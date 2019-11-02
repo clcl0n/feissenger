@@ -6,10 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.viewmodel.data.db.model.MessageItem
+import com.example.viewmodel.data.db.model.RoomItem
 
 @Database(
-    entities = [MessageItem::class],
-    version = 1,
+    entities = [MessageItem::class, RoomItem::class],
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

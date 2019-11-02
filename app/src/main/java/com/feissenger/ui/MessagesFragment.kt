@@ -21,7 +21,7 @@ import android.view.ViewTreeObserver
 import android.graphics.Rect
 
 
-class MarsFragment : Fragment() {
+class MessagesFragment : Fragment() {
     private lateinit var messagesViewModel: MessagesViewModel
     private lateinit var binding: FragmentMessageBinding
 

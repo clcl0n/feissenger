@@ -7,17 +7,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context="com.example.viewmodel.ui.MainActivity">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        style="@style/HeaderBar"
-        app:theme="@style/AppThemeDark"
-        app:popupTheme="@style/AppThemeDark"
-        android:elevation="4dp"
-        />
-
     <fragment
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
