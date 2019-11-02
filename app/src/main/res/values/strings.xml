@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">feissenger</string>
+    <string name="app_name">FEIssenger</string>
+    <string name="send">SEND</string>
 </resources>
