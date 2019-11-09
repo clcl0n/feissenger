@@ -4,20 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.Navigation
 import android.view.Menu
-import android.widget.Switch
 import android.app.Activity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.navigation.ui.NavigationUI
-import com.giphy.sdk.ui.GPHContentType
-import com.giphy.sdk.ui.GPHSettings
 import com.giphy.sdk.ui.GiphyCoreUI
-import com.giphy.sdk.ui.themes.GridType
-import com.giphy.sdk.ui.themes.LightTheme
-import com.giphy.sdk.ui.views.GiphyDialogFragment
-import com.giphy.sdk.ui.views.buttons.GPHGiphyButton
-import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_message.*
+
+
+
 
 
 class MainActivity : AppCompatActivity() {

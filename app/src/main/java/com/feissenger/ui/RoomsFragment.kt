@@ -6,7 +6,6 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,11 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
 import com.feissenger.data.ConnectivityReceiver
-import com.feissenger.data.db.model.RoomItem
 import com.feissenger.databinding.FragmentRoomBinding
 import com.feissenger.ui.adapter.RoomsAdapter
 import com.feissenger.ui.viewModels.RoomsViewModel
-import com.opinyour.android.app.data.utils.Injection
+import com.feissenger.data.util.Injection
 
 
 class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListener {

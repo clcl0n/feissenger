@@ -1,12 +1,6 @@
 package com.feissenger.ui
 
-
-import android.content.Context
-import android.content.IntentFilter
-import android.net.ConnectivityManager
-import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +14,7 @@ import com.feissenger.R
 import com.feissenger.databinding.FragmentContactListBinding
 import com.feissenger.ui.adapter.ContactListAdapter
 import com.feissenger.ui.viewModels.ContactListViewModel
-import com.opinyour.android.app.data.utils.Injection
+import com.feissenger.data.util.Injection
 
 
 class ContactListFragment : Fragment(){

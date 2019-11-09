@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opinyour.android.app.data.utils
+package com.feissenger.data.util
 
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
@@ -22,7 +22,6 @@ import com.feissenger.data.DataRepository
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.db.AppRoomDatabase
 import com.feissenger.data.db.LocalCache
-import com.feissenger.data.util.ViewModelFactory
 
 /**
  * Class that handles object creation.
@@ -37,7 +36,7 @@ object Injection {
     }
 
     fun provideDataRepository(context: Context): DataRepository {
-        return DataRepository.getInstance(WebApi.create(context),provideCache(context))
+        return DataRepository.getInstance(WebApi.create(context), provideCache(context))
     }
 
     fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {

@@ -26,7 +26,7 @@ import com.giphy.sdk.ui.themes.GridType
 import com.giphy.sdk.ui.themes.LightTheme
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
-import com.opinyour.android.app.data.utils.Injection
+import com.feissenger.data.util.Injection
 import kotlinx.android.synthetic.main.fragment_message.*
 
 class MessagesFragment : Fragment() {

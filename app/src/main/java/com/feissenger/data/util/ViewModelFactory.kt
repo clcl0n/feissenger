@@ -21,7 +21,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.feissenger.data.DataRepository
 import com.feissenger.ui.viewModels.MessagesViewModel
 import com.feissenger.ui.viewModels.ContactListViewModel
-import com.feissenger.ui.viewModels.MessagesViewModel
 import com.feissenger.ui.viewModels.RoomsViewModel
 
 /**

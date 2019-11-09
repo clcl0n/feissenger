@@ -12,8 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 interface WebApi {
-    @GET("realestate")
-    suspend fun getProperties(): Response<List<LoginResponse>>
 
     @POST("user/login.php")
     fun login(@Body login: LoginRequest): Response<LoginResponse>

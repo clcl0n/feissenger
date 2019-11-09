@@ -3,7 +3,6 @@ package com.feissenger.data.db
 import com.feissenger.data.db.DbDao
 import com.feissenger.data.db.model.MessageItem
 import com.feissenger.data.db.model.ContactItem
-import com.feissenger.data.db.model.MessageItem
 import com.feissenger.data.db.model.RoomItem
 
 class LocalCache(private val dao: DbDao) {
