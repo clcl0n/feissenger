@@ -10,7 +10,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.feissenger"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -73,4 +73,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "androidx.lifecycle:lifecycle-compiler:$archComponentsVersion"
     kapt "androidx.room:room-compiler:$room_version"
+
+//    GIPHY
+    implementation 'com.giphy.sdk:ui:1.0.0'
 }

@@ -1,9 +1,7 @@
-package com.example.viewmodel.data.db
+package com.feissenger.data.db
 
-import androidx.lifecycle.LiveData
-import com.example.viewmodel.data.db.model.MessageItem
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.feissenger.data.db.DbDao
+import com.feissenger.data.db.model.MessageItem
 
 class LocalCache(private val dao: DbDao) {
 
@@ -23,5 +21,5 @@ class LocalCache(private val dao: DbDao) {
         dao.deleteMessage(messageItem)
     }
 
-    fun getMessages() = dao.getMessages()
+    fun getMessages(user: String, contact: String) = dao.getMessages(user, contact)
 }

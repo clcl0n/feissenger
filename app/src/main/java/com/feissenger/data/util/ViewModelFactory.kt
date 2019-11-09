@@ -18,8 +18,8 @@ package com.opinyour.android.app.data.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.viewmodel.data.DataRepository
-import com.example.viewmodel.ui.viewModels.MessagesViewModel
+import com.feissenger.data.DataRepository
+import com.feissenger.ui.viewModels.MessagesViewModel
 
 /**
  * Factory for ViewModels

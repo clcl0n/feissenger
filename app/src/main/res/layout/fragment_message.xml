@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="model"
-            type="com.example.viewmodel.ui.viewModels.MessagesViewModel" />
+            type="com.feissenger.ui.viewModels.MessagesViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,16 +32,16 @@
             app:layout_constraintTop_toBottomOf="@id/messages_list"
             android:background="@drawable/message_input">
 
-            <ImageButton
+            <com.giphy.sdk.ui.views.buttons.GPHGiphyButton
+                android:id="@+id/giphy_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_add_black_24dp"
                 app:layout_constraintBottom_toBottomOf="@id/message_input"
                 app:layout_constraintEnd_toEndOf="@id/guideline_start"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@id/message_input"
-                app:layout_constraintTop_toTopOf="@id/message_input"/>
+                app:layout_constraintTop_toTopOf="@id/message_input" />
 
             <EditText
                 android:id="@+id/editText"
@@ -70,8 +69,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:onClick="@{() -> model.insertMessage()}"
-                android:src="@drawable/ic_send_black_24dp"
+                android:onClick="@{() -> model.sendMessage()}"
+                android:src="@drawable/ic_send_black"
                 app:layout_constraintBottom_toBottomOf="@id/message_input"
                 app:layout_constraintEnd_toEndOf="@id/message_input"
                 app:layout_constraintHorizontal_bias="1.0"

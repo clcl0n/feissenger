@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package com.example.viewmodel.data
+package com.feissenger.data
 
 import androidx.lifecycle.LiveData
-import com.example.viewmodel.data.api.WebApi
-import com.example.viewmodel.data.db.LocalCache
-import com.example.viewmodel.data.db.model.MessageItem
+import com.feissenger.data.api.WebApi
+import com.feissenger.data.api.model.ContactMessageRequest
+import com.feissenger.data.api.model.ContactReadRequest
+import com.feissenger.data.api.model.LoginRequest
+import com.feissenger.data.db.LocalCache
+import com.feissenger.data.db.model.MessageId
+import com.feissenger.data.db.model.MessageItem
 import java.net.ConnectException
 
 /**
@@ -32,6 +36,8 @@ class DataRepository private constructor(
 
     companion object {
         const val TAG = "DataRepository"
+        private var access: String = ""
+
         @Volatile
         private var INSTANCE: DataRepository? = null
 
@@ -58,26 +64,54 @@ class DataRepository private constructor(
         cache.deleteMessage(messageItem)
     }
 
-    fun getMessages(): LiveData<List<MessageItem>> = cache.getMessages()
+    fun getMessages(user: String, contact: String): LiveData<List<MessageItem>> = cache.getMessages(user, contact)
 
-//    suspend fun loadMars(onError: (error: String) -> Unit) {
+    suspend fun sendMessage(onError: (error: String) -> Unit, contactMessageRequest: ContactMessageRequest) {
+        try {
+
+            val contactMessageResponse = api.contactMessage("Bearer e2b9cb1b28897b2f855533d9a8d2df0cdca35ee9", contactMessageRequest)
+
+            if(contactMessageResponse.isSuccessful)
+                loadMessages(onError)
+
+            onError("Load images failed. Try again later please.")
+        } catch (ex: ConnectException) {
+            onError("Off-line. Check internet connection.")
+            ex.printStackTrace()
+            return
+        } catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
+    }
+
+    suspend fun loadMessages(onError: (error: String) -> Unit) {
+        try {
+//            val loginResponse = api.login(LoginRequest("andi@test.com","heslo123"))
 //
-//        try {
-//            val response = api.getProperties()
-//            if (response.isSuccessful) {
-//                response.body()?.let {
-//                    return cache.insertImages(it.map { item -> MarsItem(item.price, item.id, item.type, item.img_src) })
-//                }
-//            }
-//            onError("Load images failed. Try again later please.")
-//        } catch (ex: ConnectException) {
-//            onError("Off-line. Check internet connection.")
-//            ex.printStackTrace()
-//            return
-//        } catch (ex: Exception) {
-//            onError("Oops...Change failed. Try again later please.")
-//            ex.printStackTrace()
-//            return
-//        }
-//    }
+//            var access: String = "";
+//
+//            if(loginResponse.isSuccessful)
+//                access = loginResponse.body()?.access!!
+
+            val contactReadResponse = api.contactRead("Bearer e2b9cb1b28897b2f855533d9a8d2df0cdca35ee9", ContactReadRequest())
+
+            if(contactReadResponse.isSuccessful){
+                contactReadResponse.body()?.let {
+                    return cache.insertMessages(it.map { item -> MessageItem(MessageId(item.uid, item.time),item.contact, item.message) })
+                }
+            }
+
+            onError("Load images failed. Try again later please.")
+        } catch (ex: ConnectException) {
+            onError("Off-line. Check internet connection.")
+            ex.printStackTrace()
+            return
+        } catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
+    }
 }

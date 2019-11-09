@@ -18,10 +18,10 @@ package com.opinyour.android.app.data.utils
 
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
-import com.example.viewmodel.data.DataRepository
-import com.example.viewmodel.data.api.WebApi
-import com.example.viewmodel.data.db.AppRoomDatabase
-import com.example.viewmodel.data.db.LocalCache
+import com.feissenger.data.DataRepository
+import com.feissenger.data.api.WebApi
+import com.feissenger.data.db.AppRoomDatabase
+import com.feissenger.data.db.LocalCache
 
 /**
  * Class that handles object creation.

@@ -1,15 +1,15 @@
-package com.example.viewmodel.data.db
+package com.feissenger.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.viewmodel.data.db.model.MessageItem
+import com.feissenger.data.db.model.MessageItem
 
 @Database(
     entities = [MessageItem::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

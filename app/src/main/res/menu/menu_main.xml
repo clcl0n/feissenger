@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <item android:id="@+id/id"
-        android:title="nieco"
-        app:actionViewClass="android.widget.ToggleButton"
-        android:orderInCategory="80"
-        app:showAsAction="always" />
+    <item android:id="@+id/switch_theme"
+        app:actionViewClass="androidx.appcompat.widget.SwitchCompat"
+        app:showAsAction="always"
+        android:title="switch" />
 </menu>
