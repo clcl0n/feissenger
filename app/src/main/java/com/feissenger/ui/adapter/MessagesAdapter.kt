@@ -11,7 +11,6 @@ import com.feissenger.R
 import kotlinx.android.synthetic.main.message_item.view.*
 import android.widget.LinearLayout
 
-
 class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
 
     var data = listOf<MessageItem>()

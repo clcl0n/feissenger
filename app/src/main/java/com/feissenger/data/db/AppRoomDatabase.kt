@@ -1,15 +1,14 @@
 package com.feissenger.data.db
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
+import com.feissenger.data.db.model.ContactItem
 import com.feissenger.data.db.model.MessageItem
+import com.feissenger.data.db.model.RoomItem
 
 @Database(
-    entities = [MessageItem::class],
-    version = 2,
+    entities = [MessageItem::class, RoomItem::class, ContactItem::class],
+    version = 1,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -33,5 +32,7 @@ abstract class AppRoomDatabase : RoomDatabase() {
                 AppRoomDatabase::class.java, "MOBV.db"
             ).fallbackToDestructiveMigration()
                 .build()
+
     }
+
 }

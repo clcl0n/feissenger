@@ -18,3 +18,26 @@ data class ContactReadRequest(
     val contact: String = "2",
     val api_key: String = "c95332ee022df8c953ce470261efc695ecf3e784"
 )
+
+data class RoomListRequest(
+    val uid: String,
+    val api_key: String
+)
+
+data class RoomMessageRequest(
+    val uid: String,
+    val roomid: String,
+    val message: String,
+    val api_key: String
+)
+
+data class RoomReadRequest(
+    val uid: String,
+    val roomid: String,
+    val api_key: String
+)
+
+data class ContactListRequest(
+    val uid:String,
+    val api_key: String
+)

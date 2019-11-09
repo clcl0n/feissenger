@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package com.opinyour.android.app.data.utils
+package com.feissenger.data.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.feissenger.data.DataRepository
 import com.feissenger.ui.viewModels.MessagesViewModel
+import com.feissenger.ui.viewModels.ContactListViewModel
+import com.feissenger.ui.viewModels.MessagesViewModel
+import com.feissenger.ui.viewModels.RoomsViewModel
 
 /**
  * Factory for ViewModels
@@ -31,6 +34,16 @@ class ViewModelFactory(private val repository: DataRepository) : ViewModelProvid
         if (modelClass.isAssignableFrom(MessagesViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MessagesViewModel(repository) as T
+        }
+
+        if (modelClass.isAssignableFrom(RoomsViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return RoomsViewModel(repository) as T
+        }
+
+        if (modelClass.isAssignableFrom(ContactListViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return ContactListViewModel(repository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")

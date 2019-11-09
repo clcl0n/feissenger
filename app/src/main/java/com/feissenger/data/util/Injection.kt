@@ -22,6 +22,7 @@ import com.feissenger.data.DataRepository
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.db.AppRoomDatabase
 import com.feissenger.data.db.LocalCache
+import com.feissenger.data.util.ViewModelFactory
 
 /**
  * Class that handles object creation.

@@ -29,7 +29,6 @@ import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
 import com.opinyour.android.app.data.utils.Injection
 import kotlinx.android.synthetic.main.fragment_message.*
 
-
 class MessagesFragment : Fragment() {
     private lateinit var messagesViewModel: MessagesViewModel
     private lateinit var binding: FragmentMessageBinding
