@@ -6,18 +6,34 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="AppThemeLight" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimaryLight</item>
-<!--        <item name="colorPrimaryDark">@color/colorPrimaryDarkLight</item>-->
-<!--        <item name="colorAccent">@color/colorAccentLight</item>-->
-        <item name="android:windowBackground">@color/colorAccentLight</item>
+    <style name="AppThemeLight" parent="AppTheme">
+        <item name="android:windowBackground">@color/white</item>
+        <item name="toolbar_background">@color/white</item>
+        <item name="toolbar_color">@color/black</item>
+        <item name="sender">@color/green</item>
+        <item name="recipient">@color/blue</item>
+        <item name="ssid_color">@color/black</item>
     </style>
 
-    <style name="AppThemeDark" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimaryLight</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkLight</item>
-        <item name="colorAccent">@color/colorAccentLight</item>
+    <style name="AppThemeDark" parent="AppTheme">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="toolbar_background">@color/black</item>
+        <item name="toolbar_color">@color/white</item>
+        <item name="sender">@color/yellow</item>
+        <item name="recipient">@color/red</item>
+        <item name="ssid_color">@color/white</item>
+    </style>
+
+    <style name="SwitchTheme" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">#46bdbf</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#f1f1f1
+        </item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#42221f1f
+        </item>
     </style>
 </resources>

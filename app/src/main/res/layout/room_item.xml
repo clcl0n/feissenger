@@ -6,14 +6,14 @@
     android:layout_marginBottom="5dp"
     android:paddingTop="200dp"
     android:paddingBottom="200dp"
-    android:background="@color/colorPrimaryLight">
+    android:background="@color/white">
     <TextView
         android:id="@+id/ssid"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:layout_width="wrap_content"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/ssid_color"
         android:textSize="24sp" />
 
     <TextView
@@ -22,6 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:layout_width="wrap_content"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/ssid_color"
         android:textSize="14sp" />
 </LinearLayout>

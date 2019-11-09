@@ -20,7 +20,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/active_room"
             app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/ssid_color"
             android:text="@string/public_room"
             android:textSize="24sp" />
         <TextView
@@ -31,7 +31,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/messages_list"
             app:layout_constraintTop_toBottomOf="@id/public_room"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/ssid_color"
             android:text="@{model.activeRoom}"
             android:textSize="24sp" />
 
