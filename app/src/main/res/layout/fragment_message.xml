@@ -6,7 +6,8 @@
 
         <variable
             name="model"
-            type="com.example.viewmodel.ui.viewModels.MessagesViewModel" />
+
+            type="com.feissenger.ui.viewModels.MessagesViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,12 +1,11 @@
-package com.example.viewmodel.data.db.model
+package com.feissenger.data.db.model
 
 import androidx.room.*
-import com.example.viewmodel.data.db.Converters
-
 
 @Entity(tableName = "rooms")
 data class RoomItem(
-    @PrimaryKey
-    val bssid: String,
-    val ssid: String
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    val ssid: String,
+    val time: String
 )

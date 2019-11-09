@@ -1,17 +1,15 @@
-package com.example.viewmodel.ui.adapter
+package com.feissenger.ui.adapter
 
-import android.opengl.Visibility
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.viewmodel.data.db.model.MessageItem
+import com.feissenger.data.db.model.MessageItem
 import com.feissenger.R
 import kotlinx.android.synthetic.main.message_item.view.*
 import android.widget.FrameLayout
-import androidx.core.view.marginEnd
 
 
 class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {

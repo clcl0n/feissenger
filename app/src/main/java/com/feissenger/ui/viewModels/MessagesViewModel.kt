@@ -1,10 +1,9 @@
-package com.example.viewmodel.ui.viewModels
+package com.feissenger.ui.viewModels
 
 
 import androidx.lifecycle.*
-import com.example.viewmodel.data.DataRepository
-import com.example.viewmodel.data.db.model.MessageId
-import com.example.viewmodel.data.db.model.MessageItem
+import com.feissenger.data.DataRepository
+import com.feissenger.data.db.model.MessageItem
 import kotlinx.coroutines.launch
 
 class MessagesViewModel(private val repository: DataRepository) : ViewModel() {

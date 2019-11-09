@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package com.example.viewmodel.data
+package com.feissenger.data
 
 import androidx.lifecycle.LiveData
-import com.example.viewmodel.data.api.WebApi
-import com.example.viewmodel.data.db.LocalCache
-import com.example.viewmodel.data.db.model.MessageItem
+import com.feissenger.data.api.WebApi
+import com.feissenger.data.api.model.ContactListRequest
+import com.feissenger.data.api.model.RoomListRequest
+import com.feissenger.data.api.model.RoomReadRequest
+import com.feissenger.data.db.LocalCache
+import com.feissenger.data.db.model.ContactItem
+import com.feissenger.data.db.model.MessageItem
+import com.feissenger.data.db.model.RoomItem
 import java.net.ConnectException
 
 /**
@@ -27,7 +32,8 @@ import java.net.ConnectException
  */
 class DataRepository private constructor(
     private val api: WebApi,
-    private val cache: LocalCache
+    private val cache: LocalCache,
+    private val api_key: String = "c95332ee022df8c953ce470261efc695ecf3e784"
 ) {
 
     companion object {
@@ -60,24 +66,59 @@ class DataRepository private constructor(
 
     fun getMessages(): LiveData<List<MessageItem>> = cache.getMessages()
 
-//    suspend fun loadMars(onError: (error: String) -> Unit) {
-//
+    fun getRooms(): LiveData<List<RoomItem>> = cache.getRooms()
+
+    suspend fun getRoomList(onError: (error:String) -> Unit){
+        try {
+            val response = api.getRooms(RoomListRequest("2",api_key))
+            if(response.isSuccessful){
+                response.body()?.let {
+                    return cache.insertRooms(it.map { item -> RoomItem(0,item.roomid, item.time) })
+                }
+            }
+        }catch (ex: ConnectException){
+            onError("Off-line. Check internet connection.")
+        }catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
+    }
+
+
+    fun getContacts(): LiveData<List<ContactItem>> = cache.getContacts()
+
+    suspend fun getContactList(onError: (error: String) -> Unit){
+        try {
+            val response = api.getContactList(ContactListRequest("2",api_key))
+            if(response.isSuccessful){
+                response.body()?.let {
+                    return cache.insertContacts(it.map { item -> ContactItem(item.id,item.name) })
+                }
+            }
+        }catch (ex: ConnectException){
+            onError("Off-line. Check internet connection.")
+        }catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
+    }
+
+//    suspend fun getRoomMessages(onError: (error: String) -> Unit, roomid: String){
 //        try {
-//            val response = api.getProperties()
-//            if (response.isSuccessful) {
-//                response.body()?.let {
-//                    return cache.insertImages(it.map { item -> MarsItem(item.price, item.id, item.type, item.img_src) })
+//            val response = api.getRoomMessages(RoomReadRequest("2",roomid,api_key))
+//            if(response.isSuccessful)
+//                response.body()?.let{
+//                    return cache.getRoomMessages(it.map{item-> RoomMessage(0,item.message, item.roomid, item.uid, item.time)})
 //                }
-//            }
-//            onError("Load images failed. Try again later please.")
-//        } catch (ex: ConnectException) {
+//        }catch (ex: ConnectException){
 //            onError("Off-line. Check internet connection.")
-//            ex.printStackTrace()
-//            return
-//        } catch (ex: Exception) {
+//        }catch (ex: Exception) {
 //            onError("Oops...Change failed. Try again later please.")
 //            ex.printStackTrace()
 //            return
 //        }
 //    }
+
 }

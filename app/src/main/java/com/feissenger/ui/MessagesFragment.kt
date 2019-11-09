@@ -1,4 +1,4 @@
-package com.example.viewmodel.ui
+package com.feissenger.ui
 
 
 import android.os.Bundle
@@ -11,14 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.viewmodel.ui.adapter.MessagesAdapter
-import com.example.viewmodel.ui.viewModels.MessagesViewModel
+import com.feissenger.ui.adapter.MessagesAdapter
+import com.feissenger.ui.viewModels.MessagesViewModel
 import com.feissenger.R
 import com.feissenger.databinding.FragmentMessageBinding
 import com.opinyour.android.app.data.utils.Injection
-import android.R.attr.bottom
-import android.view.ViewTreeObserver
-import android.graphics.Rect
 
 
 class MessagesFragment : Fragment() {

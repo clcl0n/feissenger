@@ -1,8 +1,7 @@
-package com.example.viewmodel.data.db
+package com.feissenger.data.db
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import java.util.*
 
 class Converters {
 

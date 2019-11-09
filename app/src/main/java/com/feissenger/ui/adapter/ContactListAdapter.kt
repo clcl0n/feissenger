@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
-import com.feissenger.data.db.model.RoomItem
-import kotlinx.android.synthetic.main.room_item.view.*
+import com.feissenger.data.db.model.ContactItem
+import kotlinx.android.synthetic.main.contact_item.view.*
 
 
-class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
+class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
 
-    var data = listOf<RoomItem>()
+    var data = listOf<ContactItem>()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -33,16 +33,16 @@ class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
     class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 
-        fun bind(item: RoomItem) {
-            (itemView.ssid as TextView).text = item.ssid
-//            (itemView.ssid as TextView).text = item.ssid
+        fun bind(item: ContactItem) {
+            (itemView.contact_name as TextView).text = item.name
+            (itemView.contact_id as TextView).text = item.id
         }
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val view = layoutInflater
-                    .inflate(R.layout.room_item, parent, false)
+                    .inflate(R.layout.contact_item, parent, false)
                 return ViewHolder(view)
             }
         }

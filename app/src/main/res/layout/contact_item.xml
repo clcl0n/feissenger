@@ -8,7 +8,7 @@
     android:paddingBottom="200dp"
     android:background="@color/colorPrimaryLight">
     <TextView
-        android:id="@+id/ssid"
+        android:id="@+id/contact_name"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -17,7 +17,7 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/bssid"
+        android:id="@+id/contact_id"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
