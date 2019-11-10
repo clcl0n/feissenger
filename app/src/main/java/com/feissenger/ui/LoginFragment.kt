@@ -32,12 +32,6 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        if(!activity?.getPreferences(Context.MODE_PRIVATE)?.getString("access","").equals(""))
-            findNavController().navigate(R.id.action_login_fragment_to_room_fragment)
-
-
-
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_login, container, false

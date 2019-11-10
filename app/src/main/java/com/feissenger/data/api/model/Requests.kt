@@ -20,7 +20,7 @@ data class ContactReadRequest(
 )
 
 data class RoomListRequest(
-    val uid: String,
+    val uid: String?,
     val api_key: String
 )
 
