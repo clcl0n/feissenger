@@ -29,7 +29,8 @@ class LocalCache(private val dao: DbDao) {
     fun getMessages() = dao.getMessages()
 
     //Rooms
-    fun getRooms() = dao.getRooms()
+//    fun getRooms(uid: String) = dao.getRooms(uid)
+    fun getRooms(uid:String) = dao.getRooms(uid)
 
     suspend fun insertRoom(roomItem: RoomItem) {
         dao.insertRoom(roomItem)

@@ -26,8 +26,11 @@ interface DbDao {
     @Query("SELECT * FROM messages")
     fun getMessages(): LiveData<List<MessageItem>>
 
-    @Query("SELECT * FROM rooms")
-    fun getRooms(): LiveData<List<RoomItem>>
+//    @Query("SELECT * FROM rooms WHERE uid = :userId")
+//    fun getRooms(userId: String): LiveData<List<RoomItem>>
+
+    @Query("SELECT * FROM rooms WHERE uid LIKE :uid")
+    fun getRooms(uid: String): LiveData<List<RoomItem>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertRoom(roomItem: RoomItem)

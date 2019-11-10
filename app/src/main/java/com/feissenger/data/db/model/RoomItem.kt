@@ -4,8 +4,13 @@ import androidx.room.*
 
 @Entity(tableName = "rooms")
 data class RoomItem(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val ssid: String,
+    @PrimaryKey
+    @Embedded
+    val id: RoomItemId,
     val time: String
+)
+
+data class RoomItemId(
+    val ssid: String,
+    val uid: String
 )

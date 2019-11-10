@@ -22,6 +22,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:textColor="?attr/ssid_color"
             android:text="@string/public_room"
+            android:textIsSelectable="true"
             android:textSize="24sp" />
         <TextView
             android:id="@+id/active_room"

@@ -34,7 +34,7 @@ class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
 
 
         fun bind(item: RoomItem) {
-            (itemView.ssid as TextView).text = item.ssid
+            (itemView.ssid as TextView).text = item.id.ssid
 //            (itemView.ssid as TextView).text = item.ssid
         }
 

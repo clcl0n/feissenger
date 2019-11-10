@@ -21,15 +21,12 @@ import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.ContactMessageRequest
 import com.feissenger.data.api.model.ContactReadRequest
 import com.feissenger.data.api.model.LoginRequest
-import com.feissenger.data.db.model.MessageId
 import com.feissenger.data.api.model.ContactListRequest
 import com.feissenger.data.api.model.RoomListRequest
 import com.feissenger.data.api.model.RoomReadRequest
 import com.feissenger.data.api.model.*
 import com.feissenger.data.db.LocalCache
-import com.feissenger.data.db.model.ContactItem
-import com.feissenger.data.db.model.MessageItem
-import com.feissenger.data.db.model.RoomItem
+import com.feissenger.data.db.model.*
 import java.net.ConnectException
 
 /**
@@ -135,7 +132,8 @@ class DataRepository private constructor(
             return
         }
     }
-    fun getRooms(): LiveData<List<RoomItem>> = cache.getRooms()
+//    fun getRooms(uid: String): LiveData<List<RoomItem>> = cache.getRooms(uid=uid)
+    fun getRooms(uid:String): LiveData<List<RoomItem>> = cache.getRooms(uid)
 
     suspend fun getRoomList(onError: (error:String) -> Unit, access: String?, uid: String?){
         try {
@@ -143,7 +141,9 @@ class DataRepository private constructor(
             val response = api.getRooms("Bearer $access", RoomListRequest(uid,api_key))
             if(response.isSuccessful){
                 response.body()?.let {
-                    return cache.insertRooms(it.map { item -> RoomItem(0,item.roomid, item.time) })
+                    return cache.insertRooms(it.map { item -> RoomItem(RoomItemId(item.roomid,
+                        uid!!
+                    ), item.time) })
                 }
             }
         }catch (ex: ConnectException){

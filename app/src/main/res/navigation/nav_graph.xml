@@ -27,6 +27,17 @@
         <action
             android:id="@+id/action_login_fragment_to_room_fragment"
             app:destination="@id/room_fragment" />
+        <action
+            android:id="@+id/action_login_fragment_to_viewPagerFragment"
+            app:destination="@id/viewPagerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewPagerFragment"
+        android:name="com.feissenger.ui.ViewPagerFragment"
+        android:label="ViewPagerFragment" >
+        <action
+            android:id="@+id/action_viewPagerFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment" />
     </fragment>
 
 

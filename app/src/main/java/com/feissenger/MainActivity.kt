@@ -5,12 +5,17 @@ import android.os.Bundle
 import androidx.navigation.Navigation
 import android.view.Menu
 import android.app.Activity
+import android.util.Log
+import android.widget.ImageView
+import android.widget.Toast
 import android.content.Context
 import androidx.appcompat.widget.SwitchCompat
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.viewpager.widget.ViewPager
+import com.feissenger.ui.adapter.ViewPagerAdapter
 import com.giphy.sdk.ui.GiphyCoreUI
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -22,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private val DARK = "dark"
     private val LIGHT = "light"
-    private val navOptions: NavOptions.Builder? = null
+    private var selected: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,17 +44,29 @@ class MainActivity : AppCompatActivity() {
         val navInflater = navController?.navInflater
         val navGraph = navInflater?.inflate(R.navigation.nav_graph)
 
-        if(!getPreferences(Context.MODE_PRIVATE)?.getString("access","").equals("")){
-//            navOptions?.setPopUpTo(R.id.room_fragment,true)?.build()
-            navGraph?.startDestination = R.id.room_fragment
-        }
-        else{
+        if (!getPreferences(Context.MODE_PRIVATE)?.getString("access", "").equals("")) {
+            navGraph?.startDestination = R.id.viewPagerFragment
+        } else {
             navGraph?.startDestination = R.id.login_fragment
 //            navOptions?.setPopUpTo(R.id.login_fragment,true)?.build()
         }
 
         navController?.graph = navGraph!!
 
+
+        setSupportActionBar(findViewById(R.id.my_toolbar))
+
+        val image = findViewById<ImageView>(R.id.theme_icon)
+        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", LIGHT)) {
+            LIGHT -> {
+                image.setImageResource(R.drawable.sun)
+                selected = "light"
+            }
+            DARK -> {
+                image.setImageResource(R.drawable.moon)
+                selected = "dark"
+            }
+        }
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
 

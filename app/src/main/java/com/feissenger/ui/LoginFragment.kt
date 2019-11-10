@@ -43,8 +43,13 @@ class LoginFragment : Fragment() {
         binding.model = viewModel
 
         viewModel.loginData.observe(this) {
-            if(it!=null)
-                findNavController().navigate(R.id.action_login_fragment_to_room_fragment)
+            if(it!=null){
+                val navController = findNavController()
+                val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+                navGraph.startDestination = R.id.viewPagerFragment
+                navController.graph = navGraph
+                navController.navigate(R.id.viewPagerFragment)
+            }
         }
 //        adapter
 

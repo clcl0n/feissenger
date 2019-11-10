@@ -36,6 +36,11 @@ class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>()
         fun bind(item: ContactItem) {
             (itemView.contact_name as TextView).text = item.name
             (itemView.contact_id as TextView).text = item.id
+
+            itemView.setOnClickListener {
+                sharedViewModel.setContactId(item.id)
+                it.findNavController().navigate(R.id.action_viewPagerFragment_to_messagesFragment)
+            }
         }
 
         companion object {
