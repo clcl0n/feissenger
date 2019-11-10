@@ -19,9 +19,6 @@ import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-
-
-
 class MainActivity : AppCompatActivity() {
 
     private val DARK = "dark"
@@ -39,22 +36,16 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_host_fragment
             )
         )
-        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        val navController = navHost?.findNavController()
-        val navInflater = navController?.navInflater
-        val navGraph = navInflater?.inflate(R.navigation.nav_graph)
+        val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+        val navGraph = navController?.navInflater?.inflate(R.navigation.nav_graph)
 
-        if(!getPreferences(Context.MODE_PRIVATE)?.getString("access","").equals("")){
-//            navOptions?.setPopUpTo(R.id.room_fragment,true)?.build()
+        if (!getPreferences(Context.MODE_PRIVATE)?.getString("access", "").equals("")) {
             navGraph?.startDestination = R.id.room_fragment
-        }
-        else{
+        } else {
             navGraph?.startDestination = R.id.login_fragment
-//            navOptions?.setPopUpTo(R.id.login_fragment,true)?.build()
         }
 
         navController?.graph = navGraph!!
-
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(true)
