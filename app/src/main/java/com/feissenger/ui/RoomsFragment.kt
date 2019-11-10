@@ -35,7 +35,7 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        val sharedRef = activity?.getPreferences(Context.MODE_PRIVATE)
         wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         // Inflate the layout for this fragment
@@ -62,7 +62,7 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
             adapter.data = it
         }
 
-        viewModel.loadRooms()
+        viewModel.loadRooms(sharedRef?.getString("access",""),sharedRef?.getString("uid",""))
 
         return binding.root
     }

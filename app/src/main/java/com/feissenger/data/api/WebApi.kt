@@ -36,9 +36,8 @@ interface WebApi {
     @POST("/room/list.php")
     @Headers("Accept: application/json",
             "Cache-Control: no-cache",
-            "Content-Type: application/json",
-        "Authorization: Bearer 8b542f0dccbda5ad534936be49bc27e81e9eef26")
-    suspend fun getRooms(@Body roomList: RoomListRequest): Response<List<RoomListResponse>>
+            "Content-Type: application/json")
+    suspend fun getRooms(@Header("Authorization") authorization:String?, @Body roomList: RoomListRequest): Response<List<RoomListResponse>>
 
     @POST("room/message.php")
     @Headers("Accept: application/json",

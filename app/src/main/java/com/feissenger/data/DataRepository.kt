@@ -137,9 +137,10 @@ class DataRepository private constructor(
     }
     fun getRooms(): LiveData<List<RoomItem>> = cache.getRooms()
 
-    suspend fun getRoomList(onError: (error:String) -> Unit){
+    suspend fun getRoomList(onError: (error:String) -> Unit, access: String?, uid: String?){
         try {
-            val response = api.getRooms(RoomListRequest("2",api_key))
+
+            val response = api.getRooms(access, RoomListRequest(uid,api_key))
             if(response.isSuccessful){
                 response.body()?.let {
                     return cache.insertRooms(it.map { item -> RoomItem(0,item.roomid, item.time) })
