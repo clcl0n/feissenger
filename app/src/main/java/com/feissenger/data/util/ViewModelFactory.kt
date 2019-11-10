@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.feissenger.data.DataRepository
 import com.feissenger.ui.viewModels.MessagesViewModel
 import com.feissenger.ui.viewModels.ContactListViewModel
+import com.feissenger.ui.viewModels.LoginViewModel
 import com.feissenger.ui.viewModels.RoomsViewModel
 
 /**
@@ -29,6 +30,11 @@ import com.feissenger.ui.viewModels.RoomsViewModel
 class ViewModelFactory(private val repository: DataRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
+
+        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return LoginViewModel(repository) as T
+        }
 
         if (modelClass.isAssignableFrom(MessagesViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

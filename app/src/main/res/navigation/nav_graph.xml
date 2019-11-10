@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/nav_graph"
-            app:startDestination="@id/room_fragment">
+            app:startDestination="@id/login_fragment">
 
     <fragment
         android:id="@+id/room_fragment"
@@ -18,6 +18,11 @@
         android:id="@+id/messagesFragment"
         android:name="com.feissenger.ui.MessagesFragment"
         android:label="MessagesFragment" />
+
+    <fragment
+        android:id="@+id/login_fragment"
+        android:name="com.feissenger.ui.LoginFragment"
+        android:label="LoginFragment" />
 
 
 </navigation>

@@ -14,7 +14,9 @@ import retrofit2.http.*
 interface WebApi {
 
     @POST("user/login.php")
-    fun login(@Body login: LoginRequest): Response<LoginResponse>
+    @Headers("Content-Type: application/json",
+        "Cache-Control: no-cache")
+    suspend fun login(@Body login: LoginRequest): Response<LoginResponse>
 
     @POST("contact/message.php")
     @Headers("Accept: application/json",
