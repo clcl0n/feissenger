@@ -6,6 +6,7 @@ import androidx.navigation.Navigation
 import android.view.Menu
 import android.app.Activity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.giphy.sdk.ui.GiphyCoreUI
 import kotlinx.android.synthetic.main.activity_main.*
@@ -29,9 +30,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_host_fragment
             )
         )
+
+
         setSupportActionBar(findViewById(R.id.my_toolbar))
 
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

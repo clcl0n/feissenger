@@ -25,6 +25,7 @@ import com.feissenger.data.db.model.MessageId
 import com.feissenger.data.api.model.ContactListRequest
 import com.feissenger.data.api.model.RoomListRequest
 import com.feissenger.data.api.model.RoomReadRequest
+import com.feissenger.data.api.model.*
 import com.feissenger.data.db.LocalCache
 import com.feissenger.data.db.model.ContactItem
 import com.feissenger.data.db.model.MessageItem
@@ -90,6 +91,20 @@ class DataRepository private constructor(
             ex.printStackTrace()
             return
         }
+    }
+
+
+    suspend fun login(userName: String, password: String): LoginResponse? {
+        val loginResponse = api.login(LoginRequest(userName, password))
+
+        if (loginResponse.isSuccessful)
+            return LoginResponse(
+                uid = loginResponse.body()?.uid!!,
+                access = loginResponse.body()?.access!!,
+                refresh = loginResponse.body()?.access!!
+            )
+
+        return null
     }
 
     suspend fun loadMessages(onError: (error: String) -> Unit) {
