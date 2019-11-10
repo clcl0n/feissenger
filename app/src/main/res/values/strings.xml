@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">feissenger</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">FEIssenger</string>
+    <string name="send">SEND</string>
+    <string name="public_room">Public Room</string>
 </resources>
