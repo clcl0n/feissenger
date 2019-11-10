@@ -7,8 +7,10 @@ import androidx.navigation.Navigation
 import android.view.Menu
 import android.app.Activity
 import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.view.marginRight
 import androidx.navigation.ui.NavigationUI
 import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.gms.tasks.OnCompleteListener
@@ -23,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private val DARK = "dark"
     private val LIGHT = "light"
+    private var selected = "light"
 
     @SuppressLint("StringFormatInvalid")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +39,30 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setSupportActionBar(findViewById(R.id.my_toolbar))
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+
+        val image = findViewById<ImageView>(R.id.theme_icon)
+        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", DARK)) {
+            LIGHT -> {
+                image.setImageResource(R.drawable.sun)
+                selected = "light"
+            }
+            DARK -> {
+                image.setImageResource(R.drawable.moon)
+                selected = "dark"
+            }
+        }
+
+        image.setOnClickListener {
+            if(selected == "light"){
+                image.setImageResource(R.drawable.moon)
+                saveTheme(DARK)
+            }
+            else{
+                image.setImageResource(R.drawable.sun)
+                saveTheme(LIGHT)
+            }
+        }
 
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
 
@@ -60,23 +87,25 @@ class MainActivity : AppCompatActivity() {
         return Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu, this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        val switchItem = menu.findItem(R.id.switch_theme)
-        val switch = switchItem?.actionView as SwitchCompat
-        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", DARK)) {
-            LIGHT -> switch.isChecked = true
-            DARK -> switch.isChecked = false
-        }
-        switch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
-                saveTheme(LIGHT)
-            else
-                saveTheme(DARK)
-        }
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+//        // Inflate the menu, this adds items to the action bar if it is present.
+//        menuInflater.inflate(R.menu.menu_main, menu)
+//        val switchItem = menu.findItem(R.id.switch_theme)
+//        val image = switchItem?.actionView as ImageView
+//        image.setImageResource(R.drawable.sun)
+////        val switch = switchItem?.actionView as SwitchCompat
+////        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", DARK)) {
+////            LIGHT -> switch.isChecked = true
+////            DARK -> switch.isChecked = false
+////        }
+////        switch.setOnCheckedChangeListener { _, isChecked ->
+////            if (isChecked)
+////                saveTheme(LIGHT)
+////            else
+////                saveTheme(DARK)
+////        }
+//        return true
+//    }
 
     private fun saveTheme(value: String) {
         val editor = getPreferences(Activity.MODE_PRIVATE).edit()
