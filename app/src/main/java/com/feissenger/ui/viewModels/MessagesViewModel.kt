@@ -10,8 +10,12 @@ import kotlinx.coroutines.launch
 class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
     val error: MutableLiveData<String> = MutableLiveData()
 
+    var user: String = ""
+
+    var contact: String = ""
+
     val messages: LiveData<List<MessageItem>>
-        get() = repository.getMessages("1","2")
+        get() = repository.getMessages(user, contact)
 
     val input: MutableLiveData<String> = MutableLiveData()
 

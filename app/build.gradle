@@ -34,6 +34,8 @@ android {
     }
 }
 
+apply plugin: 'com.google.gms.google-services'  // Google Play services Gradle plugin
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -77,6 +79,15 @@ dependencies {
 
 //    GIPHY
     implementation 'com.giphy.sdk:ui:1.0.0'
+
+    // Add the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics:17.2.1'
+
+    // Add the SDKs for any other Firebase products you want to use in your app
+    // For example, to use Firebase Authentication and Cloud Firestore
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
+    implementation 'com.google.firebase:firebase-firestore:21.2.1'
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
 }
 
 configurations.all {

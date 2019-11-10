@@ -1,14 +1,17 @@
 package com.feissenger
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.Navigation
-import android.view.Menu
 import android.app.Activity
-import androidx.appcompat.widget.SwitchCompat
-import androidx.navigation.findNavController
+import android.util.Log
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.navigation.ui.NavigationUI
 import com.giphy.sdk.ui.GiphyCoreUI
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -19,7 +22,9 @@ class MainActivity : AppCompatActivity() {
 
     private val DARK = "dark"
     private val LIGHT = "light"
+    private var selected = "light"
 
+    @SuppressLint("StringFormatInvalid")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(getSavedTheme())
@@ -33,31 +38,52 @@ class MainActivity : AppCompatActivity() {
 
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+
+        val image = findViewById<ImageView>(R.id.theme_icon)
+        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", DARK)) {
+            LIGHT -> {
+                image.setImageResource(R.drawable.sun)
+                selected = "light"
+            }
+            DARK -> {
+                image.setImageResource(R.drawable.moon)
+                selected = "dark"
+            }
+        }
+
+        image.setOnClickListener {
+            if(selected == "light"){
+                image.setImageResource(R.drawable.moon)
+                saveTheme(DARK)
+            }
+            else{
+                image.setImageResource(R.drawable.sun)
+                saveTheme(LIGHT)
+            }
+        }
 
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
 
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("tag", "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new Instance ID token
+                val token = task.result?.token
+
+                // Log and toast
+                val msg = getString(R.string.msg_token_fmt, token)
+                Log.d("tag", msg)
+                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            })
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu, this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        val switchItem = menu.findItem(R.id.switch_theme)
-        val switch = switchItem?.actionView as SwitchCompat
-        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", DARK)) {
-            LIGHT -> switch.isChecked = true
-            DARK -> switch.isChecked = false
-        }
-        switch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
-                saveTheme(LIGHT)
-            else
-                saveTheme(DARK)
-        }
-        return true
     }
 
     private fun saveTheme(value: String) {

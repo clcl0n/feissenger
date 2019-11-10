@@ -23,6 +23,7 @@ import com.feissenger.ui.viewModels.MessagesViewModel
 import com.feissenger.ui.viewModels.ContactListViewModel
 import com.feissenger.ui.viewModels.LoginViewModel
 import com.feissenger.ui.viewModels.RoomsViewModel
+import com.feissenger.ui.viewModels.SharedViewModel
 
 /**
  * Factory for ViewModels
@@ -49,6 +50,11 @@ class ViewModelFactory(private val repository: DataRepository) : ViewModelProvid
         if (modelClass.isAssignableFrom(ContactListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ContactListViewModel(repository) as T
+        }
+
+        if (modelClass.isAssignableFrom(SharedViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return SharedViewModel() as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")
