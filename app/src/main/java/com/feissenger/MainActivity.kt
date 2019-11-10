@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         val image = findViewById<ImageView>(R.id.theme_icon)
-        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", DARK)) {
+        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", LIGHT)) {
             LIGHT -> {
                 image.setImageResource(R.drawable.sun)
                 selected = "light"
@@ -73,10 +73,12 @@ class MainActivity : AppCompatActivity() {
 
         image.setOnClickListener {
             if(selected == "light"){
+                selected = "dark"
                 image.setImageResource(R.drawable.moon)
                 saveTheme(DARK)
             }
             else{
+                selected = "light"
                 image.setImageResource(R.drawable.sun)
                 saveTheme(LIGHT)
             }
