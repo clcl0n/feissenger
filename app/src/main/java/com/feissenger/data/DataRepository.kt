@@ -140,7 +140,7 @@ class DataRepository private constructor(
     suspend fun getRoomList(onError: (error:String) -> Unit, access: String?, uid: String?){
         try {
 
-            val response = api.getRooms(access, RoomListRequest(uid,api_key))
+            val response = api.getRooms("Bearer $access", RoomListRequest(uid,api_key))
             if(response.isSuccessful){
                 response.body()?.let {
                     return cache.insertRooms(it.map { item -> RoomItem(0,item.roomid, item.time) })
