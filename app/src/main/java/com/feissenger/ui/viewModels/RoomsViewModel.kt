@@ -12,9 +12,10 @@ class RoomsViewModel(private val repository: DataRepository) : ViewModel() {
 
     val activeRoom: MutableLiveData<String> = MutableLiveData()
 
+    var uid: String = ""
 
     val rooms: LiveData<List<RoomItem>>
-        get() = repository.getRooms()
+        get() = repository.getRooms(uid)
 
     fun setActiveRoom(active: String) {
         activeRoom.postValue(active)

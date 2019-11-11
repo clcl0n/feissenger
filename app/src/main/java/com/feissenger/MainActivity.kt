@@ -13,6 +13,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 
 import androidx.navigation.ui.NavigationUI
+import androidx.viewpager.widget.ViewPager
+import com.feissenger.ui.adapter.ViewPagerAdapter
 import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         val navGraph = navController?.navInflater?.inflate(R.navigation.nav_graph)
 
         if (!getPreferences(Context.MODE_PRIVATE)?.getString("access", "").equals("")) {
-            navGraph?.startDestination = R.id.room_fragment
+            navGraph?.startDestination = R.id.viewPagerFragment
         } else {
             navGraph?.startDestination = R.id.login_fragment
         }
@@ -74,6 +76,19 @@ class MainActivity : AppCompatActivity() {
                 saveTheme(LIGHT)
             }
         }
+
+        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", LIGHT)) {
+            LIGHT -> {
+                image.setImageResource(R.drawable.sun)
+                selected = "light"
+            }
+            DARK -> {
+                image.setImageResource(R.drawable.moon)
+                selected = "dark"
+            }
+        }
+
+        setSupportActionBar(findViewById(R.id.my_toolbar))
 
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
 

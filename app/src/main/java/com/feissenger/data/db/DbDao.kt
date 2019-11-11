@@ -21,7 +21,7 @@ interface DbDao {
     fun getRooms(user: String): LiveData<List<RoomItem>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertRooms(roomItems: List<RoomItem>)
+    suspend fun insertRooms(roomList: List<RoomItem>)
 
     //    Contacts
     @Query("SELECT * FROM contacts WHERE uid LIKE :user")

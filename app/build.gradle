@@ -88,6 +88,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.firebase:firebase-firestore:21.2.1'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
+
+    //viewPager
+    implementation 'com.android.support:design:29.0.2'
+
 }
 
 configurations.all {

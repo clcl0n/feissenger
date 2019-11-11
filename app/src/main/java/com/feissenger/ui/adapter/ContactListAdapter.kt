@@ -45,7 +45,7 @@ class ContactListAdapter(sharedViewModel: SharedViewModel) : RecyclerView.Adapte
 
             itemView.setOnClickListener {
                 sharedViewModel.setContactId(item.id)
-                it.findNavController().navigate(R.id.action_contact_list_fragment_to_messagesFragment)
+                it.findNavController().navigate(R.id.action_viewPagerFragment_to_messagesFragment)
             }
         }
 

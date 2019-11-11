@@ -46,6 +46,8 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(RoomsViewModel::class.java)
 
+        viewModel.uid = sharedRef?.getString("uid","")!!
+
         binding.model = viewModel
 
         binding.messagesList.layoutManager =
@@ -58,11 +60,12 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
 
         val adapter = RoomsAdapter()
         binding.messagesList.adapter = adapter
+
         viewModel.rooms.observe(this) {
             adapter.data = it
         }
 
-        viewModel.loadRooms(sharedRef?.getString("access",""),sharedRef?.getString("uid",""))
+        viewModel.loadRooms(sharedRef.getString("access",""), sharedRef.getString("uid",""))
 
         return binding.root
     }

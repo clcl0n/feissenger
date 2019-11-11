@@ -46,9 +46,9 @@ class LoginFragment : Fragment() {
             if(it!=null){
                 val navController = findNavController()
                 val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
-                navGraph.startDestination = R.id.room_fragment
+                navGraph.startDestination = R.id.viewPagerFragment
                 navController.graph = navGraph
-                navController.navigate(R.id.room_fragment)
+                navController.navigate(R.id.viewPagerFragment)
             }
         }
 //        adapter

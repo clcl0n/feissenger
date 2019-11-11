@@ -159,7 +159,6 @@ class DataRepository private constructor(
 
     suspend fun getRoomList(onError: (error:String) -> Unit, roomListRequest: RoomListRequest, access: String){
         try {
-
             val roomListResponse = api.getRooms(access, roomListRequest)
             if(roomListResponse.isSuccessful){
                 roomListResponse.body()?.let {
