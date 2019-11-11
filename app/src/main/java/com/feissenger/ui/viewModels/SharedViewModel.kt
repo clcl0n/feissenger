@@ -9,7 +9,7 @@ class SharedViewModel : ViewModel() {
     val user: LiveData<LoginResponse>
         get() = _user
 
-    fun setUser(user: LoginResponse){
+    fun setUser(user: LoginResponse?){
         _user.postValue(user)
     }
 
@@ -21,11 +21,11 @@ class SharedViewModel : ViewModel() {
         _contactId.postValue(contactId)
     }
 
-    private val _roomId: MutableLiveData<String> = MutableLiveData()
-    val roomId: LiveData<String>
-        get() = _roomId
+    private val _roomid: MutableLiveData<String> = MutableLiveData()
+    val roomid: LiveData<String>
+        get() = _roomid
 
-    fun setRoomId(roomId: String){
-        _roomId.postValue(roomId)
+    fun setRoomId(roomid: String){
+        _roomid.postValue(roomid)
     }
 }

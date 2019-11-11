@@ -12,9 +12,7 @@ import com.feissenger.ui.viewModels.SharedViewModel
 import kotlinx.android.synthetic.main.contact_item.view.*
 
 
-class ContactListAdapter(sharedViewModel: SharedViewModel) : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
-
-    val sharedViewModel = sharedViewModel
+class ContactListAdapter(private val sharedViewModel: SharedViewModel) : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
 
     var data = listOf<ContactItem>()
         set(value) {
@@ -41,10 +39,10 @@ class ContactListAdapter(sharedViewModel: SharedViewModel) : RecyclerView.Adapte
             sharedViewModel: SharedViewModel
         ) {
             (itemView.contact_name as TextView).text = item.name
-            (itemView.contact_id as TextView).text = item.id
+            (itemView.contact_id as TextView).text = item.id.contactId
 
             itemView.setOnClickListener {
-                sharedViewModel.setContactId(item.id)
+                sharedViewModel.setContactId(item.id.contactId)
                 it.findNavController().navigate(R.id.action_viewPagerFragment_to_messagesFragment)
             }
         }

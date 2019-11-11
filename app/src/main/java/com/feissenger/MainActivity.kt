@@ -9,12 +9,11 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import android.content.Context
-import androidx.navigation.NavOptions
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-
 import androidx.navigation.ui.NavigationUI
-import androidx.viewpager.widget.ViewPager
-import com.feissenger.ui.adapter.ViewPagerAdapter
+import com.feissenger.data.api.model.LoginResponse
+import com.feissenger.ui.viewModels.SharedViewModel
 import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
@@ -27,7 +26,8 @@ class MainActivity : AppCompatActivity() {
     private val LIGHT = "light"
     private var selected = "light"
 
-    @SuppressLint("StringFormatInvalid")
+    private lateinit var sharedViewModel: SharedViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(getSavedTheme())
@@ -41,13 +41,54 @@ class MainActivity : AppCompatActivity() {
         val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
         val navGraph = navController?.navInflater?.inflate(R.navigation.nav_graph)
 
+        sharedViewModel = run {
+            ViewModelProviders.of(this)[SharedViewModel::class.java]
+        }
+
         if (!getPreferences(Context.MODE_PRIVATE)?.getString("access", "").equals("")) {
             navGraph?.startDestination = R.id.viewPagerFragment
+
+            with(getPreferences(Context.MODE_PRIVATE)){
+                getString("uid","")?.let {
+                    getString("access","")?.let { it1 ->
+                        getString("refresh","")?.let { it2 ->
+                            LoginResponse(it, it1, it2)
+                        }
+                    }
+                }?.let { sharedViewModel.setUser(it) }
+            }
         } else {
             navGraph?.startDestination = R.id.login_fragment
         }
 
         navController?.graph = navGraph!!
+
+        sharedViewModel.user.observeForever{
+            val id: Int
+            val sharedPref = getPreferences(Context.MODE_PRIVATE)
+
+            if(it != null){
+                id = R.id.viewPagerFragment
+                with (sharedPref.edit()) {
+                    putString("access", it.access)
+                    putString("refresh", it.refresh)
+                    putString("uid", it.uid)
+                    apply()
+                }
+            }else {
+                id = R.id.login_fragment
+                with (sharedPref.edit()) {
+                    putString("access", "")
+                    putString("refresh", "")
+                    putString("uid", "")
+                    apply()
+                }
+            }
+
+            navGraph.startDestination = id
+            navController.graph = navGraph
+            navController.navigate(id)
+        }
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(true)

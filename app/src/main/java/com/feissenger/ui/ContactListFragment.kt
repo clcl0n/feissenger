@@ -45,6 +45,9 @@ class ContactListFragment : Fragment(){
             ViewModelProviders.of(this)[SharedViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
 
+        viewModel.uid = sharedViewModel.user.value!!.uid
+        viewModel.access = sharedViewModel.user.value!!.access
+
         binding.model = viewModel
 
         binding.contactList.layoutManager =

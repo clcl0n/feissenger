@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,11 +23,13 @@ import com.feissenger.databinding.FragmentRoomBinding
 import com.feissenger.ui.adapter.RoomsAdapter
 import com.feissenger.ui.viewModels.RoomsViewModel
 import com.feissenger.data.util.Injection
+import com.feissenger.ui.viewModels.SharedViewModel
 
 
 class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListener {
 
     private lateinit var viewModel: RoomsViewModel
+    private lateinit var sharedViewModel: SharedViewModel
     private lateinit var binding: FragmentRoomBinding
     private lateinit var wifiManager: WifiManager
     private lateinit var toast: Toast
@@ -46,7 +49,12 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(RoomsViewModel::class.java)
 
-        viewModel.uid = sharedRef?.getString("uid","")!!
+        sharedViewModel = activity?.run {
+            ViewModelProviders.of(this)[SharedViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
+
+        viewModel.uid = sharedViewModel.user.value!!.uid
+        viewModel.access = sharedViewModel.user.value!!.access
 
         binding.model = viewModel
 
@@ -57,15 +65,14 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
             IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         )
 
-
-        val adapter = RoomsAdapter()
+        val adapter = RoomsAdapter(sharedViewModel)
         binding.messagesList.adapter = adapter
 
         viewModel.rooms.observe(this) {
             adapter.data = it
         }
 
-        viewModel.loadRooms(sharedRef.getString("access",""), sharedRef.getString("uid",""))
+        viewModel.loadRooms()
 
         return binding.root
     }

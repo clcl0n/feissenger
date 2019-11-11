@@ -51,15 +51,13 @@ class MessagesFragment : Fragment() {
         messagesViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(MessagesViewModel::class.java)
 
-//        sharedViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
-//            .get(SharedViewModel::class.java)
-
         sharedViewModel = activity?.run {
             ViewModelProviders.of(this)[SharedViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
 
-        messagesViewModel.user = "1"
-        messagesViewModel.contact = "2"
+        messagesViewModel.uid = sharedViewModel.user.value!!.uid
+        messagesViewModel.access = sharedViewModel.user.value!!.access
+        messagesViewModel.contact = sharedViewModel.contactId.value!!
 
         binding.model = messagesViewModel
 
@@ -79,12 +77,6 @@ class MessagesFragment : Fragment() {
         contentView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             binding.messagesList.scrollToPosition(adapter.itemCount - 1)
         }
-
-//        binding.model.setUser("1")
-//        binding.model.setContact(sharedViewModel.contactId.value!!)
-
-//        messagesViewModel.setUser("1")
-//        messagesViewModel.setContact(sharedViewModel.contactId.value!!)
 
         return binding.root
     }

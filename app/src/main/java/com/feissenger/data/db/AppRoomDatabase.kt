@@ -5,10 +5,11 @@ import androidx.room.*
 import com.feissenger.data.db.model.ContactItem
 import com.feissenger.data.db.model.MessageItem
 import com.feissenger.data.db.model.RoomItem
+import com.feissenger.data.db.model.RoomMessageItem
 
 @Database(
-    entities = [MessageItem::class, RoomItem::class, ContactItem::class],
-    version = 3,
+    entities = [MessageItem::class, RoomItem::class, ContactItem::class, RoomMessageItem::class],
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

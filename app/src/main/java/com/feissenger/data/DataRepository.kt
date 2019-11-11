@@ -16,7 +16,10 @@
 
 package com.feissenger.data
 
+import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.findNavController
+import com.feissenger.R
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.ContactMessageRequest
 import com.feissenger.data.api.model.ContactReadRequest
@@ -53,11 +56,7 @@ class DataRepository private constructor(
         val loginResponse = api.login(LoginRequest(userName, password))
 
         if (loginResponse.isSuccessful)
-            return LoginResponse(
-                uid = loginResponse.body()?.uid!!,
-                access = loginResponse.body()?.access!!,
-                refresh = loginResponse.body()?.access!!
-            )
+            return loginResponse.body()
         return null
     }
 
@@ -133,13 +132,13 @@ class DataRepository private constructor(
         }
     }
 
-    suspend fun sendRoomMessage(onError: (error: String) -> Unit, roomMessageRequest: RoomMessageRequest, roomReadRequest: RoomReadRequest, access: String) {
+    suspend fun sendRoomMessage(onError: (error: String) -> Unit, roomMessageRequest: RoomMessageRequest, access: String) {
         try {
 
             val roomMessageResponse = api.sendRoomMessage(access, roomMessageRequest)
 
             if(roomMessageResponse.isSuccessful)
-                loadRoomMessages(onError, roomReadRequest, access)
+                loadRoomMessages(onError, RoomReadRequest(roomMessageRequest.uid, roomMessageRequest.roomid), access)
 
             onError("Load images failed. Try again later please.")
         } catch (ex: ConnectException) {

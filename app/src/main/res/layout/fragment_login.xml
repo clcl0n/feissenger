@@ -20,7 +20,7 @@
             android:layout_marginTop="16dp"
             android:ems="10"
             android:inputType="textPassword"
-            android:text="heslo123"
+            android:text="@={model._password}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="andi@test.com"
+            android:text="@={model._userName}"
             app:layout_constraintBottom_toTopOf="@+id/passwordInput"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,6 +46,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:onClick="@{()->model.login()}"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

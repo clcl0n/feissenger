@@ -3,7 +3,7 @@ package com.feissenger.data.api.model
 //Login
 data class LoginResponse(
     val uid: String,
-    val access: String,
+    var access: String,
     val refresh: String
 )
 

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.feissenger.R
@@ -18,6 +19,7 @@ import com.feissenger.data.DataRepository
 import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentLoginBinding
 import com.feissenger.ui.viewModels.LoginViewModel
+import com.feissenger.ui.viewModels.SharedViewModel
 import java.lang.Exception
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -26,7 +28,7 @@ class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var viewModel: LoginViewModel
-    private lateinit var repository: DataRepository
+    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,18 +42,11 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(LoginViewModel::class.java)
 
-        binding.model = viewModel
+        sharedViewModel = activity?.run {
+            ViewModelProviders.of(this)[SharedViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
 
-        viewModel.loginData.observe(this) {
-            if(it!=null){
-                val navController = findNavController()
-                val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
-                navGraph.startDestination = R.id.viewPagerFragment
-                navController.graph = navGraph
-                navController.navigate(R.id.viewPagerFragment)
-            }
-        }
-//        adapter
+        binding.model = viewModel
 
         return binding.root
     }
@@ -59,32 +54,8 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.loginData.observeForever {
-            if (it != null && it.access.isNotEmpty()) {
-                val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-                if (sharedPref != null)
-                    with (sharedPref.edit()) {
-                        putString("access", it.access)
-                        putString("refresh", it.refresh)
-                        putString("uid", it.uid)
-                        apply()
-                    }
-            }
-        }
-
-        LoginButton.setOnClickListener {
-            val userName = userNameInput.text.toString()
-            val password = passwordInput.text.toString()
-
-            try {
-                viewModel.login(
-                    userName = userName,
-                    password = password
-                )
-            } catch (ex: Exception) {
-                Log.e("err", ex.toString())
-            }
-
+        viewModel.user.observeForever {
+            sharedViewModel.setUser(it)
         }
     }
 }

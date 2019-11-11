@@ -3,35 +3,41 @@ package com.feissenger.ui.viewModels
 
 import androidx.lifecycle.*
 import com.feissenger.data.DataRepository
-import com.feissenger.data.api.model.ContactMessageRequest
-import com.feissenger.data.db.model.MessageItem
+import com.feissenger.data.api.model.RoomMessageRequest
+import com.feissenger.data.api.model.RoomReadRequest
+import com.feissenger.data.db.model.RoomMessageItem
 import kotlinx.coroutines.launch
 
 class RoomMessagesViewModel(private val repository: DataRepository) : ViewModel() {
     val error: MutableLiveData<String> = MutableLiveData()
 
-    var room: String = ""
+    var roomid: String = ""
+    var uid : String = ""
+    var access : String = ""
+    val roomMessage: MutableLiveData<String> = MutableLiveData()
 
-    val messages: LiveData<List<MessageItem>>
-        get() = repository.getRoomMessages(user, contact)
+    val messages: LiveData<List<RoomMessageItem>>
+        get() = repository.getRoomMessages(roomid)
 
     val input: MutableLiveData<String> = MutableLiveData()
 
-    fun sendMessage() {
-        input.value?.let {
-            var str = it
+    fun sendRoomMessage() {
+        input.value?.let { it ->
             viewModelScope.launch {
-                repository.sendMessage(contactMessageRequest = ContactMessageRequest(str), onError = {error.postValue(it)})
+                repository.sendRoomMessage({error.postValue(it)}, RoomMessageRequest(uid, roomid,
+                    roomMessage.value!!
+                ), access
+                )
             }
         }
         input.postValue("")
     }
 
-    fun loadMessages() {
+    fun loadRoomMessages() {
         viewModelScope.launch {
-            repository.loadMessages {
+            repository.loadRoomMessages({
                 error.postValue(it)
-            }
+            },RoomReadRequest(uid,roomid),access)
         }
     }
 }

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "posts")
 data class RoomMessageItem(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @Embedded
     val id: RoomMessageItemId,
     val message: String

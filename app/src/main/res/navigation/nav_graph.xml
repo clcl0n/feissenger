@@ -12,28 +12,17 @@
     <fragment
         android:id="@+id/contact_list_fragment"
         android:name="com.feissenger.ui.ContactListFragment"
-        android:label="ContactListFragment" >
-        <action
-            android:id="@+id/action_contact_list_fragment_to_messagesFragment"
-            app:destination="@id/messagesFragment" />
-    </fragment>
+        android:label="ContactListFragment" />
 
     <fragment
         android:id="@+id/messagesFragment"
         android:name="com.feissenger.ui.MessagesFragment"
-        android:label="MessagesFragment" >
-        <action
-            android:id="@+id/action_messagesFragment_to_contact_list_fragment"
-            app:destination="@id/contact_list_fragment" />
-    </fragment>
+        android:label="MessagesFragment" />
 
     <fragment
         android:id="@+id/login_fragment"
         android:name="com.feissenger.ui.LoginFragment"
         android:label="LoginFragment" >
-        <action
-            android:id="@+id/action_login_fragment_to_room_fragment"
-            app:destination="@id/room_fragment" />
         <action
             android:id="@+id/action_login_fragment_to_viewPagerFragment"
             app:destination="@id/viewPagerFragment" />
@@ -45,7 +34,14 @@
         <action
             android:id="@+id/action_viewPagerFragment_to_messagesFragment"
             app:destination="@id/messagesFragment" />
+        <action
+            android:id="@+id/action_viewPagerFragment_to_roomMessagesFragment"
+            app:destination="@id/roomMessagesFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/roomMessagesFragment"
+        android:name="com.feissenger.ui.RoomMessagesFragment"
+        android:label="RoomMessagesFragment" />
 
 
 </navigation>

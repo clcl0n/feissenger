@@ -12,5 +12,5 @@ data class ContactItem(
 
 data class ContactItemId(
     val uid: String,
-    val id: String
+    val contactId: String
 )

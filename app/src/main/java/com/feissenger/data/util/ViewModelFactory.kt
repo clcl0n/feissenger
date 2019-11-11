@@ -19,11 +19,7 @@ package com.feissenger.data.util
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.feissenger.data.DataRepository
-import com.feissenger.ui.viewModels.MessagesViewModel
-import com.feissenger.ui.viewModels.ContactListViewModel
-import com.feissenger.ui.viewModels.LoginViewModel
-import com.feissenger.ui.viewModels.RoomsViewModel
-import com.feissenger.ui.viewModels.SharedViewModel
+import com.feissenger.ui.viewModels.*
 
 /**
  * Factory for ViewModels
@@ -45,6 +41,11 @@ class ViewModelFactory(private val repository: DataRepository) : ViewModelProvid
         if (modelClass.isAssignableFrom(RoomsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return RoomsViewModel(repository) as T
+        }
+
+        if (modelClass.isAssignableFrom(RoomMessagesViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return RoomMessagesViewModel(repository) as T
         }
 
         if (modelClass.isAssignableFrom(ContactListViewModel::class.java)) {
