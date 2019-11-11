@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
@@ -15,11 +17,13 @@ import com.feissenger.databinding.FragmentContactListBinding
 import com.feissenger.ui.adapter.ContactListAdapter
 import com.feissenger.ui.viewModels.ContactListViewModel
 import com.feissenger.data.util.Injection
+import com.feissenger.ui.viewModels.SharedViewModel
 
 
 class ContactListFragment : Fragment(){
 
     private lateinit var viewModel: ContactListViewModel
+    private lateinit var sharedViewModel: SharedViewModel
     private lateinit var binding: FragmentContactListBinding
 
     override fun onCreateView(
@@ -34,12 +38,19 @@ class ContactListFragment : Fragment(){
         viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(ContactListViewModel::class.java)
 
+//        sharedViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
+//            .get(SharedViewModel::class.java)
+
+        sharedViewModel = activity?.run {
+            ViewModelProviders.of(this)[SharedViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
+
         binding.model = viewModel
 
         binding.contactList.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        val adapter = ContactListAdapter()
+        val adapter = ContactListAdapter(sharedViewModel)
         binding.contactList.adapter = adapter
         viewModel.contactList.observe(this) {
             adapter.data = it

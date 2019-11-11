@@ -34,6 +34,8 @@ android {
     }
 }
 
+apply plugin: 'com.google.gms.google-services'  // Google Play services Gradle plugin
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -89,6 +91,7 @@ dependencies {
 
     //viewPager
     implementation 'com.android.support:design:29.0.2'
+
 }
 
 configurations.all {

@@ -2,4 +2,5 @@
     <string name="app_name">FEIssenger</string>
     <string name="send">SEND</string>
     <string name="public_room">Public Room</string>
+    <string name="msg_token_fmt">Token %s</string>
 </resources>

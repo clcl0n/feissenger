@@ -14,9 +14,9 @@ import retrofit2.http.*
 interface WebApi {
 
     @POST("user/login.php")
-    @Headers("Content-Type: application/json",
-        "Accept: application/json",
-        "Cache-Control: no-cache")
+    @Headers("Accept: application/json",
+        "Cache-Control: no-cache",
+        "Content-Type: application/json")
     suspend fun login(@Body login: LoginRequest): Response<LoginResponse>
 
     @POST("contact/message.php")
@@ -31,34 +31,32 @@ interface WebApi {
         "Content-Type: application/json")
     suspend fun contactRead(@Header("Authorization") authorization:String, @Body contactReadRequest: ContactReadRequest): Response<List<ContactReadResponse>>
 
-
-
     @POST("/room/list.php")
     @Headers("Accept: application/json",
             "Cache-Control: no-cache",
             "Content-Type: application/json")
     suspend fun getRooms(@Header("Authorization") authorization:String?, @Body roomList: RoomListRequest): Response<List<RoomListResponse>>
 
+
     @POST("room/message.php")
     @Headers("Accept: application/json",
         "Cache-Control: no-cache",
         "Content-Type: application/json",
-        "Authorization: Bearer 8b542f0dccbda5ad534936be49bc27e81e9eef26")
+        "Authorization: Bearer 235357457bc9de273f1cdb3d4530f56b5d9aa4c9")
     suspend fun sendRoomMessage(@Body roomMessage: RoomMessageRequest)
 
     @POST("room/read.php")
     @Headers("Accept: application/json",
         "Cache-Control: no-cache",
         "Content-Type: application/json",
-        "Authorization: Bearer 8b542f0dccbda5ad534936be49bc27e81e9eef26")
+        "Authorization: Bearer 235357457bc9de273f1cdb3d4530f56b5d9aa4c9")
     suspend fun getRoomMessages(@Body roomRead: RoomReadRequest): Response<List<RoomReadResponse>>
 
     @POST("contact/list.php")
     @Headers("Accept: application/json",
         "Cache-Control: no-cache",
-        "Content-Type: application/json",
-        "Authorization: Bearer 364d712a5f5fdd4a26df4dc2f45d794e97fb0054")
-    suspend fun getContactList(@Body contactList: ContactListRequest): Response<List<ContactListResponse>>
+        "Content-Type: application/json")
+    suspend fun getContactList(@Header("Authorization") authorization: String, @Body contactList: ContactListRequest): Response<List<ContactListResponse>>
 
 
     companion object {

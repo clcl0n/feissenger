@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "416391206561",
+    "firebase_url": "https://feissenger.firebaseio.com",
+    "project_id": "feissenger",
+    "storage_bucket": "feissenger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:416391206561:android:adf5bd3ea411aa2c3542e0",
+        "android_client_info": {
+          "package_name": "com.feissenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "416391206561-r8j1kqcichtcbtp5j50celiucif26jp0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2GBcMWW4Aa6wgkUW2JfMhGwYs48Xy-kw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "416391206561-r8j1kqcichtcbtp5j50celiucif26jp0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

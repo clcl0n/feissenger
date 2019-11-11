@@ -73,7 +73,7 @@ class DataRepository private constructor(
     suspend fun sendMessage(onError: (error: String) -> Unit, contactMessageRequest: ContactMessageRequest) {
         try {
 
-            val contactMessageResponse = api.contactMessage("Bearer e2b9cb1b28897b2f855533d9a8d2df0cdca35ee9", contactMessageRequest)
+            val contactMessageResponse = api.contactMessage("Bearer 235357457bc9de273f1cdb3d4530f56b5d9aa4c9", contactMessageRequest)
 
             if(contactMessageResponse.isSuccessful)
                 loadMessages(onError)
@@ -106,14 +106,14 @@ class DataRepository private constructor(
 
     suspend fun loadMessages(onError: (error: String) -> Unit) {
         try {
-//            val loginResponse = api.login(LoginRequest("andi@test.com","heslo123"))
-//
-//            var access: String = "";
-//
-//            if(loginResponse.isSuccessful)
-//                access = loginResponse.body()?.access!!
+            val loginResponse = api.login(LoginRequest("andi@test.com","heslo123"))
 
-            val contactReadResponse = api.contactRead("Bearer e2b9cb1b28897b2f855533d9a8d2df0cdca35ee9", ContactReadRequest())
+            var access: String = ""
+
+            if(loginResponse.isSuccessful)
+                access = loginResponse.body()?.access!!
+
+            val contactReadResponse = api.contactRead("Bearer $access", ContactReadRequest())
 
             if(contactReadResponse.isSuccessful){
                 contactReadResponse.body()?.let {
@@ -160,7 +160,15 @@ class DataRepository private constructor(
 
     suspend fun getContactList(onError: (error: String) -> Unit){
         try {
-            val response = api.getContactList(ContactListRequest("2",api_key))
+
+            val loginResponse = api.login(LoginRequest("andi@test.com","heslo123"))
+
+            var access: String = "";
+
+            if(loginResponse.isSuccessful)
+                access = loginResponse.body()?.access!!
+
+            val response = api.getContactList("Bearer $access", ContactListRequest("1",api_key))
             if(response.isSuccessful){
                 response.body()?.let {
                     return cache.insertContacts(it.map { item -> ContactItem(item.id,item.name) })

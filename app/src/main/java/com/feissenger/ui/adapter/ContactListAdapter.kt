@@ -4,13 +4,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
 import com.feissenger.data.db.model.ContactItem
+import com.feissenger.ui.viewModels.SharedViewModel
 import kotlinx.android.synthetic.main.contact_item.view.*
 
 
-class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
+class ContactListAdapter(sharedViewModel: SharedViewModel) : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
+
+    val sharedViewModel = sharedViewModel
 
     var data = listOf<ContactItem>()
         set(value) {
@@ -22,7 +26,7 @@ class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        holder.bind(item)
+        holder.bind(item, sharedViewModel)
     }
 
 
@@ -32,8 +36,10 @@ class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>()
 
     class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-
-        fun bind(item: ContactItem) {
+        fun bind(
+            item: ContactItem,
+            sharedViewModel: SharedViewModel
+        ) {
             (itemView.contact_name as TextView).text = item.name
             (itemView.contact_id as TextView).text = item.id
 
