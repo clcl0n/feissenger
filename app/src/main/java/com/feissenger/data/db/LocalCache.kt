@@ -4,6 +4,7 @@ import com.feissenger.data.db.DbDao
 import com.feissenger.data.db.model.MessageItem
 import com.feissenger.data.db.model.ContactItem
 import com.feissenger.data.db.model.RoomItem
+import com.feissenger.data.db.model.RoomMessageItem
 
 class LocalCache(private val dao: DbDao) {
 
@@ -12,38 +13,27 @@ class LocalCache(private val dao: DbDao) {
         dao.insertMessages(messageItems)
     }
 
-    suspend fun insertMessage(messageItem: MessageItem) {
-        dao.insertMessage(messageItem)
-    }
-
-    suspend fun updateMessage(messageItem: MessageItem) {
-        dao.updateMessage(messageItem)
-    }
-
-    suspend fun deleteMessage(messageItem: MessageItem) {
-        dao.deleteMessage(messageItem)
-    }
-
     fun getMessages(user: String, contact: String) = dao.getMessages(user, contact)
-    
-    fun getMessages() = dao.getMessages()
 
     //Rooms
-    fun getRooms() = dao.getRooms()
-
-    suspend fun insertRoom(roomItem: RoomItem) {
-        dao.insertRoom(roomItem)
-    }
+    fun getRooms(user: String) = dao.getRooms(user)
 
     suspend fun insertRooms(roomItems: List<RoomItem>) {
         dao.insertRooms(roomItems)
 
     }
 
-    //contacts
-    fun getContacts() = dao.getContacts()
+    //Contacts
+    fun getContacts(user: String) = dao.getContacts(user)
 
     suspend fun insertContacts(contactList: List<ContactItem>) {
         dao.insertContacts(contactList)
     }
+
+    //Messages
+    suspend fun insertRoomMessages(roomMessageItems: List<RoomMessageItem>) {
+        dao.insertRoomMessages(roomMessageItems)
+    }
+
+    fun getRoomMessages(roomId: String) = dao.getRoomMessages(roomId)
 }

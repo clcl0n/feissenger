@@ -2,11 +2,17 @@ package com.feissenger.ui.viewModels
 
 
 import androidx.lifecycle.*
-import androidx.navigation.Navigation.findNavController
-import com.feissenger.R
-import com.feissenger.data.DataRepository
+import com.feissenger.data.api.model.LoginResponse
 
-class SharedViewModel() : ViewModel() {
+class SharedViewModel : ViewModel() {
+    private val _user: MutableLiveData<LoginResponse> = MutableLiveData()
+    val user: LiveData<LoginResponse>
+        get() = _user
+
+    fun setUser(user: LoginResponse){
+        _user.postValue(user)
+    }
+
     private val _contactId: MutableLiveData<String> = MutableLiveData()
     val contactId: LiveData<String>
         get() = _contactId

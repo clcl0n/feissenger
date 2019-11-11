@@ -9,10 +9,11 @@ data class RoomMessageItem(
     @PrimaryKey(autoGenerate = true)
     @Embedded
     val id: RoomMessageItemId,
-    val time: String
+    val message: String
 )
 
 data class RoomMessageItemId(
     val uid: String,
-    val roomid: String
+    val roomId: String,
+    val time: String
 )

@@ -5,39 +5,35 @@ import androidx.room.*
 import com.feissenger.data.db.model.MessageItem
 import com.feissenger.data.db.model.ContactItem
 import com.feissenger.data.db.model.RoomItem
+import com.feissenger.data.db.model.RoomMessageItem
 
 @Dao
 interface DbDao {
+    //    Messages
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertMessages(wordItems: List<MessageItem>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertMessage(wordItem: MessageItem)
-
-    @Update
-    suspend fun updateMessage(wordItem: MessageItem)
-
-    @Delete
-    suspend fun deleteMessage(wordItem: MessageItem)
+    suspend fun insertMessages(messageItems: List<MessageItem>)
 
     @Query("SELECT * FROM messages WHERE (uid LIKE :user AND contact LIKE :contact) OR (uid LIKE :contact AND contact LIKE :user)")
     fun getMessages(user: String, contact: String): LiveData<List<MessageItem>>
 
-    @Query("SELECT * FROM messages")
-    fun getMessages(): LiveData<List<MessageItem>>
-
-    @Query("SELECT * FROM rooms")
-    fun getRooms(): LiveData<List<RoomItem>>
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertRoom(roomItem: RoomItem)
+    //    Rooms
+    @Query("SELECT * FROM rooms WHERE uid LIKE :user")
+    fun getRooms(user: String): LiveData<List<RoomItem>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertRooms(roomItems: List<RoomItem>)
 
-    @Query("SELECT * FROM contacts")
-    fun getContacts(): LiveData<List<ContactItem>>
+    //    Contacts
+    @Query("SELECT * FROM contacts WHERE uid LIKE :user")
+    fun getContacts(user: String): LiveData<List<ContactItem>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertContacts(contactList: List<ContactItem>)
+
+    //    RoomMessages
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertRoomMessages(wordItems: List<RoomMessageItem>)
+
+    @Query("SELECT * FROM posts WHERE roomId LIKE :roomId")
+    fun getRoomMessages(roomId: String): LiveData<List<RoomMessageItem>>
 }

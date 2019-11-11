@@ -21,15 +21,11 @@ import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.ContactMessageRequest
 import com.feissenger.data.api.model.ContactReadRequest
 import com.feissenger.data.api.model.LoginRequest
-import com.feissenger.data.db.model.MessageId
 import com.feissenger.data.api.model.ContactListRequest
 import com.feissenger.data.api.model.RoomListRequest
-import com.feissenger.data.api.model.RoomReadRequest
 import com.feissenger.data.api.model.*
 import com.feissenger.data.db.LocalCache
-import com.feissenger.data.db.model.ContactItem
-import com.feissenger.data.db.model.MessageItem
-import com.feissenger.data.db.model.RoomItem
+import com.feissenger.data.db.model.*
 import java.net.ConnectException
 
 /**
@@ -37,13 +33,11 @@ import java.net.ConnectException
  */
 class DataRepository private constructor(
     private val api: WebApi,
-    private val cache: LocalCache,
-    private val api_key: String = "c95332ee022df8c953ce470261efc695ecf3e784"
+    private val cache: LocalCache
 ) {
 
     companion object {
         const val TAG = "DataRepository"
-        private var access: String = ""
 
         @Volatile
         private var INSTANCE: DataRepository? = null
@@ -55,45 +49,6 @@ class DataRepository private constructor(
             }
     }
 
-    suspend fun insertMessages(messageItems: List<MessageItem>) {
-        cache.insertMessages(messageItems)
-    }
-
-    suspend fun insertMessage(messageItem: MessageItem) {
-        cache.insertMessage(messageItem)
-    }
-
-    suspend fun updateMessage(messageItem: MessageItem) {
-        cache.updateMessage(messageItem)
-    }
-
-    suspend fun deleteMessage(messageItem: MessageItem) {
-        cache.deleteMessage(messageItem)
-    }
-
-    fun getMessages(user: String, contact: String): LiveData<List<MessageItem>> = cache.getMessages(user, contact)
-
-    suspend fun sendMessage(onError: (error: String) -> Unit, contactMessageRequest: ContactMessageRequest) {
-        try {
-
-            val contactMessageResponse = api.contactMessage("Bearer 235357457bc9de273f1cdb3d4530f56b5d9aa4c9", contactMessageRequest)
-
-            if(contactMessageResponse.isSuccessful)
-                loadMessages(onError)
-
-            onError("Load images failed. Try again later please.")
-        } catch (ex: ConnectException) {
-            onError("Off-line. Check internet connection.")
-            ex.printStackTrace()
-            return
-        } catch (ex: Exception) {
-            onError("Oops...Change failed. Try again later please.")
-            ex.printStackTrace()
-            return
-        }
-    }
-
-
     suspend fun login(userName: String, password: String): LoginResponse? {
         val loginResponse = api.login(LoginRequest(userName, password))
 
@@ -103,20 +58,15 @@ class DataRepository private constructor(
                 access = loginResponse.body()?.access!!,
                 refresh = loginResponse.body()?.access!!
             )
-
         return null
     }
 
-    suspend fun loadMessages(onError: (error: String) -> Unit) {
+//    Messages
+    fun getMessages(user: String, contact: String): LiveData<List<MessageItem>> = cache.getMessages(user, contact)
+
+    suspend fun loadMessages(onError: (error: String) -> Unit, contactReadRequest: ContactReadRequest, access: String) {
         try {
-            val loginResponse = api.login(LoginRequest("andi@test.com","heslo123"))
-
-            var access: String = ""
-
-            if(loginResponse.isSuccessful)
-                access = loginResponse.body()?.access!!
-
-            val contactReadResponse = api.contactRead("Bearer $access", ContactReadRequest())
+            val contactReadResponse = api.getContactMessages(access, contactReadRequest)
 
             if(contactReadResponse.isSuccessful){
                 contactReadResponse.body()?.let {
@@ -135,15 +85,85 @@ class DataRepository private constructor(
             return
         }
     }
-    fun getRooms(): LiveData<List<RoomItem>> = cache.getRooms()
 
-    suspend fun getRoomList(onError: (error:String) -> Unit, access: String?, uid: String?){
+    suspend fun sendMessage(onError: (error: String) -> Unit, contactMessageRequest: ContactMessageRequest, contactReadRequest: ContactReadRequest, access: String) {
         try {
 
-            val response = api.getRooms("Bearer $access", RoomListRequest(uid,api_key))
-            if(response.isSuccessful){
-                response.body()?.let {
-                    return cache.insertRooms(it.map { item -> RoomItem(0,item.roomid, item.time) })
+            val contactMessageResponse = api.sendContactMessage(access, contactMessageRequest)
+
+            if(contactMessageResponse.isSuccessful)
+                loadMessages(onError, contactReadRequest, access)
+
+            onError("Load images failed. Try again later please.")
+        } catch (ex: ConnectException) {
+            onError("Off-line. Check internet connection.")
+            ex.printStackTrace()
+            return
+        } catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
+    }
+
+//    RoomMessages
+    fun getRoomMessages(roomId: String): LiveData<List<RoomMessageItem>> = cache.getRoomMessages(roomId)
+
+    suspend fun loadRoomMessages(onError: (error: String) -> Unit, roomReadRequest: RoomReadRequest, access: String) {
+        try {
+            val roomReadResponse = api.getRoomMessages(access, roomReadRequest)
+
+            if(roomReadResponse.isSuccessful){
+                roomReadResponse.body()?.let {
+                    return cache.insertRoomMessages(it.map { item -> RoomMessageItem(
+                        RoomMessageItemId(item.uid,item.roomid, item.time), item.message
+                    ) })
+                }
+            }
+
+            onError("Load images failed. Try again later please.")
+        } catch (ex: ConnectException) {
+            onError("Off-line. Check internet connection.")
+            ex.printStackTrace()
+            return
+        } catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
+    }
+
+    suspend fun sendRoomMessage(onError: (error: String) -> Unit, roomMessageRequest: RoomMessageRequest, roomReadRequest: RoomReadRequest, access: String) {
+        try {
+
+            val roomMessageResponse = api.sendRoomMessage(access, roomMessageRequest)
+
+            if(roomMessageResponse.isSuccessful)
+                loadRoomMessages(onError, roomReadRequest, access)
+
+            onError("Load images failed. Try again later please.")
+        } catch (ex: ConnectException) {
+            onError("Off-line. Check internet connection.")
+            ex.printStackTrace()
+            return
+        } catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
+    }
+
+//    Rooms
+
+    fun getRooms(user: String): LiveData<List<RoomItem>> = cache.getRooms(user)
+
+    suspend fun getRoomList(onError: (error:String) -> Unit, roomListRequest: RoomListRequest, access: String){
+        try {
+
+            val roomListResponse = api.getRooms(access, roomListRequest)
+            if(roomListResponse.isSuccessful){
+                roomListResponse.body()?.let {
+                    return cache.insertRooms(it.map { item -> RoomItem(RoomItemId(item.roomid,roomListRequest.uid),item.time) })
                 }
             }
         }catch (ex: ConnectException){
@@ -155,23 +175,17 @@ class DataRepository private constructor(
         }
     }
 
+//    Contacts
+    fun getContacts(user: String): LiveData<List<ContactItem>> = cache.getContacts(user)
 
-    fun getContacts(): LiveData<List<ContactItem>> = cache.getContacts()
-
-    suspend fun getContactList(onError: (error: String) -> Unit){
+    suspend fun getContactList(onError: (error: String) -> Unit, contactListRequest: ContactListRequest, access: String){
         try {
 
-            val loginResponse = api.login(LoginRequest("andi@test.com","heslo123"))
+            val contactListResponse = api.getContactList(access, contactListRequest)
 
-            var access: String = "";
-
-            if(loginResponse.isSuccessful)
-                access = loginResponse.body()?.access!!
-
-            val response = api.getContactList("Bearer $access", ContactListRequest("1",api_key))
-            if(response.isSuccessful){
-                response.body()?.let {
-                    return cache.insertContacts(it.map { item -> ContactItem(item.id,item.name) })
+            if(contactListResponse.isSuccessful){
+                contactListResponse.body()?.let {
+                    return cache.insertContacts(it.map { item -> ContactItem(ContactItemId(contactListRequest.uid, item.id),item.name) })
                 }
             }
         }catch (ex: ConnectException){
@@ -182,21 +196,5 @@ class DataRepository private constructor(
             return
         }
     }
-
-//    suspend fun getRoomMessages(onError: (error: String) -> Unit, roomid: String){
-//        try {
-//            val response = api.getRoomMessages(RoomReadRequest("2",roomid,api_key))
-//            if(response.isSuccessful)
-//                response.body()?.let{
-//                    return cache.getRoomMessages(it.map{item-> RoomMessage(0,item.message, item.roomid, item.uid, item.time)})
-//                }
-//        }catch (ex: ConnectException){
-//            onError("Off-line. Check internet connection.")
-//        }catch (ex: Exception) {
-//            onError("Oops...Change failed. Try again later please.")
-//            ex.printStackTrace()
-//            return
-//        }
-//    }
 
 }

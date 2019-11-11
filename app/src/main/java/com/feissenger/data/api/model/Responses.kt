@@ -1,11 +1,13 @@
 package com.feissenger.data.api.model
 
+//Login
 data class LoginResponse(
     val uid: String,
     val access: String,
     val refresh: String
 )
 
+//Messages
 data class ContactReadResponse(
     val uid: String,
     val contact: String,
@@ -13,18 +15,7 @@ data class ContactReadResponse(
     val time: String
 )
 
-data class MarsResponse(
-    val price: Long,
-    val id: String,
-    val type: String,
-    val img_src: String
-)
-
-data class RoomListResponse(
-    val roomid: String,
-    val time: String
-)
-
+//RoomMessages
 data class RoomReadResponse(
     val uid: String,
     val roomid: String,
@@ -32,10 +23,13 @@ data class RoomReadResponse(
     val time: String
 )
 
-data class ContactMessageResponse(
-    val message: String
+//Rooms
+data class RoomListResponse(
+    val roomid: String,
+    val time: String
 )
 
+//Contacts
 data class ContactListResponse(
     val name:String,
     val id: String

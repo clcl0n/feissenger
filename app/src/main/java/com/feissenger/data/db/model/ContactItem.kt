@@ -5,6 +5,12 @@ import androidx.room.*
 @Entity(tableName = "contacts")
 data class ContactItem(
     @PrimaryKey
-    val id: String,
+    @Embedded
+    val id: ContactItemId,
     val name: String
+)
+
+data class ContactItemId(
+    val uid: String,
+    val id: String
 )
