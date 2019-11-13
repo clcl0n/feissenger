@@ -64,13 +64,19 @@ class DataRepository private constructor(
 //    Messages
     fun getMessages(user: String, contact: String): LiveData<List<MessageItem>> = cache.getMessages(user, contact)
 
-    suspend fun loadMessages(onError: (error: String) -> Unit, contactReadRequest: ContactReadRequest, access: String) {
+    suspend fun loadMessages(onError: (error: String) -> Unit, contactReadRequest: ContactReadRequest, access: String, save: Boolean = true) {
         try {
             val contactReadResponse = api.getContactMessages(access, contactReadRequest)
 
             if(contactReadResponse.isSuccessful){
-                contactReadResponse.body()?.let {
-                    return cache.insertMessages(it.map { item -> MessageItem(MessageId(item.uid, item.time),item.contact, item.message) })
+                if(save){
+                    contactReadResponse.body()?.let {
+                        return cache.insertMessages(it.map { item -> MessageItem(MessageId(contactReadRequest.uid, item.uid, item.time),item.contact, item.message, item.message.startsWith("https://giphy.com/gifs/")) })
+                    }
+                }else{
+                    contactReadResponse.body()?.last().let {
+                        return cache.insertMessage(MessageItem(MessageId(contactReadRequest.uid, it!!.uid, it.time),it.contact, it.message, it.message.startsWith("https://giphy.com/gifs/")))
+                    }
                 }
             }
 

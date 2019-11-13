@@ -13,7 +13,10 @@ interface DbDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMessages(messageItems: List<MessageItem>)
 
-    @Query("SELECT * FROM messages WHERE (uid LIKE :uid AND contact LIKE :contact) OR (uid LIKE :contact AND contact LIKE :uid)")
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertMessage(messageItem: MessageItem)
+
+    @Query("SELECT * FROM messages WHERE uid LIKE :uid AND ((sender LIKE :uid AND recipient LIKE :contact) OR (sender LIKE :contact AND recipient LIKE :uid))")
     fun getMessages(uid: String, contact: String): LiveData<List<MessageItem>>
 
     //    Rooms

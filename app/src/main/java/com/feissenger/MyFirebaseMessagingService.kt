@@ -9,10 +9,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.fragment.app.Fragment
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.util.*
@@ -25,7 +23,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(applicationContext, MainActivity::class.java)
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random().nextInt(3000)
@@ -39,9 +37,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        val extras = message.from?.split("/")?.last()?.split("_")
+        intent.putExtra("typ", extras?.first())
+        intent.putExtra("value", message.data["value"])
+
         val pendingIntent = PendingIntent.getActivity(
             this, 0, intent,
-            PendingIntent.FLAG_ONE_SHOT
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val largeIcon = BitmapFactory.decodeResource(
@@ -51,12 +54,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 
 
+
         val notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
             .setSmallIcon(R.drawable.notification)
             .setLargeIcon(largeIcon)
-            .setContentTitle(message.data.get("title"))
-            .setContentText(message.data.get("message"))
+            .setContentTitle(message.data["title"])
+            .setContentText(message.data["message"])
             .setAutoCancel(true)
             .setSound(notificationSoundUri)
             .setContentIntent(pendingIntent)
@@ -66,6 +70,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationBuilder.color = resources.getColor(R.color.blue)
         }
         notificationManager.notify(notificationID, notificationBuilder.build())
+
 //        Log.i("tag",message.from)
 ////        Log.i("tag",message.notification?.body)
 //        Log.i("tag",message.data.values.toString())

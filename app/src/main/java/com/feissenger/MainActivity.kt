@@ -1,5 +1,6 @@
 package com.feissenger
 
+import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.Navigation
@@ -10,30 +11,51 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import android.content.Context
-import androidx.lifecycle.ViewModelProviders
+import android.content.pm.PackageManager
+import android.content.Intent
 import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.feissenger.data.api.model.LoginResponse
-import com.feissenger.ui.viewModels.SharedViewModel
+import com.feissenger.ui.ViewPagerFragmentDirections
 import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 
-
-
-
 class MainActivity : AppCompatActivity() {
 
-    private val DARK = "dark"
-    private val LIGHT = "light"
     private var selected = "light"
-
-    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+// Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),1)
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+
         setTheme(getSavedTheme())
         setContentView(R.layout.activity_main)
         NavigationUI.setupWithNavController(
@@ -45,65 +67,24 @@ class MainActivity : AppCompatActivity() {
         val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
         val navGraph = navController?.navInflater?.inflate(R.navigation.nav_graph)
 
-        sharedViewModel = run {
-            ViewModelProviders.of(this)[SharedViewModel::class.java]
-        }
-
         if (!getPreferences(Context.MODE_PRIVATE)?.getString("access", "").equals("")) {
             navGraph?.startDestination = R.id.viewPagerFragment
-
-            with(getPreferences(Context.MODE_PRIVATE)){
-                getString("uid","")?.let {
-                    getString("access","")?.let { it1 ->
-                        getString("refresh","")?.let { it2 ->
-                            LoginResponse(it, it1, it2)
-                        }
-                    }
-                }?.let { sharedViewModel.setUser(it) }
-            }
         } else {
             navGraph?.startDestination = R.id.login_fragment
         }
 
         navController?.graph = navGraph!!
 
-        sharedViewModel.user.observeForever{
-            val id: Int
-            val sharedPref = getPreferences(Context.MODE_PRIVATE)
-
-            if(it != null){
-                id = R.id.viewPagerFragment
-                with (sharedPref.edit()) {
-                    putString("access", it.access)
-                    putString("refresh", it.refresh)
-                    putString("uid", it.uid)
-                    apply()
-                }
-            }else {
-                id = R.id.login_fragment
-                with (sharedPref.edit()) {
-                    putString("access", "")
-                    putString("refresh", "")
-                    putString("uid", "")
-                    apply()
-                }
-            }
-
-            navGraph.startDestination = id
-            navController.graph = navGraph
-            navController.navigate(id)
-        }
-
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         val image = findViewById<ImageView>(R.id.theme_icon)
-        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", LIGHT)) {
-            LIGHT -> {
+        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", "")) {
+            "light" -> {
                 image.setImageResource(R.drawable.sun)
                 selected = "light"
             }
-            DARK -> {
+            "dark" -> {
                 image.setImageResource(R.drawable.moon)
                 selected = "dark"
             }
@@ -113,21 +94,24 @@ class MainActivity : AppCompatActivity() {
             if(selected == "light"){
                 selected = "dark"
                 image.setImageResource(R.drawable.moon)
-                saveTheme(DARK)
+                saveStringToPref("theme", selected)
+                saveStringToPref("newTheme","true")
             }
             else{
                 selected = "light"
                 image.setImageResource(R.drawable.sun)
-                saveTheme(LIGHT)
+                saveStringToPref("theme", selected)
+                saveStringToPref("newTheme","true")
             }
+            recreate()
         }
 
-        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", LIGHT)) {
-            LIGHT -> {
+        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", "")) {
+            "light" -> {
                 image.setImageResource(R.drawable.sun)
                 selected = "light"
             }
-            DARK -> {
+            "dark" -> {
                 image.setImageResource(R.drawable.moon)
                 selected = "dark"
             }
@@ -157,27 +141,43 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel("simplified_coding", "Simplified Coding", NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = "Android Push Notification Tutorial"
-            val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel)
+            getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
         }
+
+        if(getPreferences(Activity.MODE_PRIVATE).getString("newTheme","") == "true"){
+            Log.i("saved-fragment",getPreferences(Activity.MODE_PRIVATE).getString("fragment",""))
+        }else{
+            Log.i("theme","false")
+        }
+
+        onNewIntent(getIntent());
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp()
     }
 
-    private fun saveTheme(value: String) {
+    private fun saveStringToPref(key: String, value: String) {
         val editor = getPreferences(Activity.MODE_PRIVATE).edit()
-        editor.putString("theme", value)
+        editor.putString(key, value)
         editor.apply()
-        recreate()
     }
 
     private fun getSavedTheme(): Int {
-        return when (getPreferences(Activity.MODE_PRIVATE).getString("theme", LIGHT)) {
-            DARK -> R.style.AppThemeDark
-            LIGHT -> R.style.AppThemeLight
+        return when (getPreferences(Activity.MODE_PRIVATE).getString("theme", "")) {
+            "dark" -> R.style.AppThemeDark
+            "light" -> R.style.AppThemeLight
             else -> R.style.AppThemeLight
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val extras = intent?.extras
+        val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+        if(extras?.get("typ").toString() == "msg"){
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(extras?.get("value").toString())
+            navController?.navigate(action)
         }
     }
 }

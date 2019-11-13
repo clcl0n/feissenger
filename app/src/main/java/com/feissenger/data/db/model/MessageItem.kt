@@ -7,11 +7,13 @@ data class MessageItem(
     @PrimaryKey
     @Embedded
     val id: MessageId,
-    val contact: String,
-    val message: String
+    val recipient: String,
+    val message: String,
+    val gif: Boolean
 )
 
 data class MessageId(
     val uid: String,
+    val sender: String,
     val time: String
 )

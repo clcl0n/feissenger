@@ -24,19 +24,31 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
     fun sendMessage() {
         input.value?.let { it ->
-            val str = it
             viewModelScope.launch {
 
                 repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, it),
                     ContactReadRequest(uid, contact), access)
 
                 repository.notifyMessage(notifyMessage = NotificationRequest(
-                    "/topics/$contact",
-                    NotificationBody(uid, str)
+                    "/topics/msg_$contact",
+                    NotificationBody(uid, it)
                 ), onError = { error.postValue(it) })
             }
         }
         input.postValue("")
+    }
+
+    fun sendGif(gif : String) {
+        viewModelScope.launch {
+
+            repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, gif),
+                ContactReadRequest(uid, contact), access)
+
+            repository.notifyMessage(notifyMessage = NotificationRequest(
+                "/topics/$contact",
+                NotificationBody(uid, gif)
+            ), onError = { error.postValue(it) })
+        }
     }
 
     fun loadMessages() {

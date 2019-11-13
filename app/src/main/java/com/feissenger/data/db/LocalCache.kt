@@ -13,7 +13,11 @@ class LocalCache(private val dao: DbDao) {
         dao.insertMessages(messageItems)
     }
 
-    fun getMessages(user: String, contact: String) = dao.getMessages(user, contact)
+    suspend fun insertMessage(messageItem: MessageItem) {
+        dao.insertMessage(messageItem)
+    }
+
+    fun getMessages(user: String, contact : String) = dao.getMessages(user, contact)
 
     //Rooms
 
