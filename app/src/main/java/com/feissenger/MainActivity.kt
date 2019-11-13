@@ -150,6 +150,7 @@ class MainActivity : AppCompatActivity() {
             Log.i("theme","false")
         }
 
+
         onNewIntent(getIntent());
     }
 
@@ -178,6 +179,8 @@ class MainActivity : AppCompatActivity() {
         if(extras?.get("typ").toString() == "msg"){
             val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(extras?.get("value").toString())
             navController?.navigate(action)
+        }else{
+            return
         }
     }
 }
