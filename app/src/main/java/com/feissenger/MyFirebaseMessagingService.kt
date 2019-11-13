@@ -12,6 +12,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.util.*
@@ -45,12 +46,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val largeIcon = BitmapFactory.decodeResource(
             resources,
-            R.drawable.gph_logo_color_icon
+            R.drawable.notification
         )
 
         val notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-            .setSmallIcon(R.drawable.gph_logo_color_icon)
+            .setSmallIcon(R.drawable.notification)
             .setLargeIcon(largeIcon)
             .setContentTitle(message.data.get("title"))
             .setContentText(message.data.get("message"))
@@ -63,6 +64,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationBuilder.color = resources.getColor(R.color.blue)
         }
         notificationManager.notify(notificationID, notificationBuilder.build())
+
 //        Log.i("tag",message.from)
 ////        Log.i("tag",message.notification?.body)
 //        Log.i("tag",message.data.values.toString())

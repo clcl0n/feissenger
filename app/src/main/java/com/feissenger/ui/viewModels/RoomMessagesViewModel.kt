@@ -14,6 +14,7 @@ class RoomMessagesViewModel(private val repository: DataRepository) : ViewModel(
     var roomid: String = ""
     var uid : String = ""
     var access : String = ""
+
     val roomMessage: MutableLiveData<String> = MutableLiveData()
 
     val messages: LiveData<List<RoomMessageItem>>
@@ -22,7 +23,7 @@ class RoomMessagesViewModel(private val repository: DataRepository) : ViewModel(
     val input: MutableLiveData<String> = MutableLiveData()
 
     fun sendRoomMessage() {
-        input.value?.let { it ->
+        input.value?.let {
             viewModelScope.launch {
                 repository.sendRoomMessage({error.postValue(it)}, RoomMessageRequest(uid, roomid,
                     roomMessage.value!!

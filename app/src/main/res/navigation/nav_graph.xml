@@ -17,7 +17,9 @@
     <fragment
         android:id="@+id/messagesFragment"
         android:name="com.feissenger.ui.MessagesFragment"
-        android:label="MessagesFragment" />
+        android:label="MessagesFragment" >
+        <argument android:name="contactId" />
+    </fragment>
 
     <fragment
         android:id="@+id/login_fragment"
@@ -41,7 +43,9 @@
     <fragment
         android:id="@+id/roomMessagesFragment"
         android:name="com.feissenger.ui.RoomMessagesFragment"
-        android:label="RoomMessagesFragment" />
+        android:label="RoomMessagesFragment" >
+        <argument android:name="roomId" />
+    </fragment>
 
 
 </navigation>

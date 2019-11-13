@@ -1,6 +1,8 @@
 package com.feissenger.ui
 
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
@@ -17,17 +20,19 @@ import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentRoomMessageBinding
 import com.feissenger.ui.adapter.RoomMessagesAdapter
 import com.feissenger.ui.viewModels.RoomMessagesViewModel
-import com.feissenger.ui.viewModels.SharedViewModel
 
 class RoomMessagesFragment : Fragment() {
     private lateinit var viewModel: RoomMessagesViewModel
-    private lateinit var sharedViewModel: SharedViewModel
     private lateinit var binding: FragmentRoomMessageBinding
+    private lateinit var sharedPref: SharedPreferences
+
+    val arg: RoomMessagesFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)!!
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_room_message, container, false
@@ -36,16 +41,12 @@ class RoomMessagesFragment : Fragment() {
         viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(RoomMessagesViewModel::class.java)
 
-//        sharedViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
-//            .get(SharedViewModel::class.java)
+        with(sharedPref) {
+            viewModel.uid = this.getString("uid", "").toString()
+            viewModel.access = this.getString("access", "").toString()
+        }
 
-        sharedViewModel = activity?.run {
-            ViewModelProviders.of(this)[SharedViewModel::class.java]
-        } ?: throw Exception("Invalid Activity")
-
-        viewModel.uid = sharedViewModel.user.value!!.uid
-        viewModel.access = sharedViewModel.user.value!!.access
-        viewModel.roomid = sharedViewModel.roomid.value!!
+        viewModel.roomid = arg.roomId
 
         binding.model = viewModel
 
@@ -73,5 +74,12 @@ class RoomMessagesFragment : Fragment() {
 //        viewModel.setContact(sharedViewModel.contactId.value!!)
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        sharedPref.edit().putString("fragment","roomMessages").apply()
+        sharedPref.edit().putString("roomId",arg.roomId).apply()
     }
 }

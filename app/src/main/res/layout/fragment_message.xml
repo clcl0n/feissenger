@@ -54,17 +54,6 @@
                 app:layout_constraintStart_toStartOf="@id/guideline_start"
                 app:layout_constraintTop_toTopOf="@id/message_input" />
 
-            <!--            <Button-->
-<!--                android:contactId="@+contactId/send_btn"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:onClick="@{() -> model.insertMessage()}"-->
-<!--                android:text="@string/send"-->
-<!--                app:layout_constraintBottom_toBottomOf="@contactId/message_input"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toEndOf="@contactId/guideline_end"-->
-<!--                app:layout_constraintTop_toTopOf="@contactId/message_input" />-->
-
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

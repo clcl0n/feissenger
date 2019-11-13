@@ -14,6 +14,16 @@
         android:layout_weight="3"
         android:layout_width="0dp"
         android:orientation="vertical">
+        <com.giphy.sdk.ui.views.GPHMediaView
+            android:background="@drawable/rounded_border_recipient"
+            android:id="@+id/message_gif"
+            android:layout_gravity="start"
+            android:layout_margin="5dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black" />
         <TextView
             android:background="@drawable/rounded_border_recipient"
             android:id="@+id/message_bubble"

@@ -2,9 +2,7 @@ package com.feissenger.ui
 
 
 import android.content.Context
-import android.content.IntentFilter
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +13,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,14 +22,12 @@ import com.feissenger.databinding.FragmentRoomBinding
 import com.feissenger.ui.adapter.RoomsAdapter
 import com.feissenger.ui.viewModels.RoomsViewModel
 import com.feissenger.data.util.Injection
-import com.feissenger.ui.viewModels.SharedViewModel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 
 class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListener {
 
     private lateinit var viewModel: RoomsViewModel
-    private lateinit var sharedViewModel: SharedViewModel
     private lateinit var binding: FragmentRoomBinding
     private lateinit var wifiManager: WifiManager
     private lateinit var toast: Toast
@@ -53,24 +48,21 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(RoomsViewModel::class.java)
 
-
-        sharedViewModel = activity?.run {
-            ViewModelProviders.of(this)[SharedViewModel::class.java]
-        } ?: throw Exception("Invalid Activity")
-
-        viewModel.uid = sharedViewModel.user.value!!.uid
-        viewModel.access = sharedViewModel.user.value!!.access
+        with(sharedPref) {
+            viewModel.uid = this.getString("uid", "").toString()
+            viewModel.access = this.getString("access", "").toString()
+        }
 
         binding.model = viewModel
 
         binding.messagesList.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        activity?.registerReceiver(ConnectivityReceiver(),
-            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        )
+//        activity?.registerReceiver(ConnectivityReceiver(),
+//            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+//        )
 
-        val adapter = RoomsAdapter(sharedViewModel)
+        val adapter = RoomsAdapter()
         binding.messagesList.adapter = adapter
 
         viewModel.rooms.observe(this) {
@@ -83,17 +75,16 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
     }
 
     private fun showMessage(isConnected: Boolean) {
-        if (isConnected){
-            if(wifiManager.connectionInfo.hiddenSSID)
+        if (isConnected) {
+            if (wifiManager.connectionInfo.hiddenSSID)
                 viewModel.setActiveRoom(wifiManager.connectionInfo.bssid)
             else
                 viewModel.setActiveRoom(wifiManager.connectionInfo.ssid)
 
-            toast = Toast.makeText(context,wifiManager.connectionInfo.ssid,Toast.LENGTH_SHORT)
-            toast.show()
-        }
-        else{
-            toast = Toast.makeText(context,"Data or No connection",Toast.LENGTH_SHORT)
+//            toast = Toast.makeText(context,wifiManager.connectionInfo.ssid,Toast.LENGTH_SHORT)
+//            toast.show()
+        } else {
+            toast = Toast.makeText(context, "Data or No connection", Toast.LENGTH_SHORT)
             toast.show()
         }
     }
@@ -114,17 +105,17 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        sharedPref.edit().putString("fragment","rooms").apply()
+
         FirebaseApp.initializeApp(context!!)
-        val uid = sharedPref.getString("uid","")
+        val uid = sharedPref.getString("uid", "")
         FirebaseMessaging.getInstance().subscribeToTopic("/topics/$uid")
             .addOnCompleteListener { task ->
-                var msg = getString(R.string.msg_subscribed)
                 if (!task.isSuccessful) {
-                    msg = getString(R.string.msg_subscribe_failed)
+                    Log.i("tag", "/topics/$uid")
+                    toast = Toast.makeText(context, "/topics/$uid", Toast.LENGTH_SHORT)
+                    toast.show()
                 }
-                Log.i("tag", "/topics/$uid")
-                toast = Toast.makeText(context, "/topics/$uid", Toast.LENGTH_SHORT)
-                toast.show()
             }
     }
 }

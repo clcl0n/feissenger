@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 //apply plugin: 'androidx.navigation.safeargs'
 
 android {
@@ -92,6 +93,8 @@ dependencies {
     //viewPager
     implementation 'com.android.support:design:29.0.2'
 
+//    picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
 
 configurations.all {

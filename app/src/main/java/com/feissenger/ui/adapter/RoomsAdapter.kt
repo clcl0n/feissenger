@@ -8,11 +8,11 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
 import com.feissenger.data.db.model.RoomItem
-import com.feissenger.ui.viewModels.SharedViewModel
+import com.feissenger.ui.ViewPagerFragmentDirections
 import kotlinx.android.synthetic.main.room_item.view.*
 
 
-class RoomsAdapter(private val sharedViewModel: SharedViewModel) : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
+class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
 
     var data = listOf<RoomItem>()
         set(value) {
@@ -24,7 +24,7 @@ class RoomsAdapter(private val sharedViewModel: SharedViewModel) : RecyclerView.
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        holder.bind(item, sharedViewModel)
+        holder.bind(item)
     }
 
 
@@ -36,14 +36,13 @@ class RoomsAdapter(private val sharedViewModel: SharedViewModel) : RecyclerView.
 
 
         fun bind(
-            item: RoomItem,
-            sharedViewModel: SharedViewModel
+            item: RoomItem
         ) {
             (itemView.ssid as TextView).text = item.id.ssid
 
             itemView.setOnClickListener {
-                sharedViewModel.setRoomId(item.id.ssid)
-                it.findNavController().navigate(R.id.action_viewPagerFragment_to_roomMessagesFragment)
+                val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(item.id.ssid)
+                it.findNavController().navigate(action)
             }
         }
 
