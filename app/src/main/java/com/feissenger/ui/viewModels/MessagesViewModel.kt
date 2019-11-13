@@ -30,7 +30,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
                     ContactReadRequest(uid, contact), access)
 
                 repository.notifyMessage(notifyMessage = NotificationRequest(
-                    "/topics/$contact",
+                    "/topics/msg_$contact",
                     NotificationBody(uid, it)
                 ), onError = { error.postValue(it) })
             }

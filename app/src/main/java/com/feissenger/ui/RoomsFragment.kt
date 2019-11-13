@@ -108,8 +108,9 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         sharedPref.edit().putString("fragment","rooms").apply()
 
         FirebaseApp.initializeApp(context!!)
-        val uid = sharedPref.getString("uid", "")
-        FirebaseMessaging.getInstance().subscribeToTopic("/topics/$uid")
+        val uid = sharedPref.getString("uid","")
+        FirebaseMessaging.getInstance().subscribeToTopic("/topics/jany")
+        FirebaseMessaging.getInstance().subscribeToTopic("/topics/msg_$uid")
             .addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
                     Log.i("tag", "/topics/$uid")

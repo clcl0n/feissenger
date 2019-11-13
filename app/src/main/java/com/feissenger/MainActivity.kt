@@ -12,7 +12,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import android.content.Context
 import android.content.pm.PackageManager
-import androidx.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -167,6 +167,9 @@ class MainActivity : AppCompatActivity() {
         }else{
             Log.i("theme","false")
         }
+
+
+        onNewIntent(getIntent());
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -184,6 +187,18 @@ class MainActivity : AppCompatActivity() {
             "dark" -> R.style.AppThemeDark
             "light" -> R.style.AppThemeLight
             else -> R.style.AppThemeLight
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val extras = intent?.extras
+        val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+        if(extras?.get("typ").toString() == "msg"){
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(extras?.get("value").toString())
+            navController?.navigate(action)
+        }else{
+            return
         }
     }
 }

@@ -12,7 +12,7 @@ import com.feissenger.ui.ViewPagerFragmentDirections
 import kotlinx.android.synthetic.main.contact_item.view.*
 
 
-class ContactListAdapter() : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
+class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
 
     var data = listOf<ContactItem>()
         set(value) {
