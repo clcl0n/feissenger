@@ -118,13 +118,11 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         val uid = sharedPref.getString("uid","")
         FirebaseMessaging.getInstance().subscribeToTopic("/topics/$uid")
             .addOnCompleteListener { task ->
-                var msg = getString(R.string.msg_subscribed)
                 if (!task.isSuccessful) {
-                    msg = getString(R.string.msg_subscribe_failed)
+                    Log.i("tag", "/topics/$uid")
+                    toast = Toast.makeText(context, "/topics/$uid", Toast.LENGTH_SHORT)
+                    toast.show()
                 }
-                Log.i("tag", "/topics/$uid")
-                toast = Toast.makeText(context, "/topics/$uid", Toast.LENGTH_SHORT)
-                toast.show()
             }
     }
 }
