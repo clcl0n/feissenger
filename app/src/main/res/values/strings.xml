@@ -3,4 +3,6 @@
     <string name="send">SEND</string>
     <string name="public_room">Public Room</string>
     <string name="msg_token_fmt">Token %s</string>
+    <string name="msg_subscribed">Subscribed to topic</string>
+    <string name="msg_subscribe_failed">Subscription failed</string>
 </resources>

@@ -1,5 +1,9 @@
 package com.feissenger.data.api.model
 
+data class NotificationResponse(
+    val messageId:String
+)
+
 //Login
 data class LoginResponse(
     val uid: String,

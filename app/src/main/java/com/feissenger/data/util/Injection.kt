@@ -19,6 +19,7 @@ package com.feissenger.data.util
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.feissenger.data.DataRepository
+import com.feissenger.data.api.FCMApi
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.db.AppRoomDatabase
 import com.feissenger.data.db.LocalCache
@@ -36,7 +37,7 @@ object Injection {
     }
 
     fun provideDataRepository(context: Context): DataRepository {
-        return DataRepository.getInstance(WebApi.create(context), provideCache(context))
+        return DataRepository.getInstance(FCMApi.create(context),WebApi.create(context), provideCache(context))
     }
 
     fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {

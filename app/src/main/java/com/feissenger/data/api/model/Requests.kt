@@ -1,5 +1,15 @@
 package com.feissenger.data.api.model
 
+data class NotificationRequest(
+    val to: String,
+    val data: NotificationBody
+)
+
+data class NotificationBody(
+    val title:String,
+    val message: String
+)
+
 //Login
 data class LoginRequest (
     val name: String,

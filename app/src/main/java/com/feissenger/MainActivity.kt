@@ -1,15 +1,17 @@
 package com.feissenger
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.Navigation
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import android.content.Context
 import androidx.lifecycle.ViewModelProviders
+import android.os.Build
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.feissenger.data.api.model.LoginResponse
@@ -18,6 +20,8 @@ import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -136,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    Log.w("tag", "getInstanceId failed", task.exception)
+                    Log.i("tag", "getInstanceId failed", task.exception)
                     return@OnCompleteListener
                 }
 
@@ -145,9 +149,17 @@ class MainActivity : AppCompatActivity() {
 
                 // Log and toast
                 val msg = getString(R.string.msg_token_fmt, token)
-                Log.d("tag", msg)
+                Log.i("tag", msg)
                 Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
             })
+
+        //creating notification channel if android version is greater than or equals to oreo
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel("simplified_coding", "Simplified Coding", NotificationManager.IMPORTANCE_DEFAULT)
+            channel.description = "Android Push Notification Tutorial"
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

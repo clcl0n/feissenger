@@ -16,10 +16,10 @@
 
 package com.feissenger.data
 
-import android.content.Context
+
 import androidx.lifecycle.LiveData
-import androidx.navigation.fragment.findNavController
-import com.feissenger.R
+import android.util.Log
+import com.feissenger.data.api.FCMApi
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.ContactMessageRequest
 import com.feissenger.data.api.model.ContactReadRequest
@@ -35,6 +35,7 @@ import java.net.ConnectException
  * Repository class that works with local and remote data sources.
  */
 class DataRepository private constructor(
+    private val fcm: FCMApi,
     private val api: WebApi,
     private val cache: LocalCache
 ) {
@@ -45,10 +46,10 @@ class DataRepository private constructor(
         @Volatile
         private var INSTANCE: DataRepository? = null
 
-        fun getInstance(api: WebApi, cache: LocalCache): DataRepository =
+        fun getInstance(fcm:FCMApi, api: WebApi, cache: LocalCache): DataRepository =
             INSTANCE ?: synchronized(this) {
                 INSTANCE
-                    ?: DataRepository(api, cache).also { INSTANCE = it }
+                    ?: DataRepository(fcm, api, cache).also { INSTANCE = it }
             }
     }
 
@@ -194,5 +195,38 @@ class DataRepository private constructor(
             return
         }
     }
+
+    suspend fun notifyMessage(onError: (error: String) -> Unit, notifyMessage: NotificationRequest){
+        try {
+            val response = fcm.sendNotification(notifyMessage)
+            if(response.isSuccessful)
+                response.body()?.let{
+                    Log.i("tag",it.toString())
+//                    return cache.getRoomMessages(it.map{item-> RoomMessage(0,item.message, item.roomid, item.uid, item.time)})
+                }
+        }catch (ex: ConnectException){
+            onError("Off-line. Check internet connection.")
+        }catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
+    }
+
+//    suspend fun getRoomMessages(onError: (error: String) -> Unit, roomid: String){
+//        try {
+//            val response = api.getRoomMessages(RoomReadRequest("2",roomid,api_key))
+//            if(response.isSuccessful)
+//                response.body()?.let{
+//                    return cache.getRoomMessages(it.map{item-> RoomMessage(0,item.message, item.roomid, item.uid, item.time)})
+//                }
+//        }catch (ex: ConnectException){
+//            onError("Off-line. Check internet connection.")
+//        }catch (ex: Exception) {
+//            onError("Oops...Change failed. Try again later please.")
+//            ex.printStackTrace()
+//            return
+//        }
+//    }
 
 }

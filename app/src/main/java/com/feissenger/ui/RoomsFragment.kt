@@ -3,9 +3,11 @@ package com.feissenger.ui
 
 import android.content.Context
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +26,8 @@ import com.feissenger.ui.adapter.RoomsAdapter
 import com.feissenger.ui.viewModels.RoomsViewModel
 import com.feissenger.data.util.Injection
 import com.feissenger.ui.viewModels.SharedViewModel
-
+import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
 
 class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -33,12 +36,13 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
     private lateinit var binding: FragmentRoomBinding
     private lateinit var wifiManager: WifiManager
     private lateinit var toast: Toast
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val sharedRef = activity?.getPreferences(Context.MODE_PRIVATE)
+        sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)!!
         wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         // Inflate the layout for this fragment
@@ -48,6 +52,7 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         binding.lifecycleOwner = this
         viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(RoomsViewModel::class.java)
+
 
         sharedViewModel = activity?.run {
             ViewModelProviders.of(this)[SharedViewModel::class.java]
@@ -106,4 +111,20 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         showMessage(isConnected)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        FirebaseApp.initializeApp(context!!)
+        val uid = sharedPref.getString("uid","")
+        FirebaseMessaging.getInstance().subscribeToTopic("/topics/$uid")
+            .addOnCompleteListener { task ->
+                var msg = getString(R.string.msg_subscribed)
+                if (!task.isSuccessful) {
+                    msg = getString(R.string.msg_subscribe_failed)
+                }
+                Log.i("tag", "/topics/$uid")
+                toast = Toast.makeText(context, "/topics/$uid", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+    }
 }
