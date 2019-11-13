@@ -16,8 +16,10 @@ import androidx.lifecycle.ViewModelProviders
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.feissenger.ui.ViewPagerFragmentDirections
 import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
@@ -92,15 +94,13 @@ class MainActivity : AppCompatActivity() {
             if(selected == "light"){
                 selected = "dark"
                 image.setImageResource(R.drawable.moon)
-                saveStringToPref("theme", selected)
-                saveStringToPref("newTheme","true")
             }
             else{
                 selected = "light"
                 image.setImageResource(R.drawable.sun)
-                saveStringToPref("theme", selected)
-                saveStringToPref("newTheme","true")
             }
+            saveStringToPref("theme", selected)
+            saveStringToPref("newTheme","true")
             recreate()
         }
 
@@ -143,7 +143,27 @@ class MainActivity : AppCompatActivity() {
         }
 
         if(getPreferences(Activity.MODE_PRIVATE).getString("newTheme","") == "true"){
-            Log.i("saved-fragment",getPreferences(Activity.MODE_PRIVATE).getString("fragment",""))
+            getPreferences(Activity.MODE_PRIVATE).edit().putString("newTheme","false").apply()
+
+            when(getPreferences(Activity.MODE_PRIVATE).getString("fragment","")){
+                "messages"->{
+                    val action = getPreferences(Activity.MODE_PRIVATE).getString("contactId","")?.let {
+                        ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(
+                            it
+                        )
+                    }
+                    action?.let { navController.navigate(it) }
+                }
+                "roomMessages"->{
+                    val action = getPreferences(Activity.MODE_PRIVATE).getString("roomId","")?.let {
+                        ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
+                            it
+                        )
+                    }
+                    action?.let { navController.navigate(it) }
+                }
+            }
+
         }else{
             Log.i("theme","false")
         }
