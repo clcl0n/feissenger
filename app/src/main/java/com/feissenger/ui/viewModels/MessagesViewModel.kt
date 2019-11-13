@@ -31,7 +31,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
                 repository.notifyMessage(notifyMessage = NotificationRequest(
                     "/topics/msg_$contact",
-                    NotificationBody(uid, it)
+                    NotificationBody(uid, it, uid)
                 ), onError = { error.postValue(it) })
             }
         }
@@ -45,8 +45,8 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
                 ContactReadRequest(uid, contact), access)
 
             repository.notifyMessage(notifyMessage = NotificationRequest(
-                "/topics/$contact",
-                NotificationBody(uid, gif)
+                "/topics/msg_$contact",
+                NotificationBody(uid, gif, uid)
             ), onError = { error.postValue(it) })
         }
     }

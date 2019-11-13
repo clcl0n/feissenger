@@ -7,7 +7,8 @@ data class NotificationRequest(
 
 data class NotificationBody(
     val title:String,
-    val message: String
+    val message: String,
+    val value: String
 )
 
 //Login
