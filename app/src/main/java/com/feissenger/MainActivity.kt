@@ -9,14 +9,26 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import android.content.Context
+import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.navigateUp
+import com.feissenger.ui.LoginFragment
 import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.android.synthetic.main.fragment_login.view.*
+import android.content.SharedPreferences
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -73,6 +85,15 @@ class MainActivity : AppCompatActivity() {
                 image.setImageResource(R.drawable.sun)
                 saveTheme(LIGHT)
             }
+        }
+
+        logout_icon.setOnClickListener {
+            val preferences = getPreferences(Context.MODE_PRIVATE)
+            preferences.edit().clear()
+            navGraph.startDestination = R.id.login_fragment
+            val loginNavController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+            loginNavController?.graph = navGraph
+            loginNavController?.navigate(R.id.login_fragment)
         }
 
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")

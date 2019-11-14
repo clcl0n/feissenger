@@ -7,7 +7,11 @@
     <fragment
         android:id="@+id/room_fragment"
         android:name="com.feissenger.ui.RoomsFragment"
-        android:label="RoomFragment" />
+        android:label="RoomFragment" >
+        <action
+            android:id="@+id/action_room_fragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/contact_list_fragment"
