@@ -15,7 +15,6 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
     var uid: String = ""
     var contact: String = ""
-    var access: String = ""
 
     val messages: LiveData<List<MessageItem>>
         get() = repository.getMessages(uid, contact)
@@ -27,7 +26,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
             viewModelScope.launch {
 
                 repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, it),
-                    ContactReadRequest(uid, contact), access)
+                    ContactReadRequest(uid, contact))
 
                 repository.notifyMessage(notifyMessage = NotificationRequest(
                     "/topics/msg_$contact",
@@ -42,7 +41,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
         viewModelScope.launch {
 
             repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, gif),
-                ContactReadRequest(uid, contact), access)
+                ContactReadRequest(uid, contact))
 
             repository.notifyMessage(notifyMessage = NotificationRequest(
                 "/topics/$contact",
@@ -53,7 +52,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
     fun loadMessages() {
         viewModelScope.launch {
-            repository.loadMessages({error.postValue(it)},ContactReadRequest(uid, contact),access)
+            repository.loadMessages({error.postValue(it)},ContactReadRequest(uid, contact))
         }
     }
 }

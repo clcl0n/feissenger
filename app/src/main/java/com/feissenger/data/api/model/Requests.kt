@@ -17,6 +17,13 @@ data class LoginRequest (
     val api_key: String = "c95332ee022df8c953ce470261efc695ecf3e784"
 )
 
+//Refresh
+data class RefreshRequest (
+    val uid: String,
+    val refresh: String,
+    val api_key: String = "c95332ee022df8c953ce470261efc695ecf3e784"
+)
+
 //Messages
 data class ContactMessageRequest(
     val uid: String,

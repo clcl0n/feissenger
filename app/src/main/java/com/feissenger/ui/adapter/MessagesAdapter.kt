@@ -10,6 +10,7 @@ import com.feissenger.data.db.model.MessageItem
 import com.feissenger.R
 import kotlinx.android.synthetic.main.message_item.view.*
 import android.widget.LinearLayout
+import com.giphy.sdk.ui.views.GPHMediaView
 
 class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
 
@@ -17,6 +18,7 @@ class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
         set(value) {
             field = value
             notifyDataSetChanged()
+            notifyItemInserted(itemCount)
         }
 
     override fun getItemCount() = data.size
@@ -35,13 +37,13 @@ class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
 
             if(item.gif){
                 itemView.message_bubble.visibility = View.GONE
-                itemView.message_gif.visibility = View.VISIBLE
+                itemView.obal_gif.visibility = View.VISIBLE
 
                 itemView.message_gif.setMediaWithId(item.message.split("-").last())
 
                 (itemView.message_time as TextView).text = item.id.time
 
-                itemView.message_bubble.setOnClickListener {
+                itemView.message_gif.setOnClickListener {
                     val currentVisibility = itemView.message_time.visibility
                     if(currentVisibility == View.GONE)
                         itemView.message_time.visibility = View.VISIBLE
@@ -50,22 +52,22 @@ class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
                 }
 
                 if(item.id.uid == item.id.sender){
-                    itemView.message_gif.setBackgroundResource(R.drawable.rounded_border_sender)
-                    (itemView.message_gif.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
+                    itemView.obal_gif.setBackgroundResource(R.drawable.rounded_border_sender)
+                    (itemView.obal_gif.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
                     (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
                     itemView.view_left.visibility = View.VISIBLE
                     itemView.view_right.visibility = View.GONE
                 }
                 else{
-                    itemView.message_gif.setBackgroundResource(R.drawable.rounded_border_recipient)
-                    (itemView.message_gif.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
+                    itemView.obal_gif.setBackgroundResource(R.drawable.rounded_border_recipient)
+                    (itemView.obal_gif.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
                     (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
                     itemView.view_left.visibility = View.GONE
                     itemView.view_right.visibility = View.VISIBLE
                 }
             }else{
                 itemView.message_bubble.visibility = View.VISIBLE
-                itemView.message_gif.visibility = View.GONE
+                itemView.obal_gif.visibility = View.GONE
 
                 (itemView.message_bubble as TextView).text = item.message
                 (itemView.message_time as TextView).text = item.id.time

@@ -25,7 +25,7 @@ class RoomsViewModel(private val repository: DataRepository) : ViewModel() {
 
     fun loadRooms() {
         viewModelScope.launch {
-            repository.getRoomList({error.postValue(it)}, RoomListRequest(uid),access)
+            repository.getRoomList({error.postValue(it)}, RoomListRequest(uid))
         }
     }
 }

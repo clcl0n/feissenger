@@ -27,7 +27,7 @@ class RoomMessagesViewModel(private val repository: DataRepository) : ViewModel(
             viewModelScope.launch {
                 repository.sendRoomMessage({error.postValue(it)}, RoomMessageRequest(uid, roomid,
                     roomMessage.value!!
-                ), access
+                )
                 )
             }
         }
@@ -38,7 +38,7 @@ class RoomMessagesViewModel(private val repository: DataRepository) : ViewModel(
         viewModelScope.launch {
             repository.loadRoomMessages({
                 error.postValue(it)
-            },RoomReadRequest(uid,roomid),access)
+            },RoomReadRequest(uid,roomid))
         }
     }
 }
