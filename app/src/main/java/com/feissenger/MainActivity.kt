@@ -94,15 +94,13 @@ class MainActivity : AppCompatActivity() {
             if(selected == "light"){
                 selected = "dark"
                 image.setImageResource(R.drawable.moon)
-                saveStringToPref("theme", selected)
-                saveStringToPref("newTheme","true")
             }
             else{
                 selected = "light"
                 image.setImageResource(R.drawable.sun)
-                saveStringToPref("theme", selected)
-                saveStringToPref("newTheme","true")
             }
+            saveStringToPref("theme", selected)
+            saveStringToPref("newTheme","true")
             recreate()
         }
 
@@ -145,7 +143,27 @@ class MainActivity : AppCompatActivity() {
         }
 
         if(getPreferences(Activity.MODE_PRIVATE).getString("newTheme","") == "true"){
-            Log.i("saved-fragment",getPreferences(Activity.MODE_PRIVATE).getString("fragment",""))
+            getPreferences(Activity.MODE_PRIVATE).edit().putString("newTheme","false").apply()
+
+            when(getPreferences(Activity.MODE_PRIVATE).getString("fragment","")){
+                "messages"->{
+                    val action = getPreferences(Activity.MODE_PRIVATE).getString("contactId","")?.let {
+                        ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(
+                            it
+                        )
+                    }
+                    action?.let { navController.navigate(it) }
+                }
+                "roomMessages"->{
+                    val action = getPreferences(Activity.MODE_PRIVATE).getString("roomId","")?.let {
+                        ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
+                            it
+                        )
+                    }
+                    action?.let { navController.navigate(it) }
+                }
+            }
+
         }else{
             Log.i("theme","false")
         }

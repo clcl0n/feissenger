@@ -41,8 +41,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             ContactReadRequest(
                 sharedPref.getString("uid", "")!!,
                 sharedPref.getString("contactId", "")!!
-            ),
-            sharedPref.getString("access", "")!!
+            )
         )
     }
 

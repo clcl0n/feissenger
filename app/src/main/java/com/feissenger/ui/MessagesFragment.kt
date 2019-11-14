@@ -30,11 +30,13 @@ import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
 import com.feissenger.data.util.Injection
 import kotlinx.android.synthetic.main.fragment_message.*
+import kotlinx.android.synthetic.main.message_item.view.*
 
 class MessagesFragment : Fragment() {
     private lateinit var viewModel: MessagesViewModel
     private lateinit var binding: FragmentMessageBinding
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var adapter: MessagesAdapter
 
     val arg: MessagesFragmentArgs by navArgs()
 
@@ -53,7 +55,6 @@ class MessagesFragment : Fragment() {
 
         with(sharedPref) {
             viewModel.uid = this.getString("uid", "").toString()
-            viewModel.access = this.getString("access", "").toString()
         }
 
         viewModel.contact = arg.contactId
@@ -65,15 +66,12 @@ class MessagesFragment : Fragment() {
         binding.messagesList.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        val adapter = MessagesAdapter()
+        binding.messagesList.isNestedScrollingEnabled = false
+
+        adapter = MessagesAdapter()
         binding.messagesList.adapter = adapter
         viewModel.messages.observe(this) {
             adapter.data = it
-            binding.messagesList.scrollToPosition(adapter.itemCount-1)
-        }
-
-        val contentView = binding.messagesList
-        contentView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             binding.messagesList.scrollToPosition(adapter.itemCount-1)
         }
 
@@ -82,6 +80,10 @@ class MessagesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        editText.setOnClickListener {
+            binding.messagesList.scrollToPosition(adapter.itemCount-1)
+        }
 
         sharedPref.edit().putString("fragment","messages").apply()
         sharedPref.edit().putString("contactId",arg.contactId).apply()

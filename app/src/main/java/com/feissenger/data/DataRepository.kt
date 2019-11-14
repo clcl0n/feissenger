@@ -55,18 +55,20 @@ class DataRepository private constructor(
 
     suspend fun login(userName: String, password: String): LoginResponse? {
         val loginResponse = api.login(LoginRequest(userName, password))
-
         if (loginResponse.isSuccessful)
             return loginResponse.body()
         return null
     }
 
 //    Messages
-    fun getMessages(user: String, contact: String): LiveData<List<MessageItem>> = cache.getMessages(user, contact)
+    fun getMessages(user: String, contact: String): LiveData<List<MessageItem>>{
 
-    suspend fun loadMessages(onError: (error: String) -> Unit, contactReadRequest: ContactReadRequest, access: String, save: Boolean = true) {
+        return cache.getMessages(user, contact)
+    }
+
+    suspend fun loadMessages(onError: (error: String) -> Unit, contactReadRequest: ContactReadRequest, save: Boolean = true) {
         try {
-            val contactReadResponse = api.getContactMessages(access, contactReadRequest)
+            val contactReadResponse = api.getContactMessages(contactReadRequest)
 
             if(contactReadResponse.isSuccessful){
                 if(save){
@@ -92,13 +94,13 @@ class DataRepository private constructor(
         }
     }
 
-    suspend fun sendMessage(onError: (error: String) -> Unit, contactMessageRequest: ContactMessageRequest, contactReadRequest: ContactReadRequest, access: String) {
+    suspend fun sendMessage(onError: (error: String) -> Unit, contactMessageRequest: ContactMessageRequest, contactReadRequest: ContactReadRequest) {
         try {
 
-            val contactMessageResponse = api.sendContactMessage(access, contactMessageRequest)
+            val contactMessageResponse = api.sendContactMessage(contactMessageRequest)
 
             if(contactMessageResponse.isSuccessful)
-                loadMessages(onError, contactReadRequest, access)
+                loadMessages(onError, contactReadRequest)
 
             onError("Load images failed. Try again later please.")
         } catch (ex: ConnectException) {
@@ -115,9 +117,9 @@ class DataRepository private constructor(
 //    RoomMessages
     fun getRoomMessages(roomId: String): LiveData<List<RoomMessageItem>> = cache.getRoomMessages(roomId)
 
-    suspend fun loadRoomMessages(onError: (error: String) -> Unit, roomReadRequest: RoomReadRequest, access: String) {
+    suspend fun loadRoomMessages(onError: (error: String) -> Unit, roomReadRequest: RoomReadRequest) {
         try {
-            val roomReadResponse = api.getRoomMessages(access, roomReadRequest)
+            val roomReadResponse = api.getRoomMessages(roomReadRequest)
 
             if(roomReadResponse.isSuccessful){
                 roomReadResponse.body()?.let {
@@ -139,13 +141,13 @@ class DataRepository private constructor(
         }
     }
 
-    suspend fun sendRoomMessage(onError: (error: String) -> Unit, roomMessageRequest: RoomMessageRequest, access: String) {
+    suspend fun sendRoomMessage(onError: (error: String) -> Unit, roomMessageRequest: RoomMessageRequest) {
         try {
 
-            val roomMessageResponse = api.sendRoomMessage(access, roomMessageRequest)
+            val roomMessageResponse = api.sendRoomMessage(roomMessageRequest)
 
             if(roomMessageResponse.isSuccessful)
-                loadRoomMessages(onError, RoomReadRequest(roomMessageRequest.uid, roomMessageRequest.roomid), access)
+                loadRoomMessages(onError, RoomReadRequest(roomMessageRequest.uid, roomMessageRequest.roomid))
 
             onError("Load images failed. Try again later please.")
         } catch (ex: ConnectException) {
@@ -163,9 +165,9 @@ class DataRepository private constructor(
 
     fun getRooms(user: String): LiveData<List<RoomItem>> = cache.getRooms(user)
 
-    suspend fun getRoomList(onError: (error:String) -> Unit, roomListRequest: RoomListRequest, access: String){
+    suspend fun getRoomList(onError: (error:String) -> Unit, roomListRequest: RoomListRequest){
         try {
-            val roomListResponse = api.getRooms(access, roomListRequest)
+            val roomListResponse = api.getRooms(roomListRequest)
             if(roomListResponse.isSuccessful){
                 roomListResponse.body()?.let {
                     return cache.insertRooms(it.map { item -> RoomItem(RoomItemId(item.roomid,roomListRequest.uid),item.time) })
@@ -183,10 +185,10 @@ class DataRepository private constructor(
 //    Contacts
     fun getContacts(user: String): LiveData<List<ContactItem>> = cache.getContacts(user)
 
-    suspend fun getContactList(onError: (error: String) -> Unit, contactListRequest: ContactListRequest, access: String){
+    suspend fun getContactList(onError: (error: String) -> Unit, contactListRequest: ContactListRequest){
         try {
 
-            val contactListResponse = api.getContactList(access, contactListRequest)
+            val contactListResponse = api.getContactList(contactListRequest)
 
             if(contactListResponse.isSuccessful){
                 contactListResponse.body()?.let {
