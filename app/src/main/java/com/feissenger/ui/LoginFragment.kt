@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.feissenger.R
 import com.feissenger.data.DataRepository
@@ -51,6 +52,7 @@ class LoginFragment : Fragment() {
                 navController.navigate(R.id.room_fragment)
             }
         }
+
 //        adapter
 
         return binding.root
@@ -58,6 +60,15 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        goto_registration_btn.setOnClickListener {
+            val navController = it.findNavController()
+            val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+            navGraph.startDestination = R.id.login_fragment
+            navController.graph = navGraph
+
+            navController.navigate(R.id.registration_fragment)
+        }
 
         viewModel.loginData.observeForever {
             if (it != null && it.access.isNotEmpty()) {

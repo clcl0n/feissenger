@@ -93,6 +93,17 @@ class DataRepository private constructor(
         }
     }
 
+    suspend fun register(userName: String, password: String): RegisterResponse? {
+        val registerReponse = api.register(RegisterRequest(userName, password))
+
+        if (registerReponse.isSuccessful)
+            return RegisterResponse(
+                uid = registerReponse.body()?.uid!!,
+                access = registerReponse.body()?.access!!,
+                refresh = registerReponse.body()?.refresh!!
+            )
+        return null
+    }
 
     suspend fun login(userName: String, password: String): LoginResponse? {
         val loginResponse = api.login(LoginRequest(userName, password))
