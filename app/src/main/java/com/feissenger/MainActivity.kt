@@ -16,7 +16,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.feissenger.ui.ViewPagerFragmentDirections
@@ -106,6 +105,7 @@ class MainActivity : AppCompatActivity() {
             recreate()
         }
 
+
         when (getPreferences(Activity.MODE_PRIVATE).getString("theme", "")) {
             "light" -> {
                 image.setImageResource(R.drawable.sun)
@@ -118,6 +118,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
+
+        logout_icon.setOnClickListener {
+            val preferences = getPreferences(Context.MODE_PRIVATE)
+            preferences.edit()
+                .clear()
+                .apply()
+            navGraph.startDestination = R.id.login_fragment
+            val loginNavController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+            loginNavController?.graph = navGraph
+            loginNavController?.navigate(R.id.login_fragment)
+        }
 
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
 
