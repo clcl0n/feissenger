@@ -30,9 +30,11 @@
         android:name="com.feissenger.ui.LoginFragment"
         android:label="LoginFragment" >
         <action
-<<<<<<< HEAD
             android:id="@+id/action_login_fragment_to_viewPagerFragment"
             app:destination="@id/viewPagerFragment" />
+        <action
+            android:id="@+id/action_login_fragment_to_registrationFragment"
+            app:destination="@id/registration_fragment" />
     </fragment>
     <fragment
         android:id="@+id/viewPagerFragment"
@@ -50,12 +52,6 @@
         android:name="com.feissenger.ui.RoomMessagesFragment"
         android:label="RoomMessagesFragment" >
         <argument android:name="roomId" />
-=======
-            android:id="@+id/action_login_fragment_to_room_fragment"
-            app:destination="@id/room_fragment" />
-        <action
-            android:id="@+id/action_login_fragment_to_registrationFragment"
-            app:destination="@id/registration_fragment" />
     </fragment>
     <fragment
         android:id="@+id/registration_fragment"
@@ -64,7 +60,6 @@
         <action
             android:id="@+id/action_registrationFragment_to_login_fragment"
             app:destination="@id/login_fragment" />
->>>>>>> d515d808cce531b14209de84e309dfd208a41fa7
     </fragment>
 
 
