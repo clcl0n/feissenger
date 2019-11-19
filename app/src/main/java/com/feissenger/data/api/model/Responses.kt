@@ -11,6 +11,13 @@ data class LoginResponse(
     val refresh: String
 )
 
+//Refresh
+data class RefreshResponse(
+    val uid: String,
+    var access: String,
+    val refresh: String
+)
+
 //Messages
 data class ContactReadResponse(
     val uid: String,

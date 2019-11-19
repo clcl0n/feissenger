@@ -20,7 +20,7 @@ class ContactListViewModel(private val repository: DataRepository) : ViewModel()
 
     fun loadContacts(){
         viewModelScope.launch {
-            repository.getContactList({error.postValue(it)}, ContactListRequest(uid),access)
+            repository.getContactList({error.postValue(it)}, ContactListRequest(uid))
         }
     }
 }
