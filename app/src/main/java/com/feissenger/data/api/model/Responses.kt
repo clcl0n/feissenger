@@ -45,3 +45,9 @@ data class ContactListResponse(
     val name:String,
     val id: String
 )
+
+data class RegisterResponse (
+    val uid: String,
+    val access: String,
+    val refresh: String
+)

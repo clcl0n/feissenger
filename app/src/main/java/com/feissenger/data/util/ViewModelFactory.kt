@@ -33,6 +33,11 @@ class ViewModelFactory(private val repository: DataRepository) : ViewModelProvid
             return LoginViewModel(repository) as T
         }
 
+        if (modelClass.isAssignableFrom(RegistrationViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return RegistrationViewModel(repository) as T
+        }
+
         if (modelClass.isAssignableFrom(MessagesViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MessagesViewModel(repository) as T

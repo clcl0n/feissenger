@@ -10,13 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.fragment_login.*
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.feissenger.R
 import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentLoginBinding
 import com.feissenger.ui.viewModels.LoginViewModel
-import java.lang.Exception
 
 
 class LoginFragment : Fragment() {
@@ -40,6 +40,15 @@ class LoginFragment : Fragment() {
 
         binding.model = viewModel
 
+        viewModel.user.observe(this) {
+            val navController = findNavController()
+            val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+            navGraph.startDestination = R.id.room_fragment
+            navController.graph = navGraph
+            navController.navigate(R.id.room_fragment)
+        }
+
+//        adapter
         return binding.root
     }
 
@@ -50,6 +59,12 @@ class LoginFragment : Fragment() {
 
         val navController = findNavController()
         val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+        goto_registration_btn.setOnClickListener {
+            navGraph.startDestination = R.id.login_fragment
+            navController.graph = navGraph
+
+            navController.navigate(R.id.registration_fragment)
+        }
 
         viewModel.user.observeForever{
             val id: Int

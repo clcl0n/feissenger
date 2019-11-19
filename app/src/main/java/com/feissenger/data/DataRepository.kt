@@ -117,6 +117,18 @@ class DataRepository private constructor(
 //    RoomMessages
     fun getRoomMessages(roomId: String): LiveData<List<RoomMessageItem>> = cache.getRoomMessages(roomId)
 
+    suspend fun register(userName: String, password: String): RegisterResponse? {
+        val registerReponse = api.register(RegisterRequest(userName, password))
+
+        if (registerReponse.isSuccessful)
+            return RegisterResponse(
+                uid = registerReponse.body()?.uid!!,
+                access = registerReponse.body()?.access!!,
+                refresh = registerReponse.body()?.refresh!!
+            )
+        return null
+    }
+
     suspend fun loadRoomMessages(onError: (error: String) -> Unit, roomReadRequest: RoomReadRequest) {
         try {
             val roomReadResponse = api.getRoomMessages(roomReadRequest)

@@ -13,7 +13,10 @@ import retrofit2.http.*
 
 interface WebApi {
 
-//    Login
+    @POST("user/create.php")
+    @Headers("Needs-Auth: false")
+    suspend fun register(@Body register: RegisterRequest): Response<RegisterResponse>
+
     @POST("user/login.php")
     @Headers("Needs-Auth: false")
     suspend fun login(@Body login: LoginRequest): Response<LoginResponse>
