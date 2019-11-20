@@ -1,5 +1,6 @@
 package com.feissenger.ui
 
+import android.app.LauncherActivity
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -13,10 +14,13 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
+import com.feissenger.data.db.model.ContactItem
 import com.feissenger.databinding.FragmentContactListBinding
 import com.feissenger.ui.adapter.ContactListAdapter
 import com.feissenger.ui.viewModels.ContactListViewModel
 import com.feissenger.data.util.Injection
+import com.reddit.indicatorfastscroll.FastScrollItemIndicator
+import kotlinx.android.synthetic.main.fragment_contact_list.*
 
 
 class ContactListFragment : Fragment(){
@@ -58,11 +62,28 @@ class ContactListFragment : Fragment(){
         binding.contactList.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
+
+
         val adapter = ContactListAdapter()
         binding.contactList.adapter = adapter
         viewModel.contactList.observe(this) {
             adapter.data = it
         }
+
+        binding.fastscroller.apply {
+            setupWithRecyclerView(
+                binding.contactList,
+                {
+                    position ->
+                    val item = adapter.data[position]
+                    FastScrollItemIndicator.Text(
+                        item.name.substring(0, 1).toUpperCase()
+                    )
+                }
+            )
+        }
+
+        binding.fastscrollerThumb.setupWithFastScroller(binding.fastscroller)
 
         viewModel.loadContacts()
 
