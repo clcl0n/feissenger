@@ -15,6 +15,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.feissenger.MySharedPreferences
 import com.feissenger.R
 import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentRoomMessageBinding
@@ -24,7 +25,7 @@ import com.feissenger.ui.viewModels.RoomMessagesViewModel
 class RoomMessagesFragment : Fragment() {
     private lateinit var viewModel: RoomMessagesViewModel
     private lateinit var binding: FragmentRoomMessageBinding
-    private lateinit var sharedPref: SharedPreferences
+    private lateinit var sharedPref: MySharedPreferences
 
     val arg: RoomMessagesFragmentArgs by navArgs()
 
@@ -32,7 +33,7 @@ class RoomMessagesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)!!
+        sharedPref = context?.let { MySharedPreferences(it) }!!
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_room_message, container, false
@@ -42,8 +43,8 @@ class RoomMessagesFragment : Fragment() {
             .get(RoomMessagesViewModel::class.java)
 
         with(sharedPref) {
-            viewModel.uid = this.getString("uid", "").toString()
-            viewModel.access = this.getString("access", "").toString()
+            viewModel.uid = get("uid").toString()
+            viewModel.access = get("access").toString()
         }
 
         viewModel.roomid = arg.roomId
@@ -79,7 +80,7 @@ class RoomMessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedPref.edit().putString("fragment","roomMessages").apply()
-        sharedPref.edit().putString("roomId",arg.roomId).apply()
+        sharedPref.put("fragment","roomMessages")
+        sharedPref.put("roomId",arg.roomId)
     }
 }

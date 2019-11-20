@@ -2,6 +2,7 @@ package com.feissenger.data.api
 
 import android.content.Context
 import com.feissenger.MainActivity
+import com.feissenger.MySharedPreferences
 import com.feissenger.data.api.model.RefreshRequest
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -13,16 +14,14 @@ class TokenAuthenticator(val context: Context) : Authenticator {
     var access: String = ""
     var refresh: String = ""
     var uid: String = ""
+
     override fun authenticate(route: Route?, response: Response): Request? {
         if (response.request().header("Needs-Auth")?.compareTo("true") == 0 && response.code() == 401) {
-            val sharedPreferences = context.getSharedPreferences(
-                MainActivity::class.java.simpleName,
-                Context.MODE_PRIVATE
-            )
+            val sharedPreferences = MySharedPreferences(context)
             with(sharedPreferences) {
-                refresh = getString("refresh", "")!!
-                uid = getString("uid", "")!!
-                access = getString("access", "")!!
+                refresh = get("refresh") as String
+                uid = get("uid") as String
+                access = get("access") as String
             }
 
             if (!response.request().header("Authorization").equals(access))
@@ -34,11 +33,10 @@ class TokenAuthenticator(val context: Context) : Authenticator {
             if (tokenResponse.isSuccessful) {
                 access = "Bearer " + tokenResponse.body()!!.access
 
-                sharedPreferences.edit()
-                    .putString("access", access)
-                    .putString("refresh", tokenResponse.body()!!.refresh)
-                    .apply()
-
+                with(sharedPreferences){
+                    put("access", access)
+                    put("refresh", tokenResponse.body()!!.refresh)
+                }
 
                 return response.request().newBuilder().header("Authorization", access).build()
             }

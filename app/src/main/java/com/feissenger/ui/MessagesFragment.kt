@@ -5,17 +5,24 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Rect
+import android.opengl.ETC1.getHeight
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.feissenger.MainActivity
+import com.feissenger.MySharedPreferences
 import com.feissenger.ui.adapter.MessagesAdapter
 import com.feissenger.ui.viewModels.MessagesViewModel
 import com.feissenger.R
@@ -29,13 +36,18 @@ import com.giphy.sdk.ui.themes.LightTheme
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
 import com.feissenger.data.util.Injection
+import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_message.*
+import kotlinx.android.synthetic.main.fragment_message.messages_list
+import kotlinx.android.synthetic.main.fragment_room.*
+import kotlinx.android.synthetic.main.fragment_view_pager.*
 import kotlinx.android.synthetic.main.message_item.view.*
 
 class MessagesFragment : Fragment() {
     private lateinit var viewModel: MessagesViewModel
     private lateinit var binding: FragmentMessageBinding
-    private lateinit var sharedPref: SharedPreferences
+    private lateinit var sharedPref: MySharedPreferences
     private lateinit var adapter: MessagesAdapter
 
     val arg: MessagesFragmentArgs by navArgs()
@@ -44,7 +56,7 @@ class MessagesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)!!
+        sharedPref = context?.let { MySharedPreferences(it) }!!
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_message, container, false
@@ -54,7 +66,7 @@ class MessagesFragment : Fragment() {
             .get(MessagesViewModel::class.java)
 
         with(sharedPref) {
-            viewModel.uid = this.getString("uid", "").toString()
+            viewModel.uid = get("uid").toString()
         }
 
         viewModel.contact = arg.contactId
@@ -81,12 +93,8 @@ class MessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        editText.setOnClickListener {
-            binding.messagesList.scrollToPosition(adapter.itemCount-1)
-        }
-
-        sharedPref.edit().putString("fragment","messages").apply()
-        sharedPref.edit().putString("contactId",arg.contactId).apply()
+        sharedPref.put("fragment","messages")
+        sharedPref.put("contactId",arg.contactId)
 
         giphy_button.style = GPHGiphyButtonStyle.iconSquareRounded
         val settings =
@@ -110,5 +118,14 @@ class MessagesFragment : Fragment() {
                 }
             }
         }
+
+        message_root.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+            if(bottom < oldBottom) {
+                println(bottom)
+                println(oldBottom)
+                binding.messagesList.scrollToPosition(adapter.itemCount - 1)
+            }
+        }
+
     }
 }

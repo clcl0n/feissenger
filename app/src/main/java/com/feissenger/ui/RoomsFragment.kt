@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.feissenger.MySharedPreferences
 import com.feissenger.R
 import com.feissenger.data.ConnectivityReceiver
 import com.feissenger.databinding.FragmentRoomBinding
@@ -31,13 +32,13 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
     private lateinit var binding: FragmentRoomBinding
     private lateinit var wifiManager: WifiManager
     private lateinit var toast: Toast
-    private lateinit var sharedPref: SharedPreferences
+    private lateinit var sharedPref: MySharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)!!
+        sharedPref = context?.let { MySharedPreferences(it) }!!
         wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         // Inflate the layout for this fragment
@@ -49,8 +50,8 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
             .get(RoomsViewModel::class.java)
 
         with(sharedPref) {
-            viewModel.uid = this.getString("uid", "").toString()
-            viewModel.access = this.getString("access", "").toString()
+            viewModel.uid = get("uid").toString()
+            viewModel.access = get("access").toString()
         }
 
         binding.model = viewModel
@@ -85,6 +86,7 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
 //            toast.show()
         } else {
             toast = Toast.makeText(context, "Data or No connection", Toast.LENGTH_SHORT)
+            toast = Toast.makeText(context, "Data or No connection", Toast.LENGTH_SHORT)
             toast.show()
         }
     }
@@ -105,10 +107,10 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedPref.edit().putString("fragment","rooms").apply()
+        sharedPref.put("fragment","rooms")
 
         FirebaseApp.initializeApp(context!!)
-        val uid = sharedPref.getString("uid","")
+        val uid = sharedPref.get("uid")
         FirebaseMessaging.getInstance().subscribeToTopic("/topics/jany")
         FirebaseMessaging.getInstance().subscribeToTopic("/topics/msg_$uid")
             .addOnCompleteListener { task ->

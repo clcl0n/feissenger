@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.feissenger.MySharedPreferences
 import com.feissenger.R
 import com.feissenger.databinding.FragmentContactListBinding
 import com.feissenger.ui.adapter.ContactListAdapter
@@ -23,13 +24,13 @@ class ContactListFragment : Fragment(){
 
     private lateinit var viewModel: ContactListViewModel
     private lateinit var binding: FragmentContactListBinding
-    private lateinit var sharedPref: SharedPreferences
+    private lateinit var sharedPref: MySharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)!!
+        sharedPref = context?.let { MySharedPreferences(it) }!!
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_contact_list, container, false
@@ -49,8 +50,8 @@ class ContactListFragment : Fragment(){
 //        viewModel.access = sharedViewModel.user.value!!.access
 
         with(sharedPref) {
-            viewModel.uid = this.getString("uid", "").toString()
-            viewModel.access = this.getString("access", "").toString()
+            viewModel.uid = get("uid").toString()
+            viewModel.access = get("access").toString()
         }
 
         binding.model = viewModel
@@ -72,6 +73,6 @@ class ContactListFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedPref.edit().putString("fragment","contacts").apply()
+        sharedPref.put("fragment","contacts")
     }
 }
