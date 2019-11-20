@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_login.*
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import com.feissenger.MySharedPreferences
 import com.feissenger.R
 import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentLoginBinding
@@ -23,13 +24,13 @@ class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var viewModel: LoginViewModel
-    private lateinit var sharedPref: SharedPreferences
+    private lateinit var sharedPref: MySharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)!!
+        sharedPref = context?.let { MySharedPreferences(it) }!!
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_login, container, false
@@ -55,7 +56,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedPref.edit().putString("fragment","login").apply()
+        sharedPref.put("fragment","login")
 
         val navController = findNavController()
         val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
@@ -68,24 +69,16 @@ class LoginFragment : Fragment() {
 
         viewModel.user.observeForever{
             val id: Int
-            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-
             if(it != null){
                 id = R.id.viewPagerFragment
-                with (sharedPref!!.edit()) {
-                    putString("access", it.access)
-                    putString("refresh", it.refresh)
-                    putString("uid", it.uid)
-                    apply()
+                with (sharedPref) {
+                    put("access", it.access)
+                    put("refresh", it.refresh)
+                    put("uid", it.uid)
                 }
             }else {
                 id = R.id.login_fragment
-                with (sharedPref!!.edit()) {
-                    putString("access", "")
-                    putString("refresh", "")
-                    putString("uid", "")
-                    apply()
-                }
+                sharedPref.clear()
             }
 
             navGraph.startDestination = id
