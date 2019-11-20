@@ -92,6 +92,9 @@ dependencies {
 
     //viewPager
     implementation 'com.android.support:design:29.0.2'
+
+    //fastscrollrecyclerview
+    implementation 'com.reddit:indicator-fast-scroll:1.2.0'
 }
 
 configurations.all {

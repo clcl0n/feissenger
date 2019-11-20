@@ -129,6 +129,7 @@ class DataRepository private constructor(
         return null
     }
 
+
     suspend fun loadRoomMessages(onError: (error: String) -> Unit, roomReadRequest: RoomReadRequest) {
         try {
             val roomReadResponse = api.getRoomMessages(roomReadRequest)

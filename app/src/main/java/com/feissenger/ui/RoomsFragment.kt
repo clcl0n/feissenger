@@ -2,7 +2,9 @@ package com.feissenger.ui
 
 
 import android.content.Context
+import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.MySharedPreferences
@@ -25,6 +28,7 @@ import com.feissenger.ui.viewModels.RoomsViewModel
 import com.feissenger.data.util.Injection
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.android.synthetic.main.fragment_room.*
 
 class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -59,9 +63,9 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         binding.messagesList.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-//        activity?.registerReceiver(ConnectivityReceiver(),
-//            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-//        )
+        activity?.registerReceiver(ConnectivityReceiver(),
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
 
         val adapter = RoomsAdapter()
         binding.messagesList.adapter = adapter
@@ -72,22 +76,30 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
 
         viewModel.loadRooms()
 
+        binding.activeRoom.setOnClickListener {
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
+                viewModel.activeRoom.value!!
+            )
+            it.findNavController().navigate(action)
+        }
+        binding.activeRoom.setOnClickListener {
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
+                "Public Room"
+            )
+            it.findNavController().navigate(action)
+        }
+
         return binding.root
     }
 
     private fun showMessage(isConnected: Boolean) {
         if (isConnected) {
             if (wifiManager.connectionInfo.hiddenSSID)
-                viewModel.setActiveRoom(wifiManager.connectionInfo.bssid)
+                viewModel.setActiveRoom(wifiManager.connectionInfo.bssid,true)
             else
-                viewModel.setActiveRoom(wifiManager.connectionInfo.ssid)
-
-//            toast = Toast.makeText(context,wifiManager.connectionInfo.ssid,Toast.LENGTH_SHORT)
-//            toast.show()
+                viewModel.setActiveRoom(wifiManager.connectionInfo.ssid,true)
         } else {
-            toast = Toast.makeText(context, "Data or No connection", Toast.LENGTH_SHORT)
-            toast = Toast.makeText(context, "Data or No connection", Toast.LENGTH_SHORT)
-            toast.show()
+            viewModel.setActiveRoom("",false)
         }
     }
 
@@ -111,7 +123,6 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
 
         FirebaseApp.initializeApp(context!!)
         val uid = sharedPref.get("uid")
-        FirebaseMessaging.getInstance().subscribeToTopic("/topics/jany")
         FirebaseMessaging.getInstance().subscribeToTopic("/topics/msg_$uid")
             .addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
