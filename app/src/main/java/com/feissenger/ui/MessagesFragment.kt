@@ -38,6 +38,7 @@ import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
 import com.feissenger.data.util.Injection
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_message.*
 import kotlinx.android.synthetic.main.fragment_message.messages_list
 import kotlinx.android.synthetic.main.fragment_room.*
@@ -73,6 +74,8 @@ class MessagesFragment : Fragment() {
 
         binding.model = viewModel
 
+        viewModel.getContactById()
+
         viewModel.loadMessages()
 
         binding.messagesList.layoutManager =
@@ -84,7 +87,7 @@ class MessagesFragment : Fragment() {
         binding.messagesList.adapter = adapter
         viewModel.messages.observe(this) {
             adapter.data = it
-            binding.messagesList.scrollToPosition(adapter.itemCount-1)
+            binding.messagesList.scrollToPosition(adapter.itemCount - 1)
         }
 
         return binding.root
@@ -93,8 +96,8 @@ class MessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedPref.put("fragment","messages")
-        sharedPref.put("contactId",arg.contactId)
+        sharedPref.put("fragment", "messages")
+        sharedPref.put("contactId", arg.contactId)
 
         giphy_button.style = GPHGiphyButtonStyle.iconSquareRounded
         val settings =
@@ -120,12 +123,23 @@ class MessagesFragment : Fragment() {
         }
 
         message_root.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-            if(bottom < oldBottom) {
-                println(bottom)
-                println(oldBottom)
+            if (bottom < oldBottom) {
                 binding.messagesList.scrollToPosition(adapter.itemCount - 1)
             }
         }
 
+        message_input.addOnLayoutChangeListener { _, _, top, _, _, _, oldTop, _, _ ->
+            if (top < oldTop) {
+                binding.messagesList.scrollToPosition(adapter.itemCount - 1)
+            }
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        viewModel.contactItem.observeForever {
+            (activity as MainActivity).myToolbar.toolbar_text.text = it.name
+        }
     }
 }

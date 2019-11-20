@@ -3,37 +3,25 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/black</item>
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:editTextColor">?attr/text_color</item>
+        <item name="android:textColorHint">@color/gray</item>
+<!--        <item name="android:textCursorDrawable">@null</item>-->
     </style>
 
     <!-- Base application theme. -->
     <style name="AppThemeLight" parent="AppTheme">
         <item name="android:windowBackground">@color/white</item>
-        <item name="toolbar_background">@color/white</item>
-        <item name="toolbar_color">@color/black</item>
-        <item name="sender">@color/green</item>
-        <item name="recipient">@color/blue</item>
-        <item name="ssid_color">@color/black</item>
+        <item name="background_color">@color/white</item>
+        <item name="text_color">@color/black</item>
+        <item name="sender">@color/blue</item>
+        <item name="recipient">@color/gray</item>
     </style>
 
     <style name="AppThemeDark" parent="AppTheme">
         <item name="android:windowBackground">@color/black</item>
-        <item name="toolbar_background">@color/black</item>
-        <item name="toolbar_color">@color/white</item>
-        <item name="sender">@color/yellow</item>
-        <item name="recipient">@color/red</item>
-        <item name="ssid_color">@color/white</item>
-    </style>
-
-    <style name="SwitchTheme" parent="Theme.AppCompat.Light">
-        <!-- active thumb & track color (30% transparency) -->
-        <item name="colorControlActivated">#46bdbf</item>
-
-        <!-- inactive thumb color -->
-        <item name="colorSwitchThumbNormal">#f1f1f1
-        </item>
-
-        <!-- inactive track color (30% transparency) -->
-        <item name="android:colorForeground">#42221f1f
-        </item>
+        <item name="background_color">@color/black</item>
+        <item name="text_color">@color/white</item>
+        <item name="sender">@color/blue</item>
+        <item name="recipient">@color/gray</item>
     </style>
 </resources>

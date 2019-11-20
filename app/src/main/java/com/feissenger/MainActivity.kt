@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.Intent
 import android.os.Build
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     private var selected = "light"
     private lateinit var sharedPreferences: MySharedPreferences
+    lateinit var myToolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +79,9 @@ class MainActivity : AppCompatActivity() {
 
         navController?.graph = navGraph!!
 
-        setSupportActionBar(findViewById(R.id.my_toolbar))
+        myToolbar = findViewById(R.id.my_toolbar)
+
+        setSupportActionBar(myToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         val image = findViewById<ImageView>(R.id.theme_icon)

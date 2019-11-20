@@ -7,6 +7,7 @@ import com.feissenger.data.api.model.ContactMessageRequest
 import com.feissenger.data.api.model.ContactReadRequest
 import com.feissenger.data.api.model.NotificationBody
 import com.feissenger.data.api.model.NotificationRequest
+import com.feissenger.data.db.model.ContactItem
 import com.feissenger.data.db.model.MessageItem
 import kotlinx.coroutines.launch
 
@@ -20,6 +21,8 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
         get() = repository.getMessages(uid, contact)
 
     val input: MutableLiveData<String> = MutableLiveData()
+
+    val contactItem: MutableLiveData<ContactItem> = MutableLiveData()
 
     fun sendMessage() {
         input.value?.let { it ->
@@ -53,6 +56,12 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
     fun loadMessages() {
         viewModelScope.launch {
             repository.loadMessages({error.postValue(it)},ContactReadRequest(uid, contact))
+        }
+    }
+
+    fun getContactById() {
+        viewModelScope.launch {
+            contactItem.postValue(repository.getContactById(uid, contact))
         }
     }
 }

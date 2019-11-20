@@ -38,7 +38,6 @@ class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>()
             item: ContactItem
         ) {
             (itemView.contact_name as TextView).text = item.name
-            (itemView.contact_id as TextView).text = item.id.contactId
 
             itemView.setOnClickListener {
                 val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(item.id.contactId)

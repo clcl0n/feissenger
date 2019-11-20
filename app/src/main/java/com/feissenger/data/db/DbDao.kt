@@ -30,6 +30,9 @@ interface DbDao {
     @Query("SELECT * FROM contacts WHERE uid LIKE :uid")
     fun getContacts(uid: String): LiveData<List<ContactItem>>
 
+    @Query("SELECT * FROM contacts WHERE uid LIKE :uid and contactId LIKE :contactId LIMIT 1")
+    suspend fun getContactById(uid: String, contactId: String): ContactItem
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertContacts(contactList: List<ContactItem>)
 

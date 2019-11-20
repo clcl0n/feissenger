@@ -196,6 +196,7 @@ class DataRepository private constructor(
 
 //    Contacts
     fun getContacts(user: String): LiveData<List<ContactItem>> = cache.getContacts(user)
+    suspend fun getContactById(user: String, contactId: String): ContactItem = cache.getContactById(user, contactId)
 
     suspend fun getContactList(onError: (error: String) -> Unit, contactListRequest: ContactListRequest){
         try {

@@ -13,11 +13,13 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_login.*
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
 import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentLoginBinding
 import com.feissenger.ui.viewModels.LoginViewModel
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 class LoginFragment : Fragment() {
@@ -75,6 +77,7 @@ class LoginFragment : Fragment() {
                     put("access", it.access)
                     put("refresh", it.refresh)
                     put("uid", it.uid)
+                    put("name", it.name)
                 }
             }else {
                 id = R.id.login_fragment
@@ -85,5 +88,11 @@ class LoginFragment : Fragment() {
             navController.graph = navGraph
             navController.navigate(id)
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        (activity as MainActivity).myToolbar.toolbar_text.text = "FEIssenger"
     }
 }

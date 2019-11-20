@@ -7,18 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.feissenger.MainActivity
+import com.feissenger.MySharedPreferences
 import com.feissenger.R
 
 import com.feissenger.ui.adapter.ViewPagerAdapter
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_view_pager.*
 
 
 class ViewPagerFragment : Fragment() {
 
+    private lateinit var sharedPref: MySharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        sharedPref = context?.let { MySharedPreferences(it) }!!
        return inflater.inflate(R.layout.fragment_view_pager,container,false)
     }
 
@@ -28,5 +34,11 @@ class ViewPagerFragment : Fragment() {
         val fragmentAdapter = ViewPagerAdapter(childFragmentManager)
         view_pager.adapter = fragmentAdapter
         tab_layout.setupWithViewPager(view_pager)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        (activity as MainActivity).myToolbar.toolbar_text.text = sharedPref.get("name").toString()
     }
 }
