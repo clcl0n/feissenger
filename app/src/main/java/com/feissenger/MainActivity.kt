@@ -134,21 +134,7 @@ class MainActivity : AppCompatActivity() {
 
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
 
-        FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.i("tag", "getInstanceId failed", task.exception)
-                    return@OnCompleteListener
-                }
-
-                // Get new Instance ID token
-                val token = task.result?.token
-
-                // Log and toast
-                val msg = getString(R.string.msg_token_fmt, token)
-                Log.i("tag", msg)
-                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-            })
+//
 
         //creating notification channel if android version is greater than or equals to oreo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -204,7 +190,7 @@ class MainActivity : AppCompatActivity() {
         val extras = intent?.extras
         val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
         if(extras?.get("typ").toString() == "msg"){
-            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(extras?.get("value").toString())
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(extras?.get("from").toString())
             navController?.navigate(action)
         }else{
             return

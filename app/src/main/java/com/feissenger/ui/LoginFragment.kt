@@ -1,9 +1,8 @@
 package com.feissenger.ui
 
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,10 +15,15 @@ import androidx.navigation.fragment.findNavController
 import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
+import com.feissenger.data.api.WebApi
+import com.feissenger.data.api.model.RegisterTokenRequest
 import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentLoginBinding
 import com.feissenger.ui.viewModels.LoginViewModel
 import kotlinx.android.synthetic.main.activity_main.view.*
+import com.google.firebase.iid.FirebaseInstanceId
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class LoginFragment : Fragment() {
@@ -58,7 +62,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedPref.put("fragment","login")
+        sharedPref.put("fragment", "login")
 
         val navController = findNavController()
         val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
@@ -69,19 +73,29 @@ class LoginFragment : Fragment() {
             navController.navigate(R.id.registration_fragment)
         }
 
-        viewModel.user.observeForever{
+        viewModel.user.observeForever {
             val id: Int
-            if(it != null){
+            if (it != null) {
                 id = R.id.viewPagerFragment
-                with (sharedPref) {
+                with(sharedPref) {
                     put("access", it.access)
                     put("refresh", it.refresh)
                     put("uid", it.uid)
                     put("name", it.name)
                 }
-            }else {
+
+
+            } else {
                 id = R.id.login_fragment
                 sharedPref.clear()
+                GlobalScope.launch {
+                    FirebaseInstanceId.getInstance().deleteInstanceId()
+
+                }
+            }
+
+            viewModel.fid.observeForever{
+                viewModel.registerToken()
             }
 
             navGraph.startDestination = id

@@ -24,12 +24,19 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/gph_transparent" />
 
+        <meta-data android:name="firebase_messaging_auto_init_enabled"
+            android:value="false" />
+
         <activity
             android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
             </intent-filter>
         </activity>
         <service
@@ -40,6 +47,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>
