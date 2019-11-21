@@ -41,4 +41,7 @@ class LocalCache(private val dao: DbDao) {
     }
 
     fun getRoomMessages(roomId: String) = dao.getRoomMessages(roomId)
+
+    suspend fun getContactFid(contact: String) = dao.getContactFid(contact)
+
 }

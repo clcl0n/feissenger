@@ -19,6 +19,9 @@ interface DbDao {
     @Query("SELECT * FROM messages WHERE uid LIKE :uid AND ((sender LIKE :uid AND recipient LIKE :contact) OR (sender LIKE :contact AND recipient LIKE :uid))")
     fun getMessages(uid: String, contact: String): LiveData<List<MessageItem>>
 
+    @Query("SELECT contact_fid FROM messages WHERE recipient = :contact LIMIT 1")
+    suspend fun getContactFid(contact: String): String
+
     //    Rooms
     @Query("SELECT * FROM rooms WHERE uid LIKE :uid")
     fun getRooms(uid: String): LiveData<List<RoomItem>>
@@ -42,4 +45,5 @@ interface DbDao {
 
     @Query("SELECT * FROM posts WHERE roomid LIKE :roomid")
     fun getRoomMessages(roomid: String): LiveData<List<RoomMessageItem>>
+
 }

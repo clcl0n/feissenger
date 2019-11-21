@@ -63,6 +63,7 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         binding.messagesList.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
+
         activity?.registerReceiver(ConnectivityReceiver(),
             IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         )
@@ -82,7 +83,8 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
             )
             it.findNavController().navigate(action)
         }
-        binding.activeRoom.setOnClickListener {
+
+        binding.publicRoom.setOnClickListener {
             val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
                 "Public Room"
             )

@@ -25,15 +25,17 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
     val contactItem: MutableLiveData<ContactItem> = MutableLiveData()
 
     fun sendMessage() {
+
         input.value?.let { it ->
             viewModelScope.launch {
+                val contactFid = repository.getContactFid(contact)
 
                 repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, it),
                     ContactReadRequest(uid, contact))
 
                 repository.notifyMessage(notifyMessage = NotificationRequest(
-                    "/topics/msg_$contact",
-                    NotificationBody(uid, it, uid)
+                    contactFid,
+                    NotificationBody(uid, it, uid, "msg")
                 ), onError = { error.postValue(it) })
             }
         }
@@ -41,14 +43,16 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
     }
 
     fun sendGif(gif : String) {
+
         viewModelScope.launch {
+            val contactFid = repository.getContactFid(contact)
 
             repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, gif),
                 ContactReadRequest(uid, contact))
 
             repository.notifyMessage(notifyMessage = NotificationRequest(
-                "/topics/msg_$contact",
-                NotificationBody(uid, gif, uid)
+                contactFid,
+                NotificationBody(uid, gif, uid, "msg")
             ), onError = { error.postValue(it) })
         }
     }

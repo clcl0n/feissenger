@@ -14,11 +14,14 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.feissenger.data.DataRepository
+import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.ContactReadRequest
+import com.feissenger.data.api.model.RegisterTokenRequest
 import com.feissenger.data.util.Injection
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
@@ -29,6 +32,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private val ADMIN_CHANNEL_ID = "admin_channel"
     private lateinit var dataRepository: DataRepository
     private lateinit var sharedPref: MySharedPreferences
+
+
     private fun CoroutineScope.go() = launch {
         dataRepository.loadMessages(
             {},
@@ -39,15 +44,36 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         )
     }
 
+
+    override fun onNewToken(p0: String) {
+        sharedPref = MySharedPreferences(applicationContext)
+        super.onNewToken(p0)
+        if (sharedPref.get("access") != "") {
+            GlobalScope.launch {
+                WebApi.create(applicationContext!!)
+                    .registerToken(
+                        userFidRequest = RegisterTokenRequest(
+                            sharedPref.get("uid").toString(),
+                            p0
+                        )
+                    )
+            }
+        }
+    }
+
+
     override fun onMessageReceived(message: RemoteMessage) {
+        sharedPref = MySharedPreferences(applicationContext)
+
         super.onMessageReceived(message)
         dataRepository = Injection.provideDataRepository(applicationContext)
-        sharedPref = MySharedPreferences(applicationContext)
+
 
         runBlocking { go() }
 
         val activityManager =
             applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+
         var isOpen = false
         for (appProcess in activityManager.runningAppProcesses) {
             if ((appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName == "com.feissenger" && sharedPref.get(
@@ -78,10 +104,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            val extras = message.from?.split("/")?.last()?.split("_")
-            intent.putExtra("typ", extras?.first())
-            intent.putExtra("value", message.data["value"])
 
+            intent.putExtra("typ", message.data["typ"])
+            intent.putExtra("from", message.data["from"])
             val pendingIntent = PendingIntent.getActivity(
                 this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
