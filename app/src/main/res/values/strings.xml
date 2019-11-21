@@ -9,4 +9,6 @@
     <string name="password_hint">PASSWORD</string>
     <string name="login_btn">Login</string>
     <string name="registration_btn">Registration</string>
+    <string name="register_btn">REGISTER</string>
+    <string name="confirm_password">CONFIRM PASSWORD</string>
 </resources>

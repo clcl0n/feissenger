@@ -22,10 +22,10 @@ class ViewPagerAdapter(fm: FragmentManager): FragmentStatePagerAdapter(fm) {
 
     override fun getPageTitle(position: Int): CharSequence {
         return when (position) {
-            0 -> "Room Tab"
-            1 -> "Contacts Tab"
+            0 -> "Rooms"
+            1 -> "Contacts"
             else -> {
-                return "Room Tab"
+                return "Rooms"
             }
         }
     }

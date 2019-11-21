@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/big_height"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_margin="@dimen/thick"
     android:background="?attr/background_color">
@@ -11,13 +12,14 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:layout_width="wrap_content"
-        android:textColor="?attr/toolbar_color"
-        android:textSize="24sp"/>
+        android:textColor="@color/red"
+        android:textSize="24sp"
+        tools:text="J"/>
     <TextView
         android:id="@+id/contact_name"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:textColor="?attr/text_color"
+        tools:text="jany"
         android:textSize="@dimen/normal_text" />
 </LinearLayout>

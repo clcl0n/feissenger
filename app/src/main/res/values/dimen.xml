@@ -4,6 +4,7 @@
     <item name="small_text" type="dimen">10sp</item>
     <item name="big_text" type="dimen">24sp</item>
 
+    <item name="indicator" type="dimen">3dp</item>
     <item name="thin" type="dimen">5dp</item>
     <item name="thick" type="dimen">10dp</item>
 
