@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/nav_graph"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
             app:startDestination="@id/login_fragment">
 
     <fragment
@@ -52,6 +53,9 @@
         android:name="com.feissenger.ui.RoomMessagesFragment"
         android:label="RoomMessagesFragment" >
         <argument android:name="roomId" />
+        <action
+            android:id="@+id/action_roomMessagesFragment_to_roomPost"
+            app:destination="@id/roomPost" />
     </fragment>
     <fragment
         android:id="@+id/registration_fragment"
@@ -61,6 +65,11 @@
             android:id="@+id/action_registrationFragment_to_login_fragment"
             app:destination="@id/login_fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/roomPost"
+        android:name="com.feissenger.ui.RoomPostFragment"
+        android:label="fragment_room_post"
+        tools:layout="@layout/fragment_room_post" />
 
 
 </navigation>
