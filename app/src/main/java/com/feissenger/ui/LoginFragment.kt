@@ -94,10 +94,6 @@ class LoginFragment : Fragment() {
                 }
             }
 
-            viewModel.fid.observeForever{
-                viewModel.registerToken()
-            }
-
             navGraph.startDestination = id
             navController.graph = navGraph
             navController.navigate(id)

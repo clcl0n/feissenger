@@ -96,10 +96,14 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
 
     private fun showMessage(isConnected: Boolean) {
         if (isConnected) {
-            if (wifiManager.connectionInfo.hiddenSSID)
+            if (wifiManager.connectionInfo.hiddenSSID){
                 viewModel.setActiveRoom(wifiManager.connectionInfo.bssid,true)
-            else
+                sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid)
+            }
+            else{
                 viewModel.setActiveRoom(wifiManager.connectionInfo.ssid,true)
+                sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid)
+            }
         } else {
             viewModel.setActiveRoom("",false)
         }
@@ -122,16 +126,5 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         super.onViewCreated(view, savedInstanceState)
 
         sharedPref.put("fragment","rooms")
-
-        FirebaseApp.initializeApp(context!!)
-        val uid = sharedPref.get("uid")
-        FirebaseMessaging.getInstance().subscribeToTopic("/topics/msg_$uid")
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.i("tag", "/topics/$uid")
-                    toast = Toast.makeText(context, "/topics/$uid", Toast.LENGTH_SHORT)
-                    toast.show()
-                }
-            }
     }
 }

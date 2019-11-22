@@ -19,6 +19,7 @@ package com.feissenger.data
 
 import androidx.lifecycle.LiveData
 import android.util.Log
+import android.widget.Toast
 import com.feissenger.data.api.FCMApi
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.ContactMessageRequest
@@ -30,7 +31,9 @@ import com.feissenger.data.api.model.*
 import com.feissenger.data.db.LocalCache
 import com.feissenger.data.db.model.*
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
@@ -207,6 +210,15 @@ class DataRepository private constructor(
             val roomListResponse = api.getRooms(roomListRequest)
             if(roomListResponse.isSuccessful){
                 roomListResponse.body()?.let {
+                    for (ritem in it){
+                        FirebaseMessaging.getInstance().subscribeToTopic("/topics/${ritem.roomid}")
+                            .addOnCompleteListener { task ->
+                                if (!task.isSuccessful) {
+                                    Log.i("tag", "/topics/${ritem.roomid}")
+                                }
+                            }
+                    }
+
                     return cache.insertRooms(it.map { item -> RoomItem(RoomItemId(item.roomid,roomListRequest.uid),item.time) })
                 }
             }
