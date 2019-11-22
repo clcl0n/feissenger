@@ -1,5 +1,6 @@
 package com.feissenger.ui
 
+import android.app.LauncherActivity
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -12,24 +13,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.feissenger.MySharedPreferences
 import com.feissenger.R
+import com.feissenger.data.db.model.ContactItem
 import com.feissenger.databinding.FragmentContactListBinding
 import com.feissenger.ui.adapter.ContactListAdapter
 import com.feissenger.ui.viewModels.ContactListViewModel
 import com.feissenger.data.util.Injection
+import com.reddit.indicatorfastscroll.FastScrollItemIndicator
+import kotlinx.android.synthetic.main.fragment_contact_list.*
 
 
 class ContactListFragment : Fragment(){
 
     private lateinit var viewModel: ContactListViewModel
     private lateinit var binding: FragmentContactListBinding
-    private lateinit var sharedPref: SharedPreferences
+    private lateinit var sharedPref: MySharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)!!
+        sharedPref = context?.let { MySharedPreferences(it) }!!
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_contact_list, container, false
@@ -49,8 +54,8 @@ class ContactListFragment : Fragment(){
 //        viewModel.access = sharedViewModel.user.value!!.access
 
         with(sharedPref) {
-            viewModel.uid = this.getString("uid", "").toString()
-            viewModel.access = this.getString("access", "").toString()
+            viewModel.uid = get("uid").toString()
+            viewModel.access = get("access").toString()
         }
 
         binding.model = viewModel
@@ -58,11 +63,28 @@ class ContactListFragment : Fragment(){
         binding.contactList.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
+
+
         val adapter = ContactListAdapter()
         binding.contactList.adapter = adapter
         viewModel.contactList.observe(this) {
             adapter.data = it
         }
+
+        binding.fastscroller.apply {
+            setupWithRecyclerView(
+                binding.contactList,
+                {
+                    position ->
+                    val item = adapter.data[position]
+                    FastScrollItemIndicator.Text(
+                        item.name.substring(0, 1).toUpperCase()
+                    )
+                }
+            )
+        }
+
+        binding.fastscrollerThumb.setupWithFastScroller(binding.fastscroller)
 
         viewModel.loadContacts()
 
@@ -72,6 +94,6 @@ class ContactListFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedPref.edit().putString("fragment","contacts").apply()
+        sharedPref.put("fragment","contacts")
     }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="normal_text" type="dimen">18sp</item>
+    <item name="small_text" type="dimen">10sp</item>
+    <item name="big_text" type="dimen">24sp</item>
+
+    <item name="thin" type="dimen">5dp</item>
+    <item name="thick" type="dimen">10dp</item>
+
+    <item name="small_height" type="dimen">5dp</item>
+    <item name="normal_height" type="dimen">32dp</item>
+    <item name="big_height" type="dimen">40dp</item>
+</resources>

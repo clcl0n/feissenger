@@ -1,6 +1,7 @@
 package com.feissenger.data.db.model
 
 import androidx.room.*
+import com.giphy.sdk.core.models.Media
 
 @Entity(tableName = "messages")
 data class MessageItem(
@@ -9,7 +10,11 @@ data class MessageItem(
     val id: MessageId,
     val recipient: String,
     val message: String,
-    val gif: Boolean
+    val gif: Boolean,
+    val uid_fid: String,
+    val contact_fid: String,
+    val uid_name: String,
+    val contact_name: String
 )
 
 data class MessageId(

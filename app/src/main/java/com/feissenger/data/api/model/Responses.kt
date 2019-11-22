@@ -23,7 +23,11 @@ data class ContactReadResponse(
     val uid: String,
     val contact: String,
     val message: String,
-    val time: String
+    val time: String,
+    val uid_name: String,
+    val contact_name: String,
+    val uid_fid: String,
+    val contact_fid: String
 )
 
 //RoomMessages
@@ -31,7 +35,8 @@ data class RoomReadResponse(
     val uid: String,
     val roomid: String,
     val message: String,
-    val time: String
+    val time: String,
+    val name: String
 )
 
 //Rooms
@@ -44,4 +49,10 @@ data class RoomListResponse(
 data class ContactListResponse(
     val name:String,
     val id: String
+)
+
+data class RegisterResponse (
+    val uid: String,
+    val access: String,
+    val refresh: String
 )

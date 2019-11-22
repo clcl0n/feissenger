@@ -4,8 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.net.wifi.WifiManager
-import android.util.Log
+import android.net.NetworkCapabilities
 
 class ConnectivityReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, arg1: Intent) {
@@ -17,8 +16,10 @@ class ConnectivityReceiver: BroadcastReceiver() {
 
     private fun isConnectedOrConnecting(context: Context): Boolean {
         val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connMgr.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnectedOrConnecting
+        return if(connMgr.getNetworkCapabilities(connMgr.activeNetwork) != null)
+            connMgr.getNetworkCapabilities(connMgr.activeNetwork).hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+        else
+            false
     }
 
     interface ConnectivityReceiverListener {

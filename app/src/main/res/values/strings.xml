@@ -5,4 +5,8 @@
     <string name="msg_token_fmt">Token %s</string>
     <string name="msg_subscribed">Subscribed to topic</string>
     <string name="msg_subscribe_failed">Subscription failed</string>
+    <string name="username_hint">USERNAME</string>
+    <string name="password_hint">PASSWORD</string>
+    <string name="login_btn">Login</string>
+    <string name="registration_btn">Registration</string>
 </resources>

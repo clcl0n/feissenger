@@ -14,9 +14,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.Intent
 import android.os.Build
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.feissenger.ui.ViewPagerFragmentDirections
@@ -28,6 +28,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private var selected = "light"
+    private lateinit var sharedPreferences: MySharedPreferences
+    lateinit var myToolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +58,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        sharedPreferences = MySharedPreferences(applicationContext)
+
         setTheme(getSavedTheme())
         setContentView(R.layout.activity_main)
         NavigationUI.setupWithNavController(
@@ -67,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
         val navGraph = navController?.navInflater?.inflate(R.navigation.nav_graph)
 
-        if (!getPreferences(Context.MODE_PRIVATE)?.getString("access", "").equals("")) {
+        if (sharedPreferences.get("access") != "") {
             navGraph?.startDestination = R.id.viewPagerFragment
         } else {
             navGraph?.startDestination = R.id.login_fragment
@@ -75,11 +79,13 @@ class MainActivity : AppCompatActivity() {
 
         navController?.graph = navGraph!!
 
-        setSupportActionBar(findViewById(R.id.my_toolbar))
+        myToolbar = findViewById(R.id.my_toolbar)
+
+        setSupportActionBar(myToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         val image = findViewById<ImageView>(R.id.theme_icon)
-        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", "")) {
+        when (sharedPreferences.get("theme")) {
             "light" -> {
                 image.setImageResource(R.drawable.sun)
                 selected = "light"
@@ -99,12 +105,13 @@ class MainActivity : AppCompatActivity() {
                 selected = "light"
                 image.setImageResource(R.drawable.sun)
             }
-            saveStringToPref("theme", selected)
-            saveStringToPref("newTheme","true")
+            sharedPreferences.put("theme", selected)
+            sharedPreferences.put("newTheme","true")
             recreate()
         }
 
-        when (getPreferences(Activity.MODE_PRIVATE).getString("theme", "")) {
+
+        when (sharedPreferences.get("theme")) {
             "light" -> {
                 image.setImageResource(R.drawable.sun)
                 selected = "light"
@@ -117,50 +124,44 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
 
+        logout_icon.setOnClickListener {
+            sharedPreferences.clear()
+            navGraph.startDestination = R.id.login_fragment
+            val loginNavController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+            loginNavController?.graph = navGraph
+            loginNavController?.navigate(R.id.login_fragment)
+        }
+
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
 
-        FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.i("tag", "getInstanceId failed", task.exception)
-                    return@OnCompleteListener
-                }
-
-                // Get new Instance ID token
-                val token = task.result?.token
-
-                // Log and toast
-                val msg = getString(R.string.msg_token_fmt, token)
-                Log.i("tag", msg)
-                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-            })
+//
 
         //creating notification channel if android version is greater than or equals to oreo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel("simplified_coding", "Simplified Coding", NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = "Android Push Notification Tutorial"
-            getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+            getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
         }
 
-        if(getPreferences(Activity.MODE_PRIVATE).getString("newTheme","") == "true"){
-            getPreferences(Activity.MODE_PRIVATE).edit().putString("newTheme","false").apply()
+        if(sharedPreferences.get("newTheme") == "true"){
+            sharedPreferences.put("newTheme","false")
 
-            when(getPreferences(Activity.MODE_PRIVATE).getString("fragment","")){
+            when(sharedPreferences.get("fragment")){
                 "messages"->{
-                    val action = getPreferences(Activity.MODE_PRIVATE).getString("contactId","")?.let {
+                    val action = sharedPreferences.get("contactId").let {
                         ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(
-                            it
+                            it as String
                         )
                     }
-                    action?.let { navController.navigate(it) }
+                    action.let { navController.navigate(it) }
                 }
                 "roomMessages"->{
-                    val action = getPreferences(Activity.MODE_PRIVATE).getString("roomId","")?.let {
+                    val action = sharedPreferences.get("roomId").let {
                         ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
-                            it
+                            it as String
                         )
                     }
-                    action?.let { navController.navigate(it) }
+                    action.let { navController.navigate(it) }
                 }
             }
 
@@ -169,21 +170,15 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        onNewIntent(getIntent());
+        onNewIntent(intent)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp()
     }
 
-    private fun saveStringToPref(key: String, value: String) {
-        val editor = getPreferences(Activity.MODE_PRIVATE).edit()
-        editor.putString(key, value)
-        editor.apply()
-    }
-
     private fun getSavedTheme(): Int {
-        return when (getPreferences(Activity.MODE_PRIVATE).getString("theme", "")) {
+        return when (sharedPreferences.get("theme")) {
             "dark" -> R.style.AppThemeDark
             "light" -> R.style.AppThemeLight
             else -> R.style.AppThemeLight
@@ -195,7 +190,7 @@ class MainActivity : AppCompatActivity() {
         val extras = intent?.extras
         val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
         if(extras?.get("typ").toString() == "msg"){
-            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(extras?.get("value").toString())
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(extras?.get("from").toString())
             navController?.navigate(action)
         }else{
             return

@@ -8,7 +8,8 @@ data class NotificationRequest(
 data class NotificationBody(
     val title:String,
     val message: String,
-    val value: String
+    val value: String,
+    val typ: String
 )
 
 //Login
@@ -49,7 +50,7 @@ data class RoomMessageRequest(
 
 data class RoomReadRequest(
     val uid: String,
-    val roomid: String,
+    val room: String,
     val api_key: String = "c95332ee022df8c953ce470261efc695ecf3e784"
 )
 
@@ -63,4 +64,17 @@ data class RoomListRequest(
 data class ContactListRequest(
     val uid:String,
     val api_key: String = "c95332ee022df8c953ce470261efc695ecf3e784"
+)
+
+data class RegisterRequest (
+    val name: String,
+    val password: String,
+    val api_key: String = "c95332ee022df8c953ce470261efc695ecf3e784"
+)
+
+data class RegisterTokenRequest(
+    val uid: String,
+    val fid: String,
+    val api_key: String = "c95332ee022df8c953ce470261efc695ecf3e784"
+
 )

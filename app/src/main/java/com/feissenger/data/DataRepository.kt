@@ -29,6 +29,11 @@ import com.feissenger.data.api.model.RoomListRequest
 import com.feissenger.data.api.model.*
 import com.feissenger.data.db.LocalCache
 import com.feissenger.data.db.model.*
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 import java.net.ConnectException
 
 /**
@@ -55,8 +60,27 @@ class DataRepository private constructor(
 
     suspend fun login(userName: String, password: String): LoginResponse? {
         val loginResponse = api.login(LoginRequest(userName, password))
-        if (loginResponse.isSuccessful)
+        if (loginResponse.isSuccessful){
+            FirebaseInstanceId.getInstance().instanceId
+                .addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        Log.i("tag", "getInstanceId failed", task.exception)
+                        return@OnCompleteListener
+                    }
+
+                    // Get new Instance ID token
+                    val token = task.result?.token.toString()
+//                    registerToken(RegisterTokenRequest(loginResponse.body()!!.uid, token))
+
+                        GlobalScope.launch {
+                           api.registerToken(RegisterTokenRequest(loginResponse.body()!!.uid, token))
+                        }
+
+                    // Log and toast
+                    Log.i("tag", "TU MAS TOKEN $token")
+                })
             return loginResponse.body()
+        }
         return null
     }
 
@@ -73,11 +97,11 @@ class DataRepository private constructor(
             if(contactReadResponse.isSuccessful){
                 if(save){
                     contactReadResponse.body()?.let {
-                        return cache.insertMessages(it.map { item -> MessageItem(MessageId(contactReadRequest.uid, item.uid, item.time),item.contact, item.message, item.message.startsWith("https://giphy.com/gifs/")) })
+                        return cache.insertMessages(it.map { item -> MessageItem(MessageId(contactReadRequest.uid, item.uid, item.time),item.contact, item.message, item.message.startsWith("https://giphy.com/gifs/"),item.uid_fid,item.contact_fid, item.uid_name, item.contact_name) })
                     }
                 }else{
                     contactReadResponse.body()?.last().let {
-                        return cache.insertMessage(MessageItem(MessageId(contactReadRequest.uid, it!!.uid, it.time),it.contact, it.message, it.message.startsWith("https://giphy.com/gifs/")))
+                        return cache.insertMessage(MessageItem(MessageId(contactReadRequest.uid, it!!.uid, it.time),it.contact, it.message, it.message.startsWith("https://giphy.com/gifs/"),it.uid_fid, it.contact_fid, it.uid_name, it.contact_name))
                     }
                 }
             }
@@ -116,6 +140,19 @@ class DataRepository private constructor(
 
 //    RoomMessages
     fun getRoomMessages(roomId: String): LiveData<List<RoomMessageItem>> = cache.getRoomMessages(roomId)
+
+    suspend fun register(userName: String, password: String): RegisterResponse? {
+        val registerReponse = api.register(RegisterRequest(userName, password))
+
+        if (registerReponse.isSuccessful)
+            return RegisterResponse(
+                uid = registerReponse.body()?.uid!!,
+                access = registerReponse.body()?.access!!,
+                refresh = registerReponse.body()?.refresh!!
+            )
+        return null
+    }
+
 
     suspend fun loadRoomMessages(onError: (error: String) -> Unit, roomReadRequest: RoomReadRequest) {
         try {
@@ -184,6 +221,7 @@ class DataRepository private constructor(
 
 //    Contacts
     fun getContacts(user: String): LiveData<List<ContactItem>> = cache.getContacts(user)
+    suspend fun getContactById(user: String, contactId: String): ContactItem = cache.getContactById(user, contactId)
 
     suspend fun getContactList(onError: (error: String) -> Unit, contactListRequest: ContactListRequest){
         try {
@@ -220,6 +258,15 @@ class DataRepository private constructor(
             return
         }
     }
+//
+//    fun registerToken(registerTokenRequest: RegisterTokenRequest) {
+//        val response = api.registerToken(registerTokenRequest).execute()
+//        if(response.isSuccessful){
+//            Log.i("tag","token registred")
+//        }
+//    }
+
+    suspend fun getContactFid(contact: String) = cache.getContactFid(contact)
 
 //    suspend fun getRoomMessages(onError: (error: String) -> Unit, roomid: String){
 //        try {

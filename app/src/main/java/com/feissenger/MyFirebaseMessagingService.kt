@@ -6,63 +6,84 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
-import android.preference.PreferenceManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.feissenger.data.DataRepository
-import com.feissenger.data.api.FCMApi
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.ContactReadRequest
-import com.feissenger.data.db.LocalCache
+import com.feissenger.data.api.model.RegisterTokenRequest
 import com.feissenger.data.util.Injection
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
-import java.util.prefs.PreferenceChangeEvent
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private val ADMIN_CHANNEL_ID = "admin_channel"
     private lateinit var dataRepository: DataRepository
-    private lateinit var sharedPref: SharedPreferences
-    fun CoroutineScope.go() = launch {
+    private lateinit var sharedPref: MySharedPreferences
+
+
+    private fun CoroutineScope.go() = launch {
         dataRepository.loadMessages(
             {},
             ContactReadRequest(
-                sharedPref.getString("uid", "")!!,
-                sharedPref.getString("contactId", "")!!
+                sharedPref.get("uid") as String,
+                sharedPref.get("contactId") as String
             )
         )
     }
 
+
+    override fun onNewToken(p0: String) {
+        sharedPref = MySharedPreferences(applicationContext)
+        super.onNewToken(p0)
+        if (sharedPref.get("access") != "") {
+            GlobalScope.launch {
+                WebApi.create(applicationContext!!)
+                    .registerToken(
+                        userFidRequest = RegisterTokenRequest(
+                            sharedPref.get("uid").toString(),
+                            p0
+                        )
+                    )
+            }
+        }
+    }
+
+
     override fun onMessageReceived(message: RemoteMessage) {
+        sharedPref = MySharedPreferences(applicationContext)
+
         super.onMessageReceived(message)
         dataRepository = Injection.provideDataRepository(applicationContext)
-        sharedPref = getSharedPreferences(MainActivity::class.simpleName, Context.MODE_PRIVATE)
+
 
         runBlocking { go() }
 
         val activityManager =
             applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+
         var isOpen = false
-        for (appprocess in activityManager.runningAppProcesses) {
-            if ((appprocess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appprocess.processName == "com.feissenger" && sharedPref.getString(
-                    "fragment",
-                    ""
-                ) == "messages" && sharedPref.getString("contactId", "") == message.data.get("value")) || (sharedPref.getString("uid","") == "")
+        for (appProcess in activityManager.runningAppProcesses) {
+            if ((appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName == "com.feissenger" && sharedPref.get(
+                    "fragment"
+                ) == "messages" && sharedPref.get("contactId") == message.data["value"]) || (sharedPref.get(
+                    "uid"
+                ) == "")
             ) {
                 isOpen = !isOpen
-                Log.i("Foreground App", appprocess.processName)
+                Log.i("Foreground App", appProcess.processName)
             }
         }
 
@@ -83,10 +104,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            val extras = message.from?.split("/")?.last()?.split("_")
-            intent.putExtra("typ", extras?.first())
-            intent.putExtra("value", message.data["value"])
 
+            intent.putExtra("typ", message.data["typ"])
+            intent.putExtra("from", message.data["from"])
             val pendingIntent = PendingIntent.getActivity(
                 this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
@@ -109,10 +129,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setSound(notificationSoundUri)
                 .setContentIntent(pendingIntent)
 
-            //Set notification color to match your app color template
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                notificationBuilder.color = resources.getColor(R.color.blue)
-            }
             notificationManager.notify(notificationID, notificationBuilder.build())
         }
     }

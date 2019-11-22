@@ -5,13 +5,17 @@ import com.feissenger.data.api.model.*
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 interface WebApi {
+
+//    Register
+    @POST("user/create.php")
+    @Headers("Needs-Auth: false")
+    suspend fun register(@Body register: RegisterRequest): Response<RegisterResponse>
 
 //    Login
     @POST("user/login.php")
@@ -51,6 +55,9 @@ interface WebApi {
     @Headers("Needs-Auth: true")
     suspend fun getRooms(@Body roomList: RoomListRequest): Response<List<RoomListResponse>>
 
+    @POST("/user/fid.php")
+    @Headers("Needs-Auth: true")
+    suspend fun registerToken(@Body userFidRequest: RegisterTokenRequest): Response<ResponseBody>
 
     companion object {
         private const val BASE_URL =

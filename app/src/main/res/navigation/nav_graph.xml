@@ -7,7 +7,11 @@
     <fragment
         android:id="@+id/room_fragment"
         android:name="com.feissenger.ui.RoomsFragment"
-        android:label="RoomFragment" />
+        android:label="RoomFragment" >
+        <action
+            android:id="@+id/action_room_fragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/contact_list_fragment"
@@ -28,6 +32,9 @@
         <action
             android:id="@+id/action_login_fragment_to_viewPagerFragment"
             app:destination="@id/viewPagerFragment" />
+        <action
+            android:id="@+id/action_login_fragment_to_registrationFragment"
+            app:destination="@id/registration_fragment" />
     </fragment>
     <fragment
         android:id="@+id/viewPagerFragment"
@@ -45,6 +52,14 @@
         android:name="com.feissenger.ui.RoomMessagesFragment"
         android:label="RoomMessagesFragment" >
         <argument android:name="roomId" />
+    </fragment>
+    <fragment
+        android:id="@+id/registration_fragment"
+        android:name="com.feissenger.ui.RegistrationFragment"
+        android:label="RegistrationFragment" >
+        <action
+            android:id="@+id/action_registrationFragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
     </fragment>
 
 

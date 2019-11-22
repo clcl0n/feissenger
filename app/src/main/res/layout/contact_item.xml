@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/big_height"
     android:orientation="vertical"
-    android:layout_marginBottom="5dp"
-    android:paddingTop="200dp"
-    android:paddingBottom="200dp"
-    android:background="@color/white">
+    android:layout_margin="@dimen/thick"
+    android:background="?attr/background_color">
+    <TextView
+        android:id="@+id/contact_group"
+        android:layout_gravity="start"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:textColor="?attr/toolbar_color"
+        android:textSize="24sp"/>
     <TextView
         android:id="@+id/contact_name"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:textColor="?attr/toolbar_color"
-        android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/contact_id"
-        android:layout_gravity="start"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:textColor="?attr/toolbar_color"
-        android:textSize="14sp" />
+        android:layout_width="match_parent"
+        android:textColor="?attr/text_color"
+        android:textSize="@dimen/normal_text" />
 </LinearLayout>

@@ -29,6 +29,7 @@ class LocalCache(private val dao: DbDao) {
 
     //Contacts
     fun getContacts(user: String) = dao.getContacts(user)
+    suspend fun getContactById(user: String, contactId: String) = dao.getContactById(user, contactId)
 
     suspend fun insertContacts(contactList: List<ContactItem>) {
         dao.insertContacts(contactList)
@@ -40,4 +41,7 @@ class LocalCache(private val dao: DbDao) {
     }
 
     fun getRoomMessages(roomId: String) = dao.getRoomMessages(roomId)
+
+    suspend fun getContactFid(contact: String) = dao.getContactFid(contact)
+
 }

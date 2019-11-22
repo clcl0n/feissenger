@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
 
         <variable
             name="model"
@@ -20,10 +21,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/active_room"
             app:layout_constraintTop_toTopOf="parent"
-            android:textColor="?attr/ssid_color"
+            android:textColor="?attr/text_color"
             android:text="@string/public_room"
             android:textIsSelectable="true"
-            android:textSize="24sp" />
+            android:textSize="24sp"/>
         <TextView
             android:id="@+id/active_room"
             android:layout_height="wrap_content"
@@ -32,7 +33,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/messages_list"
             app:layout_constraintTop_toBottomOf="@id/public_room"
-            android:textColor="?attr/ssid_color"
+            android:textColor="?attr/text_color"
+            android:visibility="@{model.visibleActive ? View.VISIBLE : View.GONE}"
             android:text="@{model.activeRoom}"
             android:textSize="24sp" />
 
