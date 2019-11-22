@@ -75,31 +75,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         dataRepository = Injection.provideDataRepository(applicationContext)
 
 
-        runBlocking { go() }
-
-        var isOpen = false
-        
-            val dontNotify =
-                (
-                    (
-                        sharedPref.get("fragment") == "messages" && sharedPref.get("contactId") == message.data["value"]
-                    )
-                            ||
-                    (
-                        sharedPref.get("activeWifi") != message.data["value"] && message.data["typ"] == "room"
-                    )
-                            ||
-                    (
-                        sharedPref.get("fragment") == "roomMessages" && sharedPref.get("roomId") == message.data["value"]
-                    )
-                )
-            if (dontNotify) {
-                isOpen = !isOpen
-            }
 
 
+        if (!((sharedPref.get("fragment") == "messages" && sharedPref.get("contactId") == message.data["value"]) ||
+            ( sharedPref.get("activeWifi") != message.data["value"] && message.data["typ"] == "room") ||
+            (sharedPref.get("fragment") == "roomMessages" && sharedPref.get("roomId") == message.data["value"])))
+        {
 
-        if (!isOpen) {
+            runBlocking { go() }
+
             val intent = Intent(applicationContext, MainActivity::class.java)
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
