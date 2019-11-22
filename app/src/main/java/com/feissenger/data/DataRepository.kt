@@ -164,7 +164,7 @@ class DataRepository private constructor(
             if(roomReadResponse.isSuccessful){
                 roomReadResponse.body()?.let {
                     return cache.insertRoomMessages(it.map { item -> RoomMessageItem(
-                        RoomMessageItemId(item.uid,item.roomid, item.time), item.message
+                        RoomMessageItemId(item.uid,item.roomid, item.time, item.name), item.message
                     ) })
                 }
             }
@@ -203,7 +203,9 @@ class DataRepository private constructor(
 
 //    Rooms
 
-    fun getRooms(user: String): LiveData<List<RoomItem>> = cache.getRooms(user)
+    fun getRooms(user: String, activeRoom: String): LiveData<List<RoomItem>> = cache.getRooms(user, activeRoom)
+
+    suspend fun getMutableRooms(user: String, activeRoom: String): List<RoomItem> = cache.getMutableRooms(user, activeRoom)
 
     suspend fun getRoomList(onError: (error:String) -> Unit, roomListRequest: RoomListRequest){
         try {
@@ -213,11 +215,17 @@ class DataRepository private constructor(
                     for (ritem in it){
                         FirebaseMessaging.getInstance().subscribeToTopic("/topics/${ritem.roomid}")
                             .addOnCompleteListener { task ->
-                                if (!task.isSuccessful) {
+                                if (task.isSuccessful) {
                                     Log.i("tag", "/topics/${ritem.roomid}")
                                 }
                             }
                     }
+                    FirebaseMessaging.getInstance().subscribeToTopic("/topics/XsTDHS3C2YneVmEW5Ry7")
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Log.i("tag", "/topics/XsTDHS3C2YneVmEW5Ry7")
+                            }
+                        }
 
                     return cache.insertRooms(it.map { item -> RoomItem(RoomItemId(item.roomid,roomListRequest.uid),item.time) })
                 }

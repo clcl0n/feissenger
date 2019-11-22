@@ -46,7 +46,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         dataRepository.loadRoomMessages(
             {},
-            RoomReadRequest(sharedPref.get("uid") as String, sharedPref.get("roomId") as String)
+            RoomReadRequest(sharedPref.get("uid") as String, sharedPref.get("activeWifi") as String)
         )
     }
 
@@ -77,26 +77,27 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         runBlocking { go() }
 
-        val activityManager =
-            applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-
         var isOpen = false
-
-        for (appProcess in activityManager.runningAppProcesses) {
-            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
-                appProcess.processName == "com.feissenger" &&
-                ((sharedPref.get("fragment") == "messages" &&
-                        sharedPref.get("contactId") == message.data["value"] ||
-                        sharedPref.get("uid") != "") ||
-                        (sharedPref.get("fragment") == "roomMessages" &&
-                        sharedPref.get("activeWifi") == message.data["value"] ||
-                        sharedPref.get("uid") != ""))
-            ) {
+        
+            val dontNotify =
+                (
+                    (
+                        sharedPref.get("fragment") == "messages" && sharedPref.get("contactId") == message.data["value"]
+                    )
+                            ||
+                    (
+                        sharedPref.get("activeWifi") != message.data["value"] && message.data["typ"] == "room"
+                    )
+                            ||
+                    (
+                        sharedPref.get("fragment") == "roomMessages" && sharedPref.get("roomId") == message.data["value"]
+                    )
+                )
+            if (dontNotify) {
                 isOpen = !isOpen
             }
-        }
-        if ((message.data["typ"] == "room" && sharedPref.get("activeWifi") == message.data["value"]))
-            return
+
+
 
         if (!isOpen) {
             val intent = Intent(applicationContext, MainActivity::class.java)

@@ -26,6 +26,8 @@ import com.feissenger.MySharedPreferences
 import com.feissenger.ui.adapter.MessagesAdapter
 import com.feissenger.ui.viewModels.MessagesViewModel
 import com.feissenger.R
+import com.feissenger.data.db.model.ContactItem
+import com.feissenger.data.db.model.ContactItemId
 import com.feissenger.databinding.FragmentMessageBinding
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
@@ -71,10 +73,11 @@ class MessagesFragment : Fragment() {
         }
 
         viewModel.contact = arg.contactId
+        viewModel.contactItem.postValue(ContactItem(ContactItemId(viewModel.uid, arg.contactId), arg.contactName))
 
         binding.model = viewModel
 
-        viewModel.getContactById()
+//        viewModel.getContactById()
 
         viewModel.loadMessages()
 

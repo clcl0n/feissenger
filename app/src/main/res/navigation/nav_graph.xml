@@ -24,6 +24,10 @@
         android:name="com.feissenger.ui.MessagesFragment"
         android:label="MessagesFragment" >
         <argument android:name="contactId" />
+        <argument
+            android:name="contactName"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
 
     <fragment
@@ -56,6 +60,9 @@
         <action
             android:id="@+id/action_roomMessagesFragment_to_roomPost"
             app:destination="@id/roomPost" />
+        <action
+            android:id="@+id/action_roomMessagesFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment" />
     </fragment>
     <fragment
         android:id="@+id/registration_fragment"

@@ -1,6 +1,10 @@
 package com.feissenger.ui
 
 
+import android.content.Context
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
+import com.feissenger.data.ConnectivityReceiver
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.RegisterTokenRequest
 import com.feissenger.data.util.Injection
@@ -26,17 +31,26 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListener {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var viewModel: LoginViewModel
     private lateinit var sharedPref: MySharedPreferences
+    private lateinit var wifiManager: WifiManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        activity?.registerReceiver(ConnectivityReceiver(),
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
+
         sharedPref = context?.let { MySharedPreferences(it) }!!
+
+        wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
+
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_login, container, false
@@ -47,13 +61,13 @@ class LoginFragment : Fragment() {
 
         binding.model = viewModel
 
-        viewModel.user.observe(this) {
-            val navController = findNavController()
-            val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
-            navGraph.startDestination = R.id.room_fragment
-            navController.graph = navGraph
-            navController.navigate(R.id.room_fragment)
-        }
+//        viewModel.user.observe(this) {
+//            val navController = findNavController()
+//            val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+//            navGraph.startDestination = R.id.room_fragment
+//            navController.graph = navGraph
+//            navController.navigate(R.id.room_fragment)
+//        }
 
 //        adapter
         return binding.root
@@ -104,5 +118,25 @@ class LoginFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         (activity as MainActivity).myToolbar.toolbar_text.text = "FEIssenger"
+    }
+
+    /**
+     * Callback will be called when there is change
+     */
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        showMessage(isConnected)
+    }
+
+    private fun showMessage(isConnected: Boolean) {
+        if (isConnected) {
+            if (wifiManager.connectionInfo.hiddenSSID){
+                sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
+            }
+            else{
+                sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
+            }
+        } else {
+            sharedPref.put("activeWifi","")
+        }
     }
 }

@@ -19,7 +19,7 @@ class RoomPostViewModel(private val repository: DataRepository) : ViewModel() {
     var access: String = ""
 
     val rooms: LiveData<List<RoomItem>>
-        get() = repository.getRooms(uid)
+        get() = repository.getRooms(uid, activeRoom.value!!)
 
     fun setActiveRoom(active: String, visible: Boolean) {
         visibleActive.postValue(visible)

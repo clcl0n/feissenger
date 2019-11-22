@@ -35,13 +35,15 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
     private lateinit var viewModel: RoomsViewModel
     private lateinit var binding: FragmentRoomBinding
     private lateinit var wifiManager: WifiManager
-    private lateinit var toast: Toast
     private lateinit var sharedPref: MySharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        activity?.registerReceiver(ConnectivityReceiver(),
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
         sharedPref = context?.let { MySharedPreferences(it) }!!
         wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
@@ -56,7 +58,9 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         with(sharedPref) {
             viewModel.uid = get("uid").toString()
             viewModel.access = get("access").toString()
+            viewModel.activeWifi = get("activeWifi").toString()
         }
+
 
         binding.model = viewModel
 
@@ -64,15 +68,19 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
 
-        activity?.registerReceiver(ConnectivityReceiver(),
-            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        )
-
         val adapter = RoomsAdapter()
         binding.messagesList.adapter = adapter
 
-        viewModel.rooms.observe(this) {
+        viewModel.mutableRooms.observe(this){
             adapter.data = it
+        }
+
+//        viewModel.rooms.observe(this) {
+//            adapter.data = it
+//        }
+
+        viewModel.activeRoom.observe(this){
+            viewModel.refreshRooms()
         }
 
         viewModel.loadRooms()
@@ -86,7 +94,7 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
 
         binding.publicRoom.setOnClickListener {
             val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
-                "Public Room"
+                "XsTDHS3C2YneVmEW5Ry7"
             )
             it.findNavController().navigate(action)
         }
@@ -97,15 +105,19 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
     private fun showMessage(isConnected: Boolean) {
         if (isConnected) {
             if (wifiManager.connectionInfo.hiddenSSID){
-                viewModel.setActiveRoom(wifiManager.connectionInfo.bssid,true)
-                sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid)
+                sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
+                viewModel.activeWifi = wifiManager.connectionInfo.bssid.removeSurrounding("\"","\"")
+                viewModel.setActiveRoom()
             }
             else{
-                viewModel.setActiveRoom(wifiManager.connectionInfo.ssid,true)
-                sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid)
+                sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
+                viewModel.activeWifi = wifiManager.connectionInfo.ssid.removeSurrounding("\"","\"")
+                viewModel.setActiveRoom()
             }
         } else {
-            viewModel.setActiveRoom("",false)
+            sharedPref.put("activeWifi","")
+            viewModel.activeWifi = ""
+            viewModel.setActiveRoom()
         }
     }
 
@@ -127,4 +139,6 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
 
         sharedPref.put("fragment","rooms")
     }
+
+
 }
