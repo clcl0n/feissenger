@@ -16,6 +16,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
     var uid: String = ""
     var contact: String = ""
+    var contactName: String = ""
 
     val messages: LiveData<List<MessageItem>>
         get() = repository.getMessages(uid, contact)
@@ -35,7 +36,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
                 repository.notifyMessage(notifyMessage = NotificationRequest(
                     contactFid,
-                    NotificationBody(uid, it, uid, "msg")
+                    NotificationBody(contactName,it,uid,"msg")
                 ), onError = { error.postValue(it) })
             }
         }
@@ -52,7 +53,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
             repository.notifyMessage(notifyMessage = NotificationRequest(
                 contactFid,
-                NotificationBody(uid, gif, uid, "msg")
+                NotificationBody(contactName, "Nový GIF súbor", uid, "msg")
             ), onError = { error.postValue(it) })
         }
     }

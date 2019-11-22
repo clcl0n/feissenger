@@ -33,7 +33,7 @@ interface DbDao {
     suspend fun insertRooms(roomList: List<RoomItem>)
 
     //    Contacts
-    @Query("SELECT * FROM contacts WHERE uid LIKE :uid")
+    @Query("SELECT * FROM contacts WHERE uid LIKE :uid ORDER BY name ASC")
     fun getContacts(uid: String): LiveData<List<ContactItem>>
 
     @Query("SELECT * FROM contacts WHERE uid LIKE :uid and contactId LIKE :contactId LIMIT 1")

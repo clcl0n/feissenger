@@ -190,10 +190,13 @@ class MainActivity : AppCompatActivity() {
         val extras = intent?.extras
         val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
         if(extras?.get("typ").toString() == "msg"){
-            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(extras?.get("from").toString())
+            navController?.popBackStack(R.id.viewPagerFragment,false)
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(extras?.get("id").toString(),extras?.get("from").toString())
             navController?.navigate(action)
-        }else{
-            return
+        }else if(extras?.get("typ").toString() == "room"){
+            navController?.popBackStack(R.id.viewPagerFragment,false)
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(extras?.get("id").toString())
+            navController?.navigate(action)
         }
     }
 }

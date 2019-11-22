@@ -73,6 +73,7 @@ class MessagesFragment : Fragment() {
         }
 
         viewModel.contact = arg.contactId
+        viewModel.contactName = arg.contactName
         viewModel.contactItem.postValue(ContactItem(ContactItemId(viewModel.uid, arg.contactId), arg.contactName))
 
         binding.model = viewModel

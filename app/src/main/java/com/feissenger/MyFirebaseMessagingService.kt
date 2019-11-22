@@ -82,7 +82,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             (sharedPref.get("fragment") == "roomMessages" && sharedPref.get("roomId") == message.data["value"])))
         {
 
-            runBlocking { go() }
 
             val intent = Intent(applicationContext, MainActivity::class.java)
             val notificationManager =
@@ -101,7 +100,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
             intent.putExtra("typ", message.data["typ"])
-            intent.putExtra("from", message.data["from"])
+            intent.putExtra("from", message.data["title"])
+            intent.putExtra("id", message.data["value"])
             val pendingIntent = PendingIntent.getActivity(
                 this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
@@ -125,6 +125,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentIntent(pendingIntent)
 
             notificationManager.notify(notificationID, notificationBuilder.build())
+        }else{
+            runBlocking { go() }
+
         }
     }
 
