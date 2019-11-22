@@ -1,8 +1,6 @@
 package com.feissenger.ui
 
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,8 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +20,7 @@ import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentRoomMessageBinding
 import com.feissenger.ui.adapter.RoomMessagesAdapter
 import com.feissenger.ui.viewModels.RoomMessagesViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class RoomMessagesFragment : Fragment() {
     private lateinit var viewModel: RoomMessagesViewModel
@@ -66,6 +66,15 @@ class RoomMessagesFragment : Fragment() {
         val contentView = binding.messagesList
         contentView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             binding.messagesList.scrollToPosition(0)
+        }
+
+
+        binding.fab.setOnClickListener { view ->
+            Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                .setAction("Action", null)
+                .show()
+            val action = RoomMessagesFragmentDirections.actionRoomMessagesFragmentToRoomPost()
+            view.findNavController().navigate(action)
         }
 
 //        binding.model.setUid("1")

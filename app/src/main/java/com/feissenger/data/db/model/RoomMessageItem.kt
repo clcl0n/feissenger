@@ -15,5 +15,6 @@ data class RoomMessageItem(
 data class RoomMessageItemId(
     val uid: String,
     val roomId: String,
-    val time: String
+    val time: String,
+    val name: String
 )

@@ -62,10 +62,4 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
             repository.loadMessages({error.postValue(it)},ContactReadRequest(uid, contact))
         }
     }
-
-    fun getContactById() {
-        viewModelScope.launch {
-            contactItem.postValue(repository.getContactById(uid, contact))
-        }
-    }
 }

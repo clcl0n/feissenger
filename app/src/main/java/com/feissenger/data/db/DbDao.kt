@@ -23,8 +23,11 @@ interface DbDao {
     suspend fun getContactFid(contact: String): String
 
     //    Rooms
-    @Query("SELECT * FROM rooms WHERE uid LIKE :uid")
-    fun getRooms(uid: String): LiveData<List<RoomItem>>
+    @Query("SELECT * FROM rooms WHERE uid LIKE :uid  AND ssid NOT LIKE 'XsTDHS3C2YneVmEW5Ry7' AND ssid NOT LIKE :activeRoom")
+    fun getRooms(uid: String, activeRoom: String): LiveData<List<RoomItem>>
+
+    @Query("SELECT * FROM rooms WHERE uid LIKE :user  AND ssid NOT LIKE 'XsTDHS3C2YneVmEW5Ry7' AND ssid NOT LIKE :activeRoom")
+    suspend fun getMutableRooms(user: String, activeRoom: String): List<RoomItem>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertRooms(roomList: List<RoomItem>)
@@ -45,5 +48,6 @@ interface DbDao {
 
     @Query("SELECT * FROM posts WHERE roomid LIKE :roomid")
     fun getRoomMessages(roomid: String): LiveData<List<RoomMessageItem>>
+
 
 }

@@ -17,6 +17,7 @@ import com.feissenger.data.DataRepository
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.ContactReadRequest
 import com.feissenger.data.api.model.RegisterTokenRequest
+import com.feissenger.data.api.model.RoomReadRequest
 import com.feissenger.data.util.Injection
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -41,6 +42,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 sharedPref.get("uid") as String,
                 sharedPref.get("contactId") as String
             )
+        )
+
+        dataRepository.loadRoomMessages(
+            {},
+            RoomReadRequest(sharedPref.get("uid") as String, sharedPref.get("activeWifi") as String)
         )
     }
 
@@ -69,26 +75,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         dataRepository = Injection.provideDataRepository(applicationContext)
 
 
-        runBlocking { go() }
-
-        val activityManager =
-            applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-
-        var isOpen = false
-        for (appProcess in activityManager.runningAppProcesses) {
-            if ((appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName == "com.feissenger" && sharedPref.get(
-                    "fragment"
-                ) == "messages" && sharedPref.get("contactId") == message.data["value"]) || (sharedPref.get(
-                    "uid"
-                ) == "")
-            ) {
-                isOpen = !isOpen
-                Log.i("Foreground App", appProcess.processName)
-            }
-        }
 
 
-        if (!isOpen) {
+        if (!((sharedPref.get("fragment") == "messages" && sharedPref.get("contactId") == message.data["value"]) ||
+            ( sharedPref.get("activeWifi") != message.data["value"] && message.data["typ"] == "room") ||
+            (sharedPref.get("fragment") == "roomMessages" && sharedPref.get("roomId") == message.data["value"])))
+        {
+
+            runBlocking { go() }
+
             val intent = Intent(applicationContext, MainActivity::class.java)
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

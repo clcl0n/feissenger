@@ -43,16 +43,6 @@ class ContactListFragment : Fragment(){
         viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(ContactListViewModel::class.java)
 
-//        sharedViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
-//            .get(SharedViewModel::class.java)
-
-//        sharedViewModel = activity?.run {
-//            ViewModelProviders.of(this)[SharedViewModel::class.java]
-//        } ?: throw Exception("Invalid Activity")
-//
-//        viewModel.uid = sharedViewModel.user.value!!.uid
-//        viewModel.access = sharedViewModel.user.value!!.access
-
         with(sharedPref) {
             viewModel.uid = get("uid").toString()
             viewModel.access = get("access").toString()
