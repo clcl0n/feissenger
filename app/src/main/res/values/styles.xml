@@ -15,6 +15,7 @@
         <item name="text_color">@color/black</item>
         <item name="sender">@color/blue</item>
         <item name="recipient">@color/gray</item>
+        <item name="room_message">@color/light_gray</item>
     </style>
 
     <style name="AppThemeDark" parent="AppTheme">
@@ -23,6 +24,7 @@
         <item name="text_color">@color/white</item>
         <item name="sender">@color/blue</item>
         <item name="recipient">@color/gray</item>
+        <item name="room_message">@color/light_gray</item>
     </style>
     
     <style name="editTextStyle" parent="Widget.AppCompat.EditText">
