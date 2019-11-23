@@ -1,85 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="@dimen/thin"
     android:background="@drawable/rounded_border_room_message"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp">
+    android:padding="@dimen/text_padding"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/room_message_user_icon"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/chat_with_user"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/user_circle"
-        app:layout_constraintBottom_toTopOf="@id/horizontal_guideline"
-        app:layout_constraintEnd_toEndOf="@id/guideline1"
-        android:layout_margin="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/thick">
 
-    <TextView
-        android:id="@+id/room_message_user_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/normal_text"
-        android:layout_margin="@dimen/thin"
-        app:layout_constraintBottom_toTopOf="@id/horizontal_guideline"
-        app:layout_constraintEnd_toEndOf="@id/guideline2"
-        app:layout_constraintStart_toStartOf="@id/guideline1"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="MENOOOO"/>
+        <ImageView
+            android:id="@+id/room_message_user_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/user_circle"
+            android:layout_gravity="start"
+            android:layout_marginEnd="@dimen/thin"
+            />
 
-    <TextView
-        android:id="@+id/room_message_time"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/small_text"
-        android:layout_margin="@dimen/thin"
-        app:layout_constraintBottom_toTopOf="@id/horizontal_guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline2"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="datum"
-        android:textAlignment="textEnd"
-        android:gravity="end"/>
+        <TextView
+            android:id="@+id/room_message_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/normal_text"
+            android:layout_weight="2"
+            tools:text="MENOOOO"/>
+
+        <TextView
+            android:id="@+id/room_message_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/small_text"
+            android:layout_weight="2"
+            android:gravity="end"
+            tools:text="datum"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/room_message_text"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textColor="@android:color/black"
         android:textSize="@dimen/normal_text"
-        android:layout_margin="@dimen/thin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/horizontal_guideline" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontal_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="40dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="35dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="230dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        tools:text="teeeeee"/>
+</LinearLayout>

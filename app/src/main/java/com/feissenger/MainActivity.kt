@@ -148,19 +148,23 @@ class MainActivity : AppCompatActivity() {
 
             when(sharedPreferences.get("fragment")){
                 "messages"->{
-                    val action = sharedPreferences.get("contactId").let {
-                        ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(
-                            it as String
+                    val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(
+                        sharedPreferences.get("contactId") as String, sharedPreferences.get("contactName") as String
                         )
-                    }
                     action.let { navController.navigate(it) }
                 }
                 "roomMessages"->{
-                    val action = sharedPreferences.get("roomId").let {
+                    val action =
                         ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
-                            it as String
+                            sharedPreferences.get("roomId") as String
                         )
-                    }
+                    action.let { navController.navigate(it) }
+                }
+                "roomsPost"->{
+                    val action =
+                        ViewPagerFragmentDirections.actionViewPagerFragmentToRoomPost(
+                            sharedPreferences.get("roomId") as String
+                        )
                     action.let { navController.navigate(it) }
                 }
             }

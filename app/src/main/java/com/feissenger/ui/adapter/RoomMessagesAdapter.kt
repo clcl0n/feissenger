@@ -38,7 +38,7 @@ class RoomMessagesAdapter() : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolde
             (itemView.room_message_user_name as TextView).text = item.id.name
             (itemView.room_message_time as TextView).text = item.id.time
             (itemView.room_message_text as TextView).text = item.message
-            itemView.room_message_user_icon.setOnClickListener {
+            itemView.chat_with_user.setOnClickListener {
                 it.findNavController().navigate(RoomMessagesFragmentDirections.actionRoomMessagesFragmentToMessagesFragment(item.id.uid, item.id.name))
             }
         }

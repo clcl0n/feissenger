@@ -73,7 +73,6 @@ class MessagesFragment : Fragment() {
         }
 
         viewModel.contact = arg.contactId
-        viewModel.contactItem.postValue(ContactItem(ContactItemId(viewModel.uid, arg.contactId), arg.contactName))
 
         binding.model = viewModel
 
@@ -101,6 +100,7 @@ class MessagesFragment : Fragment() {
 
         sharedPref.put("fragment", "messages")
         sharedPref.put("contactId", arg.contactId)
+        sharedPref.put("contactName", arg.contactName)
 
         giphy_button.style = GPHGiphyButtonStyle.iconSquareRounded
         val settings =
@@ -141,8 +141,6 @@ class MessagesFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.contactItem.observeForever {
-            (activity as MainActivity).myToolbar.toolbar_text.text = it.name
-        }
+        (activity as MainActivity).myToolbar.toolbar_text.text = arg.contactName
     }
 }

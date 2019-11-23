@@ -51,12 +51,16 @@
         <action
             android:id="@+id/action_viewPagerFragment_to_roomMessagesFragment"
             app:destination="@id/roomMessagesFragment" />
+        <action
+            android:id="@+id/action_viewPagerFragment_to_roomPost"
+            app:destination="@id/roomPost" />
     </fragment>
     <fragment
         android:id="@+id/roomMessagesFragment"
         android:name="com.feissenger.ui.RoomMessagesFragment"
         android:label="RoomMessagesFragment" >
-        <argument android:name="roomId" />
+        <argument android:name="roomId"
+            app:argType="string" />
         <action
             android:id="@+id/action_roomMessagesFragment_to_roomPost"
             app:destination="@id/roomPost" />
@@ -76,7 +80,14 @@
         android:id="@+id/roomPost"
         android:name="com.feissenger.ui.RoomPostFragment"
         android:label="fragment_room_post"
-        tools:layout="@layout/fragment_room_post" />
+        tools:layout="@layout/fragment_room_post" >
+        <action
+            android:id="@+id/action_roomPost_to_roomMessagesFragment"
+            app:destination="@id/roomMessagesFragment" />
+        <argument
+            android:name="roomId"
+            app:argType="string" />
+    </fragment>
 
 
 </navigation>

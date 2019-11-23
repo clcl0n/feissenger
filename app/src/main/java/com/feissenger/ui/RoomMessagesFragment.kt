@@ -14,13 +14,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
+import com.feissenger.data.db.model.RoomItem
 import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentRoomMessageBinding
 import com.feissenger.ui.adapter.RoomMessagesAdapter
 import com.feissenger.ui.viewModels.RoomMessagesViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 class RoomMessagesFragment : Fragment() {
     private lateinit var viewModel: RoomMessagesViewModel
@@ -70,18 +73,9 @@ class RoomMessagesFragment : Fragment() {
 
 
         binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .show()
-            val action = RoomMessagesFragmentDirections.actionRoomMessagesFragmentToRoomPost()
+            val action = RoomMessagesFragmentDirections.actionRoomMessagesFragmentToRoomPost(arg.roomId)
             view.findNavController().navigate(action)
         }
-
-//        binding.model.setUid("1")
-//        binding.model.setContact(sharedViewModel.contactId.value!!)
-
-//        viewModel.setUid("1")
-//        viewModel.setContact(sharedViewModel.contactId.value!!)
 
         return binding.root
     }
@@ -91,5 +85,16 @@ class RoomMessagesFragment : Fragment() {
 
         sharedPref.put("fragment","roomMessages")
         sharedPref.put("roomId",arg.roomId)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        val roomName = if (arg.roomId == "XsTDHS3C2YneVmEW5Ry7")
+            "Public Room"
+        else
+            arg.roomId
+        (activity as MainActivity).myToolbar.toolbar_text.text = roomName
+        (activity as MainActivity).myToolbar.theme_icon.visibility = View.VISIBLE
     }
 }
