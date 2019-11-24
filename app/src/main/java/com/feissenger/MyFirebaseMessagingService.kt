@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.RingtoneManager
+import android.net.ConnectivityManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -33,6 +34,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private val ADMIN_CHANNEL_ID = "admin_channel"
     private lateinit var dataRepository: DataRepository
     private lateinit var sharedPref: MySharedPreferences
+    private lateinit var connectivityManager: ConnectivityManager
 
 
     private fun CoroutineScope.go() = launch {
@@ -74,7 +76,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(message)
         dataRepository = Injection.provideDataRepository(applicationContext)
 
-
+//        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
 
         if (!((sharedPref.get("fragment") == "messages" && sharedPref.get("contactId") == message.data["value"]) ||

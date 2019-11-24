@@ -93,6 +93,8 @@ class DataRepository private constructor(
         return cache.getMessages(user, contact)
     }
 
+    suspend fun getMutableMessages(uid: String, contact: String): List<MessageItem> = cache.getMutableMessages(uid, contact)
+
     suspend fun loadMessages(onError: (error: String) -> Unit, contactReadRequest: ContactReadRequest, save: Boolean = true) {
         try {
             val contactReadResponse = api.getContactMessages(contactReadRequest)
@@ -287,6 +289,7 @@ class DataRepository private constructor(
 //    }
 
     suspend fun getContactFid(contact: String) = cache.getContactFid(contact)
+
 
 //    suspend fun getRoomMessages(onError: (error: String) -> Unit, roomid: String){
 //        try {

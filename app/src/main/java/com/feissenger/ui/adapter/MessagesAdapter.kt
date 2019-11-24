@@ -39,7 +39,7 @@ class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
                 itemView.message_bubble.visibility = View.GONE
                 itemView.obal_gif.visibility = View.VISIBLE
 
-                itemView.message_gif.setMediaWithId(item.message.split("-").last())
+                itemView.message_gif.setMediaWithId(item.message.split("/").last().split("-").last())
 
                 (itemView.message_time as TextView).text = item.id.time
 

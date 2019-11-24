@@ -30,26 +30,26 @@ import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-
-class LoginFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListener {
+//, ConnectivityReceiver.ConnectivityReceiverListener
+class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var viewModel: LoginViewModel
     private lateinit var sharedPref: MySharedPreferences
-    private lateinit var wifiManager: WifiManager
+//    private lateinit var wifiManager: WifiManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        activity?.registerReceiver(ConnectivityReceiver(),
-            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        )
+//        activity?.registerReceiver(ConnectivityReceiver(),
+//            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+//        )
 
         sharedPref = context?.let { MySharedPreferences(it) }!!
 
-        wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
+//        wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
@@ -120,23 +120,23 @@ class LoginFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
         (activity as MainActivity).myToolbar.toolbar_text.text = "FEIssenger"
     }
 
-    /**
-     * Callback will be called when there is change
-     */
-    override fun onNetworkConnectionChanged(isConnected: Boolean) {
-        showMessage(isConnected)
-    }
+//    /**
+//     * Callback will be called when there is change
+//     */
+//    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+//        showMessage(isConnected)
+//    }
 
-    private fun showMessage(isConnected: Boolean) {
-        if (isConnected) {
-            if (wifiManager.connectionInfo.hiddenSSID){
-                sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
-            }
-            else{
-                sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
-            }
-        } else {
-            sharedPref.put("activeWifi","")
-        }
-    }
+//    private fun showMessage(isConnected: Boolean) {
+//        if (isConnected) {
+//            if (wifiManager.connectionInfo.hiddenSSID){
+//                sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
+//            }
+//            else{
+//                sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
+//            }
+//        } else {
+//            sharedPref.put("activeWifi","")
+//        }
+//    }
 }

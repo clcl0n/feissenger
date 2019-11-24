@@ -16,7 +16,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
+
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -65,7 +65,7 @@ class MessagesFragment : Fragment() {
             inflater, R.layout.fragment_message, container, false
         )
         binding.lifecycleOwner = this
-        viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
+        viewModel = ViewModelProvider(activity!!, Injection.provideViewModelFactory(context!!))
             .get(MessagesViewModel::class.java)
 
         with(sharedPref) {
@@ -76,11 +76,13 @@ class MessagesFragment : Fragment() {
 
         viewModel.contactName = arg.contactName
 
+        viewModel.senderName = sharedPref.get("name").toString()
+
         binding.model = viewModel
 
 //        viewModel.getContactById()
 
-        viewModel.loadMessages()
+//        viewModel.loadMessages()
 
         binding.messagesList.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -89,10 +91,13 @@ class MessagesFragment : Fragment() {
 
         adapter = MessagesAdapter()
         binding.messagesList.adapter = adapter
-        viewModel.messages.observe(this) {
+
+        viewModel.messages.observeForever {
             adapter.data = it
             binding.messagesList.scrollToPosition(adapter.itemCount - 1)
         }
+
+        viewModel.loadMessages()
 
         return binding.root
     }

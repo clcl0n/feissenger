@@ -6,6 +6,7 @@
         <variable
             name="model"
             type="com.feissenger.ui.viewModels.MessagesViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,11 +62,13 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:onClick="@{() -> model.sendMessage()}"
-                android:src="@drawable/ic_send_black"
+                android:src="@{model.enabledSend ? @drawable/ic_send_black : @drawable/ic_sync_disabled_black_24dp}"
                 app:layout_constraintBottom_toBottomOf="@id/message_input"
                 app:layout_constraintEnd_toEndOf="@id/message_input"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline_end"
+                android:enabled="@{model.enabledSend}"
+
                 app:layout_constraintTop_toTopOf="@id/message_input" />
 
             <androidx.constraintlayout.widget.Guideline

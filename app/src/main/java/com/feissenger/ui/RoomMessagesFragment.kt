@@ -54,14 +54,14 @@ class RoomMessagesFragment : Fragment() {
 
         binding.model = viewModel
 
-        viewModel.loadRoomMessages()
 
         binding.messagesList.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, true)
 
         val adapter = RoomMessagesAdapter()
         binding.messagesList.adapter = adapter
-        viewModel.messages.observe(this) {
+
+        viewModel.messages.observeForever {
             adapter.data = it
             binding.messagesList.scrollToPosition(0)
         }
@@ -76,6 +76,8 @@ class RoomMessagesFragment : Fragment() {
             val action = RoomMessagesFragmentDirections.actionRoomMessagesFragmentToRoomPost(arg.roomId)
             view.findNavController().navigate(action)
         }
+
+        viewModel.loadRoomMessages()
 
         return binding.root
     }

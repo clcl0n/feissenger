@@ -14,11 +14,11 @@ import kotlinx.android.synthetic.main.room_item.view.*
 
 class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
 
-    var data = listOf<RoomItem>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+        var data = listOf<RoomItem>()
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
 
     override fun getItemCount() = data.size
 

@@ -9,6 +9,7 @@ import com.feissenger.data.api.model.NotificationBody
 import com.feissenger.data.api.model.NotificationRequest
 import com.feissenger.data.db.model.ContactItem
 import com.feissenger.data.db.model.MessageItem
+import com.feissenger.data.db.model.RoomItem
 import kotlinx.coroutines.launch
 
 class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
@@ -17,11 +18,16 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
     var uid: String = ""
     var contact: String = ""
     var contactName: String = ""
+    var senderName: String = ""
 
     val messages: LiveData<List<MessageItem>>
         get() = repository.getMessages(uid, contact)
 
+    val mutableMessages: MutableLiveData<List<MessageItem>> = MutableLiveData()
+
     val input: MutableLiveData<String> = MutableLiveData()
+
+    val enabledSend: MutableLiveData<Boolean> = MutableLiveData()
 
     fun sendMessage() {
 
@@ -34,7 +40,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
                 repository.notifyMessage(notifyMessage = NotificationRequest(
                     contactFid,
-                    NotificationBody(contactName,it,uid,"msg")
+                    NotificationBody(senderName,it,uid,"msg")
                 ), onError = { error.postValue(it) })
             }
         }
@@ -51,7 +57,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
             repository.notifyMessage(notifyMessage = NotificationRequest(
                 contactFid,
-                NotificationBody(contactName, "Nový GIF súbor", uid, "msg")
+                NotificationBody(senderName, "Nový GIF súbor", uid, "msg")
             ), onError = { error.postValue(it) })
         }
     }
@@ -61,4 +67,11 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
             repository.loadMessages({error.postValue(it)},ContactReadRequest(uid, contact))
         }
     }
+
+//    init {
+//        viewModelScope.launch {
+//            loadMessages()
+//            mutableMessages.postValue(repository.getMutableMessages(uid, contact))
+//        }
+//    }
 }

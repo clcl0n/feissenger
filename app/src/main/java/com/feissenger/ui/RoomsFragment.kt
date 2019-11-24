@@ -29,30 +29,30 @@ import com.feissenger.data.util.Injection
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.fragment_room.*
-
-class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListener {
+//, ConnectivityReceiver.ConnectivityReceiverListener
+class RoomsFragment : Fragment() {
 
     private lateinit var viewModel: RoomsViewModel
     private lateinit var binding: FragmentRoomBinding
-    private lateinit var wifiManager: WifiManager
+//    private lateinit var wifiManager: WifiManager
     private lateinit var sharedPref: MySharedPreferences
-
+    private lateinit var adapter: RoomsAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        activity?.registerReceiver(ConnectivityReceiver(),
-            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        )
+//        activity?.registerReceiver(ConnectivityReceiver(),
+//            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+//        )
         sharedPref = context?.let { MySharedPreferences(it) }!!
-        wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
+//        wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_room, container, false
         )
         binding.lifecycleOwner = this
-        viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
+        viewModel = ViewModelProvider(activity!!, Injection.provideViewModelFactory(context!!))
             .get(RoomsViewModel::class.java)
 
         with(sharedPref) {
@@ -68,22 +68,22 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
 
-        val adapter = RoomsAdapter()
+
+        adapter = RoomsAdapter()
         binding.messagesList.adapter = adapter
 
-        viewModel.mutableRooms.observe(this){
-            adapter.data = it
-        }
 
 //        viewModel.rooms.observe(this) {
 //            adapter.data = it
 //        }
 
-        viewModel.activeRoom.observe(this){
+        viewModel.activeRoom.observeForever{
             viewModel.refreshRooms()
         }
 
-        viewModel.loadRooms()
+        viewModel.mutableRooms.observeForever{
+            adapter.data = it
+        }
 
         binding.activeRoom.setOnClickListener {
             val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
@@ -101,42 +101,36 @@ class RoomsFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListe
 
         return binding.root
     }
+//
+//    private fun showMessage(isConnected: Boolean) {
+//        if (isConnected) {
+//            if (wifiManager.connectionInfo.hiddenSSID){
+//                sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
+//                viewModel.activeWifi = wifiManager.connectionInfo.bssid.removeSurrounding("\"","\"")
+//                viewModel.setActiveRoom()
+//            }
+//            else{
+//                sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
+//                viewModel.activeWifi = wifiManager.connectionInfo.ssid.removeSurrounding("\"","\"")
+//                viewModel.setActiveRoom()
+//            }
+//        } else {
+//            sharedPref.put("activeWifi","")
+//            viewModel.activeWifi = ""
+//            viewModel.setActiveRoom()
+//        }
+//    }
 
-    private fun showMessage(isConnected: Boolean) {
-        if (isConnected) {
-            if (wifiManager.connectionInfo.hiddenSSID){
-                sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
-                viewModel.activeWifi = wifiManager.connectionInfo.bssid.removeSurrounding("\"","\"")
-                viewModel.setActiveRoom()
-            }
-            else{
-                sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
-                viewModel.activeWifi = wifiManager.connectionInfo.ssid.removeSurrounding("\"","\"")
-                viewModel.setActiveRoom()
-            }
-        } else {
-            sharedPref.put("activeWifi","")
-            viewModel.activeWifi = ""
-            viewModel.setActiveRoom()
-        }
-    }
 
-    override fun onResume() {
-        super.onResume()
-
-        ConnectivityReceiver.connectivityReceiverListener = this
-    }
-
-    /**
-     * Callback will be called when there is change
-     */
-    override fun onNetworkConnectionChanged(isConnected: Boolean) {
-        showMessage(isConnected)
-    }
+//    /**
+//     * Callback will be called when there is change
+//     */
+//    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+//        showMessage(isConnected)
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         sharedPref.put("fragment","rooms")
     }
 

@@ -22,7 +22,7 @@ class RoomsViewModel(private val repository: DataRepository) : ViewModel() {
     val rooms: LiveData<List<RoomItem>>
         get() = repository.getRooms(uid, activeWifi)
 
-    var mutableRooms: MutableLiveData<List<RoomItem>> = MutableLiveData()
+    val mutableRooms: MutableLiveData<List<RoomItem>> = MutableLiveData()
 
     fun setActiveRoom() {
         activeRoom.postValue(activeWifi)

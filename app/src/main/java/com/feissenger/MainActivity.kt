@@ -13,19 +13,85 @@ import android.widget.Toast
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.Intent
+import android.content.IntentFilter
+import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.wifi.WifiManager
 import android.os.Build
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.feissenger.data.ConnectivityReceiver
+import com.feissenger.data.util.Injection
+import com.feissenger.ui.RoomsFragment
 import com.feissenger.ui.ViewPagerFragmentDirections
+import com.feissenger.ui.viewModels.MessagesViewModel
+import com.feissenger.ui.viewModels.RoomsViewModel
+import com.giphy.sdk.core.network.api.GPHApiClient
 import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_view_pager.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
+    private lateinit var snackbar: Snackbar
+    private lateinit var wifiManager: WifiManager
+    private lateinit var sharedPref: MySharedPreferences
+    private lateinit var roomsViewModel: RoomsViewModel
+    private lateinit var messagesViewModel: MessagesViewModel
+    private lateinit var connMgr: ConnectivityManager
+
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        val activeNetworkCapabilities = connMgr.getNetworkCapabilities(connMgr.activeNetwork)
+
+        if(connMgr.activeNetwork != null){
+            if(activeNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)){
+                Log.i("connection", "ON WIFI")
+                if (wifiManager.connectionInfo.hiddenSSID){
+                    sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
+                    roomsViewModel.activeWifi = wifiManager.connectionInfo.bssid.removeSurrounding("\"","\"")
+                    roomsViewModel.setActiveRoom()
+                }
+                else{
+                    sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
+                    roomsViewModel.activeWifi = wifiManager.connectionInfo.ssid.removeSurrounding("\"","\"")
+                    roomsViewModel.setActiveRoom()
+                }
+            }
+            else{
+                sharedPref.put("activeWifi","")
+                roomsViewModel.activeWifi = ""
+                Log.i("connection", "NO CONNECTION OR ONLY DATA")
+            }
+            snackbar.dismiss()
+            messagesViewModel.enabledSend.postValue(true)
+        }else{
+            snackbar.show()
+            sharedPref.put("activeWifi","")
+            roomsViewModel.activeWifi = ""
+            messagesViewModel.enabledSend.postValue(false)
+            Log.i("connection", "NO CONNECTION AT ALL")
+        }
+        when(sharedPref.get("fragment")){
+//            "roomMessages" ->
+            "messages" -> messagesViewModel.loadMessages()
+            "rooms", "contacts" -> {
+                roomsViewModel.loadRooms()
+                roomsViewModel.setActiveRoom()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ConnectivityReceiver.connectivityReceiverListener = this
+    }
 
     private var selected = "light"
     private lateinit var sharedPreferences: MySharedPreferences
@@ -33,7 +99,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applicationContext.registerReceiver(ConnectivityReceiver(), IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
 
+        wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        roomsViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomsViewModel::class.java)
+        messagesViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(MessagesViewModel::class.java)
+        sharedPref = MySharedPreferences(applicationContext)
+
+        connMgr = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
 // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
@@ -62,6 +135,8 @@ class MainActivity : AppCompatActivity() {
 
         setTheme(getSavedTheme())
         setContentView(R.layout.activity_main)
+        snackbar = Snackbar.make(app,"NO INTERNET CONNECTION!",Snackbar.LENGTH_INDEFINITE)
+        snackbar.view.setBackgroundColor(Color.RED)
         NavigationUI.setupWithNavController(
             nav_view, Navigation.findNavController(
                 this,

@@ -17,7 +17,7 @@ class ConnectivityReceiver: BroadcastReceiver() {
     private fun isConnectedOrConnecting(context: Context): Boolean {
         val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return if(connMgr.getNetworkCapabilities(connMgr.activeNetwork) != null)
-            connMgr.getNetworkCapabilities(connMgr.activeNetwork).hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+            connMgr.getNetworkCapabilities(connMgr.activeNetwork).hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         else
             false
     }

@@ -57,7 +57,7 @@ class ContactListFragment : Fragment(){
 
         val adapter = ContactListAdapter()
         binding.contactList.adapter = adapter
-        viewModel.contactList.observe(this) {
+        viewModel.contactList.observeForever {
             adapter.data = it
         }
 
@@ -76,9 +76,13 @@ class ContactListFragment : Fragment(){
 
         binding.fastscrollerThumb.setupWithFastScroller(binding.fastscroller)
 
-        viewModel.loadContacts()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        viewModel.loadContacts()
+        super.onResume()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

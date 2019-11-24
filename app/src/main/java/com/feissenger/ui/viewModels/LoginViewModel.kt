@@ -30,8 +30,10 @@ class LoginViewModel(private val repository: DataRepository) : ViewModel() {
     fun login() {
         viewModelScope.launch {
             val response = repository.login(userName.value!!, password.value!!)
-            response?.access = "Bearer ${response?.access}"
-            _user.postValue(User(response!!.uid, response.access, response.refresh, userName.value!!))
+            if (response != null){
+                response.access = "Bearer ${response.access}"
+                _user.postValue(User(response.uid, response.access, response.refresh, userName.value!!))
+            }
         }
     }
 }
