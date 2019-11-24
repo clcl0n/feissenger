@@ -41,6 +41,7 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(LoginViewModel::class.java)
 
+        viewModel.wrongUsernameOrPasswordMessage = getString(R.string.wrong_username_or_password_message)
         binding.model = viewModel
 
         viewModel.loginData.observe(this) {

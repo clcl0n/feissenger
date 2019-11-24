@@ -10,6 +10,8 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: DataRepository) : ViewModel() {
     val loginData: MutableLiveData<LoginResponse> = MutableLiveData()
+    val _userInfo: MutableLiveData<String> = MutableLiveData("")
+    var wrongUsernameOrPasswordMessage = ""
 
     fun login(userName: String, password: String) {
         try {
@@ -22,7 +24,7 @@ class LoginViewModel(private val repository: DataRepository) : ViewModel() {
                 if (loginResponse != null) {
                     loginData.postValue(loginResponse)
                 } else {
-                    throw Exception("Login failed.")
+                    _userInfo.postValue(wrongUsernameOrPasswordMessage)
                 }
             }
         } catch (ex: Exception) {

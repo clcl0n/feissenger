@@ -37,6 +37,13 @@
             android:inputType="textPassword"
             android:text="@={model._passwodConfirm}"/>
 
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={model._userInfo}" />
+
         <Button
             android:id="@+id/registration_btn"
             android:layout_width="match_parent"

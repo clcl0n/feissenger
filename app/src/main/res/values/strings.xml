@@ -3,4 +3,7 @@
     <string name="send">SEND</string>
     <string name="public_room">Public Room</string>
     <string name="msg_token_fmt">Token %s</string>
+    <string name="not_matching_passwords">Passwords do not match!</string>
+    <string name="existing_username_message">Username already exists.</string>
+    <string name="wrong_username_or_password_message">Wrong username or password.</string>
 </resources>
