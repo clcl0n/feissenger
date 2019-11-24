@@ -4,6 +4,8 @@ package com.feissenger.ui.viewModels
 import androidx.lifecycle.*
 import com.feissenger.data.DataRepository
 import com.feissenger.data.api.model.RoomListRequest
+import com.feissenger.data.api.model.RoomMessageRequest
+import com.feissenger.data.api.model.RoomReadRequest
 import com.feissenger.data.db.model.RoomItem
 import kotlinx.coroutines.launch
 
@@ -11,24 +13,37 @@ class RoomPostViewModel(private val repository: DataRepository) : ViewModel() {
 
     val error: MutableLiveData<String> = MutableLiveData()
 
-    val activeRoom: MutableLiveData<String> = MutableLiveData()
-
-    val visibleActive: MutableLiveData<Boolean> = MutableLiveData()
-
     var uid: String = ""
-    var access: String = ""
+    var roomId: String = ""
 
-    val rooms: LiveData<List<RoomItem>>
-        get() = repository.getRooms(uid, activeRoom.value!!)
+    val input: MutableLiveData<String> = MutableLiveData()
 
-    fun setActiveRoom(active: String, visible: Boolean) {
-        visibleActive.postValue(visible)
-        activeRoom.postValue(active)
+    fun sendMessage() {
+
+        input.value?.let { it ->
+            viewModelScope.launch {
+
+                repository.sendRoomMessage({error.postValue(it)}, RoomMessageRequest(uid, roomId, it))
+
+//                repository.notifyMessage(notifyMessage = NotificationRequest(
+//                    contactFid,
+//                    NotificationBody(uid, it, uid, "msg")
+//                ), onError = { error.postValue(it) })
+            }
+        }
+        input.postValue("")
     }
 
-    fun loadRooms() {
+    fun sendGif(gif : String) {
+
         viewModelScope.launch {
-            repository.getRoomList({error.postValue(it)}, RoomListRequest(uid))
+
+            repository.sendRoomMessage({error.postValue(it)}, RoomMessageRequest(uid, roomId, gif))
+
+//            repository.notifyMessage(notifyMessage = NotificationRequest(
+//                contactFid,
+//                NotificationBody(uid, gif, uid, "msg")
+//            ), onError = { error.postValue(it) })
         }
     }
 }

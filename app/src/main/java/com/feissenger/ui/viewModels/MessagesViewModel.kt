@@ -28,8 +28,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
             viewModelScope.launch {
                 val contactFid = repository.getContactFid(contact)
 
-                repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, it),
-                    ContactReadRequest(uid, contact))
+                repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, it))
 
                 repository.notifyMessage(notifyMessage = NotificationRequest(
                     contactFid,
@@ -45,8 +44,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
         viewModelScope.launch {
             val contactFid = repository.getContactFid(contact)
 
-            repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, gif),
-                ContactReadRequest(uid, contact))
+            repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, gif))
 
             repository.notifyMessage(notifyMessage = NotificationRequest(
                 contactFid,

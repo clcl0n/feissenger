@@ -1,6 +1,7 @@
 package com.feissenger.data.db
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.feissenger.data.db.model.MessageItem
 import com.feissenger.data.db.model.ContactItem
@@ -18,6 +19,9 @@ interface DbDao {
 
     @Query("SELECT * FROM messages WHERE uid LIKE :uid AND ((sender LIKE :uid AND recipient LIKE :contact) OR (sender LIKE :contact AND recipient LIKE :uid))")
     fun getMessages(uid: String, contact: String): LiveData<List<MessageItem>>
+
+    @Query("SELECT * FROM messages WHERE uid LIKE :uid AND sender LIKE :sender AND time LIKE :time LIMIT 1")
+    fun getMessage(uid: String, sender: String, time: String):MessageItem
 
     @Query("SELECT contact_fid FROM messages WHERE recipient = :contact LIMIT 1")
     suspend fun getContactFid(contact: String): String
@@ -46,8 +50,8 @@ interface DbDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertRoomMessages(wordItems: List<RoomMessageItem>)
 
-    @Query("SELECT * FROM posts WHERE roomid LIKE :roomid")
-    fun getRoomMessages(roomid: String): LiveData<List<RoomMessageItem>>
+    @Query("SELECT * FROM posts WHERE uid LIKE :uid AND roomid LIKE :roomid")
+    fun getRoomMessages(uid: String, roomid: String): LiveData<List<RoomMessageItem>>
 
 
 }

@@ -19,7 +19,7 @@ package com.feissenger.data
 
 import androidx.lifecycle.LiveData
 import android.util.Log
-import android.widget.Toast
+import com.feissenger.MyCompletionHelper
 import com.feissenger.data.api.FCMApi
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.ContactMessageRequest
@@ -28,15 +28,16 @@ import com.feissenger.data.api.model.LoginRequest
 import com.feissenger.data.api.model.ContactListRequest
 import com.feissenger.data.api.model.RoomListRequest
 import com.feissenger.data.api.model.*
+import com.feissenger.data.db.Converters
 import com.feissenger.data.db.LocalCache
 import com.feissenger.data.db.model.*
+import com.giphy.sdk.core.models.Media
+import com.giphy.sdk.core.network.api.GPHApiClient
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.FirebaseApp
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
 import java.net.ConnectException
 
 /**
@@ -54,7 +55,11 @@ class DataRepository private constructor(
         @Volatile
         private var INSTANCE: DataRepository? = null
 
-        fun getInstance(fcm:FCMApi, api: WebApi, cache: LocalCache): DataRepository =
+        fun getInstance(
+            fcm: FCMApi,
+            api: WebApi,
+            cache: LocalCache
+        ): DataRepository =
             INSTANCE ?: synchronized(this) {
                 INSTANCE
                     ?: DataRepository(fcm, api, cache).also { INSTANCE = it }
@@ -63,7 +68,7 @@ class DataRepository private constructor(
 
     suspend fun login(userName: String, password: String): LoginResponse? {
         val loginResponse = api.login(LoginRequest(userName, password))
-        if (loginResponse.isSuccessful){
+        if (loginResponse.isSuccessful) {
             FirebaseInstanceId.getInstance().instanceId
                 .addOnCompleteListener(OnCompleteListener { task ->
                     if (!task.isSuccessful) {
@@ -75,9 +80,9 @@ class DataRepository private constructor(
                     val token = task.result?.token.toString()
 //                    registerToken(RegisterTokenRequest(loginResponse.body()!!.uid, token))
 
-                        GlobalScope.launch {
-                           api.registerToken(RegisterTokenRequest(loginResponse.body()!!.uid, token))
-                        }
+                    GlobalScope.launch {
+                        api.registerToken(RegisterTokenRequest(loginResponse.body()!!.uid, token))
+                    }
 
                     // Log and toast
                     Log.i("tag", "TU MAS TOKEN $token")
@@ -87,26 +92,67 @@ class DataRepository private constructor(
         return null
     }
 
-//    Messages
-    fun getMessages(user: String, contact: String): LiveData<List<MessageItem>>{
+    //    Messages
+    fun getMessages(user: String, contact: String): LiveData<List<MessageItem>> =
+        cache.getMessages(user, contact)
 
-        return cache.getMessages(user, contact)
-    }
-
-    suspend fun loadMessages(onError: (error: String) -> Unit, contactReadRequest: ContactReadRequest, save: Boolean = true) {
+    suspend fun loadMessages(
+        onError: (error: String) -> Unit,
+        contactReadRequest: ContactReadRequest
+    ) {
         try {
             val contactReadResponse = api.getContactMessages(contactReadRequest)
 
-            if(contactReadResponse.isSuccessful){
-                if(save){
-                    contactReadResponse.body()?.let {
-                        return cache.insertMessages(it.map { item -> MessageItem(MessageId(contactReadRequest.uid, item.uid, item.time),item.contact, item.message, item.message.startsWith("https://giphy.com/gifs/"),item.uid_fid,item.contact_fid, item.uid_name, item.contact_name) })
-                    }
-                }else{
-                    contactReadResponse.body()?.last().let {
-                        return cache.insertMessage(MessageItem(MessageId(contactReadRequest.uid, it!!.uid, it.time),it.contact, it.message, it.message.startsWith("https://giphy.com/gifs/"),it.uid_fid, it.contact_fid, it.uid_name, it.contact_name))
-                    }
+            if (contactReadResponse.isSuccessful) {
+
+                contactReadResponse.body()?.let {
+                    cache.insertMessages(it.map { item ->
+                        MessageItem(
+                            MessageId(
+                                contactReadRequest.uid,
+                                item.uid,
+                                item.time
+                            ),
+                            item.contact,
+                            item.message,
+                            item.uid_fid,
+                            item.contact_fid,
+                            item.uid_name,
+                            item.contact_name,
+                            item.message.contains("giphy.com/media/"))
+                    })
+//                    for (r: ContactReadResponse in it) {
+//
+//                        if (r.message.startsWith("https://giphy.com/gifs/")) {
+//                            val client = GPHApiClient("jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
+//                            val handler =
+//                                MyCompletionHelper(this, contactReadRequest.uid, onError, r)
+//                            client.gifById(r.message.split("-").last(), handler)
+//                        } else {
+//                            cache.insertMessages(
+//                                listOf(
+//                                    MessageItem(
+//                                        MessageId(
+//                                            contactReadRequest.uid,
+//                                            r.uid,
+//                                            r.time
+//                                        ),
+//                                        r.contact,
+//                                        r.message,
+//                                        r.message.startsWith("https://giphy.com/gifs/"),
+//                                        r.uid_fid,
+//                                        r.contact_fid,
+//                                        r.uid_name,
+//                                        r.contact_name
+//                                    )
+//                                )
+//                            )
+//                        }
+//                    }
+
+
                 }
+
             }
 
             onError("Load images failed. Try again later please.")
@@ -121,13 +167,56 @@ class DataRepository private constructor(
         }
     }
 
-    suspend fun sendMessage(onError: (error: String) -> Unit, contactMessageRequest: ContactMessageRequest, contactReadRequest: ContactReadRequest) {
+    suspend fun saveMessage(
+        onError: (error: String) -> Unit,
+        uid: String,
+        contactReadResponse: ContactReadResponse,
+        media: Media
+    ) {
+        try {
+            cache.insertMessages(
+                listOf(
+                    MessageItem(
+                        MessageId(
+                            uid,
+                            contactReadResponse.uid,
+                            contactReadResponse.time
+                        ),
+                        contactReadResponse.contact,
+                        contactReadResponse.message,
+                        contactReadResponse.uid_fid,
+                        contactReadResponse.contact_fid,
+                        contactReadResponse.uid_name,
+                        contactReadResponse.contact_name,
+                        false
+                    )
+                )
+            )
+            onError("Load images failed. Try again later please.")
+        } catch (ex: ConnectException) {
+            onError("Off-line. Check internet connection.")
+            ex.printStackTrace()
+            return
+        } catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
+    }
+
+    suspend fun sendMessage(
+        onError: (error: String) -> Unit,
+        contactMessageRequest: ContactMessageRequest
+    ) {
         try {
 
             val contactMessageResponse = api.sendContactMessage(contactMessageRequest)
 
-            if(contactMessageResponse.isSuccessful)
-                loadMessages(onError, contactReadRequest)
+            if (contactMessageResponse.isSuccessful)
+                loadMessages(
+                    onError,
+                    ContactReadRequest(contactMessageRequest.uid, contactMessageRequest.contact)
+                )
 
             onError("Load images failed. Try again later please.")
         } catch (ex: ConnectException) {
@@ -141,8 +230,9 @@ class DataRepository private constructor(
         }
     }
 
-//    RoomMessages
-    fun getRoomMessages(roomId: String): LiveData<List<RoomMessageItem>> = cache.getRoomMessages(roomId)
+    //    RoomMessages
+    fun getRoomMessages(uid: String, roomId: String): LiveData<List<RoomMessageItem>> =
+        cache.getRoomMessages(uid, roomId)
 
     suspend fun register(userName: String, password: String): RegisterResponse? {
         val registerReponse = api.register(RegisterRequest(userName, password))
@@ -157,15 +247,22 @@ class DataRepository private constructor(
     }
 
 
-    suspend fun loadRoomMessages(onError: (error: String) -> Unit, roomReadRequest: RoomReadRequest) {
+    suspend fun loadRoomMessages(
+        onError: (error: String) -> Unit,
+        roomReadRequest: RoomReadRequest
+    ) {
         try {
             val roomReadResponse = api.getRoomMessages(roomReadRequest)
 
-            if(roomReadResponse.isSuccessful){
+            if (roomReadResponse.isSuccessful) {
                 roomReadResponse.body()?.let {
-                    return cache.insertRoomMessages(it.map { item -> RoomMessageItem(
-                        RoomMessageItemId(item.uid,item.roomid, item.time, item.name), item.message
-                    ) })
+
+                    return cache.insertRoomMessages(it.map { item ->
+                        RoomMessageItem(
+                            RoomMessageItemId(item.uid, item.roomid, item.time, item.name),
+                            item.message
+                        )
+                    })
                 }
             }
 
@@ -181,13 +278,19 @@ class DataRepository private constructor(
         }
     }
 
-    suspend fun sendRoomMessage(onError: (error: String) -> Unit, roomMessageRequest: RoomMessageRequest) {
+    suspend fun sendRoomMessage(
+        onError: (error: String) -> Unit,
+        roomMessageRequest: RoomMessageRequest
+    ) {
         try {
 
             val roomMessageResponse = api.sendRoomMessage(roomMessageRequest)
 
-            if(roomMessageResponse.isSuccessful)
-                loadRoomMessages(onError, RoomReadRequest(roomMessageRequest.uid, roomMessageRequest.roomid))
+            if (roomMessageResponse.isSuccessful)
+                loadRoomMessages(
+                    onError,
+                    RoomReadRequest(roomMessageRequest.uid, roomMessageRequest.roomid)
+                )
 
             onError("Load images failed. Try again later please.")
         } catch (ex: ConnectException) {
@@ -203,16 +306,18 @@ class DataRepository private constructor(
 
 //    Rooms
 
-    fun getRooms(user: String, activeRoom: String): LiveData<List<RoomItem>> = cache.getRooms(user, activeRoom)
+    fun getRooms(user: String, activeRoom: String): LiveData<List<RoomItem>> =
+        cache.getRooms(user, activeRoom)
 
-    suspend fun getMutableRooms(user: String, activeRoom: String): List<RoomItem> = cache.getMutableRooms(user, activeRoom)
+    suspend fun getMutableRooms(user: String, activeRoom: String): List<RoomItem> =
+        cache.getMutableRooms(user, activeRoom)
 
-    suspend fun getRoomList(onError: (error:String) -> Unit, roomListRequest: RoomListRequest){
+    suspend fun getRoomList(onError: (error: String) -> Unit, roomListRequest: RoomListRequest) {
         try {
             val roomListResponse = api.getRooms(roomListRequest)
-            if(roomListResponse.isSuccessful){
+            if (roomListResponse.isSuccessful) {
                 roomListResponse.body()?.let {
-                    for (ritem in it){
+                    for (ritem in it) {
                         FirebaseMessaging.getInstance().subscribeToTopic("/topics/${ritem.roomid}")
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
@@ -227,52 +332,74 @@ class DataRepository private constructor(
                             }
                         }
 
-                    return cache.insertRooms(it.map { item -> RoomItem(RoomItemId(item.roomid,roomListRequest.uid),item.time) })
+                    return cache.insertRooms(it.map { item ->
+                        RoomItem(
+                            RoomItemId(
+                                item.roomid,
+                                roomListRequest.uid
+                            ), item.time
+                        )
+                    })
                 }
             }
-        }catch (ex: ConnectException){
+        } catch (ex: ConnectException) {
             onError("Off-line. Check internet connection.")
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             onError("Oops...Change failed. Try again later please.")
             ex.printStackTrace()
             return
         }
     }
 
-//    Contacts
+    //    Contacts
     fun getContacts(user: String): LiveData<List<ContactItem>> = cache.getContacts(user)
-    suspend fun getContactById(user: String, contactId: String): ContactItem = cache.getContactById(user, contactId)
 
-    suspend fun getContactList(onError: (error: String) -> Unit, contactListRequest: ContactListRequest){
+    suspend fun getContactById(user: String, contactId: String): ContactItem =
+        cache.getContactById(user, contactId)
+
+    suspend fun getContactList(
+        onError: (error: String) -> Unit,
+        contactListRequest: ContactListRequest
+    ) {
         try {
 
             val contactListResponse = api.getContactList(contactListRequest)
 
-            if(contactListResponse.isSuccessful){
+            if (contactListResponse.isSuccessful) {
                 contactListResponse.body()?.let {
-                    return cache.insertContacts(it.map { item -> ContactItem(ContactItemId(contactListRequest.uid, item.id),item.name) })
+                    return cache.insertContacts(it.map { item ->
+                        ContactItem(
+                            ContactItemId(
+                                contactListRequest.uid,
+                                item.id
+                            ), item.name
+                        )
+                    })
                 }
             }
-        }catch (ex: ConnectException){
+        } catch (ex: ConnectException) {
             onError("Off-line. Check internet connection.")
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             onError("Oops...Change failed. Try again later please.")
             ex.printStackTrace()
             return
         }
     }
 
-    suspend fun notifyMessage(onError: (error: String) -> Unit, notifyMessage: NotificationRequest){
+    suspend fun notifyMessage(
+        onError: (error: String) -> Unit,
+        notifyMessage: NotificationRequest
+    ) {
         try {
             val response = fcm.sendNotification(notifyMessage)
-            if(response.isSuccessful)
-                response.body()?.let{
-                    Log.i("tag",it.toString())
+            if (response.isSuccessful)
+                response.body()?.let {
+                    Log.i("tag", it.toString())
 //                    return cache.getRoomMessages(it.map{item-> RoomMessage(0,item.message, item.roomid, item.uid, item.time)})
                 }
-        }catch (ex: ConnectException){
+        } catch (ex: ConnectException) {
             onError("Off-line. Check internet connection.")
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             onError("Oops...Change failed. Try again later please.")
             ex.printStackTrace()
             return

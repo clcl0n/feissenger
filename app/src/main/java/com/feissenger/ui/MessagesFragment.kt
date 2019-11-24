@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.adapters.Converters
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
@@ -117,7 +118,9 @@ class MessagesFragment : Fragment() {
             gifsDialog.gifSelectionListener = object : GiphyDialogFragment.GifSelectionListener {
                 @SuppressLint("LogNotTimber")
                 override fun onGifSelected(media: Media) {
-                    media.url?.let { it1 -> viewModel.sendGif(it1) }
+                    val converter = com.feissenger.data.db.Converters()
+                    viewModel.sendGif(converter.mediaToJson(media))
+//                    media.url?.let { it1 -> viewModel.sendGif(it1) }
                 }
 
                 override fun onDismissed() {
@@ -125,17 +128,21 @@ class MessagesFragment : Fragment() {
             }
         }
 
-        message_root.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-            if (bottom < oldBottom) {
+        messages_list.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
                 binding.messagesList.scrollToPosition(adapter.itemCount - 1)
-            }
         }
 
-        message_input.addOnLayoutChangeListener { _, _, top, _, _, _, oldTop, _, _ ->
-            if (top < oldTop) {
-                binding.messagesList.scrollToPosition(adapter.itemCount - 1)
-            }
-        }
+//        message_root.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+//            if (bottom < oldBottom) {
+//                binding.messagesList.scrollToPosition(adapter.itemCount - 1)
+//            }
+//        }
+//
+//        message_input.addOnLayoutChangeListener { _, _, top, _, _, _, oldTop, _, _ ->
+//            if (top < oldTop) {
+//                binding.messagesList.scrollToPosition(adapter.itemCount - 1)
+//            }
+//        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
