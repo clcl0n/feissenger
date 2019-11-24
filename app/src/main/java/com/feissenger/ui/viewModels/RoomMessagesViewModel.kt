@@ -15,12 +15,11 @@ class RoomMessagesViewModel(private val repository: DataRepository) : ViewModel(
 
     var roomid: String = ""
     var uid : String = ""
-    var access : String = ""
 
     val roomMessage: MutableLiveData<String> = MutableLiveData()
 
     val messages: LiveData<List<RoomMessageItem>>
-        get() = repository.getRoomMessages(roomid)
+        get() = repository.getRoomMessages(uid, roomid)
 
     val input: MutableLiveData<String> = MutableLiveData()
 

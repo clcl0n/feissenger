@@ -10,6 +10,7 @@ import com.feissenger.data.db.model.MessageItem
 import com.feissenger.R
 import kotlinx.android.synthetic.main.message_item.view.*
 import android.widget.LinearLayout
+import com.giphy.sdk.core.models.enums.RenditionType
 import com.giphy.sdk.ui.views.GPHMediaView
 
 class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
@@ -35,11 +36,13 @@ class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
     class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: MessageItem) {
 
-            if(item.gif){
+            if(item.isGif){
                 itemView.message_bubble.visibility = View.GONE
                 itemView.obal_gif.visibility = View.VISIBLE
 
-                itemView.message_gif.setMediaWithId(item.message.split("/").last().split("-").last())
+                val converter = com.feissenger.data.db.Converters()
+
+                itemView.message_gif.setMedia(converter.jsonToMedia(item.message))
 
                 (itemView.message_time as TextView).text = item.id.time
 

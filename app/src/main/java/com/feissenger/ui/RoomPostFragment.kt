@@ -35,6 +35,9 @@ import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_room_post.*
 
 
+
+
+
 class RoomPostFragment : Fragment() {
     private lateinit var viewModel: RoomPostViewModel
     private lateinit var binding: FragmentRoomPostBinding
@@ -58,7 +61,6 @@ class RoomPostFragment : Fragment() {
 
         with(sharedPref) {
             viewModel.uid = get("uid").toString()
-            viewModel.access = get("access").toString()
         }
 
         binding.model = viewModel
@@ -71,20 +73,10 @@ class RoomPostFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         sharedPref.put("fragment","roomsPost")
-
-//        editTextRoomPost.requestFocus()
-//        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//        imm.toggleSoftInputFromWindow(view.windowToken,SHOW_IMPLICIT, SHOW_IMPLICIT)
+        editTextRoomPost.requestFocus()
+        val keyboard =
+            activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        keyboard.showSoftInput(editTextRoomPost, 0)
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val roomName = if (arg.roomId == "XsTDHS3C2YneVmEW5Ry7")
-            "Public Room"
-        else
-            arg.roomId
-        (activity as MainActivity).myToolbar.toolbar_text.text = roomName
-//        (activity as MainActivity).myToolbar.theme_icon.visibility = View.GONE
-    }
+    
 }

@@ -47,7 +47,6 @@ class RoomMessagesFragment : Fragment() {
 
         with(sharedPref) {
             viewModel.uid = get("uid").toString()
-            viewModel.access = get("access").toString()
         }
 
         viewModel.roomid = arg.roomId
