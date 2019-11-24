@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.InputMethodManager.*
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -26,11 +28,19 @@ import com.feissenger.databinding.FragmentRoomPostBinding
 import com.feissenger.ui.adapter.RoomsAdapter
 import com.feissenger.ui.viewModels.RoomPostViewModel
 import com.feissenger.ui.viewModels.RoomsViewModel
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.navigation.fragment.navArgs
+import com.feissenger.MainActivity
+import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.fragment_room_post.*
+
 
 class RoomPostFragment : Fragment() {
     private lateinit var viewModel: RoomPostViewModel
     private lateinit var binding: FragmentRoomPostBinding
     private lateinit var sharedPref: MySharedPreferences
+
+    val arg: RoomPostFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,5 +71,20 @@ class RoomPostFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         sharedPref.put("fragment","roomsPost")
+
+//        editTextRoomPost.requestFocus()
+//        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.toggleSoftInputFromWindow(view.windowToken,SHOW_IMPLICIT, SHOW_IMPLICIT)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        val roomName = if (arg.roomId == "XsTDHS3C2YneVmEW5Ry7")
+            "Public Room"
+        else
+            arg.roomId
+        (activity as MainActivity).myToolbar.toolbar_text.text = roomName
+//        (activity as MainActivity).myToolbar.theme_icon.visibility = View.GONE
     }
 }

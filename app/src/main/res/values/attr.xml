@@ -2,6 +2,7 @@
 <resources>
     <attr name="sender" format="reference"/>
     <attr name="recipient" format="reference"/>
+    <attr name="room_message" format="reference"/>
     <attr name="background_color" format="reference"/>
     <attr name="toolbar_background" format="reference"/>
     <attr name="toolbar_color" format="reference"/>

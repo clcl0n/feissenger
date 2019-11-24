@@ -1,9 +1,9 @@
-<LinearLayout
-    android:id="@+id/main_layout"
+<LinearLayout android:id="@+id/main_layout"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- our tablayout to display tabs  -->
     <com.google.android.material.tabs.TabLayout
@@ -12,7 +12,9 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        app:tabTextColor="@color/black"
+        app:tabIndicatorColor="@color/red"
+        app:tabIndicatorHeight="@dimen/thin"/>
 
     <!-- View pager to swipe views -->
     <androidx.viewpager.widget.ViewPager

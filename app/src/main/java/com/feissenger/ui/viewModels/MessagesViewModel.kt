@@ -23,8 +23,6 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
     val input: MutableLiveData<String> = MutableLiveData()
 
-    val contactItem: MutableLiveData<ContactItem> = MutableLiveData()
-
     fun sendMessage() {
 
         input.value?.let { it ->
