@@ -13,6 +13,12 @@ import retrofit2.http.*
 
 interface WebApi {
 
+    @POST("user/create.php")
+    @Headers("Accept: application/json",
+        "Cache-Control: no-cache",
+        "Content-Type: application/json")
+    suspend fun register(@Body register: RegisterRequest): Response<RegisterResponse>
+
     @POST("user/login.php")
     @Headers("Accept: application/json",
         "Cache-Control: no-cache",

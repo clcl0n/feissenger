@@ -34,6 +34,17 @@
         <action
             android:id="@+id/action_login_fragment_to_room_fragment"
             app:destination="@id/room_fragment" />
+        <action
+            android:id="@+id/action_login_fragment_to_registrationFragment"
+            app:destination="@id/registration_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registration_fragment"
+        android:name="com.feissenger.ui.RegistrationFragment"
+        android:label="RegistrationFragment" >
+        <action
+            android:id="@+id/action_registrationFragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
     </fragment>
 
 
