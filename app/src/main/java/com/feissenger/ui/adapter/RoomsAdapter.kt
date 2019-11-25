@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
 import com.feissenger.data.db.model.RoomItem
 import com.feissenger.ui.ViewPagerFragmentDirections
+import kotlinx.android.synthetic.main.contact_item.view.*
 import kotlinx.android.synthetic.main.room_item.view.*
 
 
@@ -20,11 +21,25 @@ class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
                 notifyDataSetChanged()
             }
 
+    var category: String = "A"
+
     override fun getItemCount() = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        holder.bind(item)
+        if(position == 0){
+            category = item.id.ssid.first().toUpperCase().toString()
+            holder.bind(item, category, View.VISIBLE)
+        }
+        else{
+            val prevItem = data[position-1]
+            if(item.id.ssid.first().toUpperCase() != prevItem.id.ssid.first().toUpperCase()){
+                category = item.id.ssid.first().toUpperCase().toString()
+                holder.bind(item, category, View.VISIBLE)
+            }else{
+                holder.bind(item, category, View.GONE)
+            }
+        }
     }
 
 
@@ -36,8 +51,15 @@ class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
 
 
         fun bind(
-            item: RoomItem
+            item: RoomItem,
+            category: String,
+            visibility: Int
         ) {
+
+            val head = (itemView.room_group as TextView)
+            head.text = category
+            head.visibility = visibility
+
             (itemView.ssid as TextView).text = item.id.ssid
             itemView.setOnClickListener {
                 val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(item.id.ssid)

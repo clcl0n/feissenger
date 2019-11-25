@@ -3,6 +3,7 @@ package com.feissenger.data.db.model
 import androidx.room.*
 import com.feissenger.data.db.Converters
 import com.giphy.sdk.core.models.Media
+import java.util.*
 
 @Entity(tableName = "messages")
 @TypeConverters(Converters::class)

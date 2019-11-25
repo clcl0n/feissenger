@@ -30,6 +30,7 @@ import com.feissenger.data.util.Injection
 import com.feissenger.ui.RoomsFragment
 import com.feissenger.ui.ViewPagerFragmentDirections
 import com.feissenger.ui.viewModels.MessagesViewModel
+import com.feissenger.ui.viewModels.RoomPostViewModel
 import com.feissenger.ui.viewModels.RoomsViewModel
 import com.giphy.sdk.core.network.api.GPHApiClient
 import com.giphy.sdk.ui.GiphyCoreUI
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
     private lateinit var sharedPref: MySharedPreferences
     private lateinit var roomsViewModel: RoomsViewModel
     private lateinit var messagesViewModel: MessagesViewModel
+    private lateinit var roomPostViewModel: RoomPostViewModel
     private lateinit var connMgr: ConnectivityManager
 
     fun refresRooms(){
@@ -79,11 +81,13 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             }
             snackbar.dismiss()
             messagesViewModel.enabledSend.postValue(true)
+            roomPostViewModel.enableSend.postValue(true)
         }else{
             snackbar.show()
             sharedPref.put("activeWifi","")
             roomsViewModel.activeWifi = ""
             messagesViewModel.enabledSend.postValue(false)
+            roomPostViewModel.enableSend.postValue(false)
             Log.i("connection", "NO CONNECTION AT ALL")
         }
         when(sharedPref.get("fragment")){
@@ -110,6 +114,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         roomsViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomsViewModel::class.java)
+        roomPostViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomPostViewModel::class.java)
         messagesViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(MessagesViewModel::class.java)
         sharedPref = MySharedPreferences(applicationContext)
 

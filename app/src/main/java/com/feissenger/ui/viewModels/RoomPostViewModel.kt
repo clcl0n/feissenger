@@ -18,6 +18,8 @@ class RoomPostViewModel(private val repository: DataRepository) : ViewModel() {
 
     val input: MutableLiveData<String> = MutableLiveData()
 
+    var enableSend: MutableLiveData<Boolean> = MutableLiveData(true)
+
     fun sendMessage() {
 
         input.value?.let { it ->

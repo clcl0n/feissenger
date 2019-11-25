@@ -40,6 +40,8 @@ import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.net.ConnectException
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Repository class that works with local and remote data sources.
@@ -182,7 +184,7 @@ class DataRepository private constructor(
                         MessageId(
                             uid,
                             contactReadResponse.uid,
-                            contactReadResponse.time
+                            SimpleDateFormat().parse(contactReadResponse.time).time.toString()
                         ),
                         contactReadResponse.contact,
                         contactReadResponse.message,
@@ -415,7 +417,23 @@ class DataRepository private constructor(
 //        }
 //    }
 
-    suspend fun getContactFid(contact: String) = cache.getContactFid(contact)
+    suspend fun getContactFid(onError: (error: String) -> Unit, uid:String, contact: String): String {
+        try {
+            val response = api.getContactMessages(ContactReadRequest(uid, contact))
+            if(response.isSuccessful)
+                response.body()?.let{
+
+                    return it.filter{it.contact==contact}[0].contact_fid
+                }
+        }catch (ex: ConnectException){
+            onError("Off-line. Check internet connection.")
+        }catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return ""
+        }
+        return ""
+    }
 
 
 //    suspend fun getRoomMessages(onError: (error: String) -> Unit, roomid: String){
