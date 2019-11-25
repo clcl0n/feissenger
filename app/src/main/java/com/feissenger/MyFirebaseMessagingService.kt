@@ -34,7 +34,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private val ADMIN_CHANNEL_ID = "admin_channel"
     private lateinit var dataRepository: DataRepository
     private lateinit var sharedPref: MySharedPreferences
-    private lateinit var connectivityManager: ConnectivityManager
 
 
     private fun CoroutineScope.go() = launch {

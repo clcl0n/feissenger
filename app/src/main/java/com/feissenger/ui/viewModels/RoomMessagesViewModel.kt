@@ -18,6 +18,11 @@ class RoomMessagesViewModel(private val repository: DataRepository) : ViewModel(
 
     val roomMessage: MutableLiveData<String> = MutableLiveData()
 
+    var showFab: MutableLiveData<Boolean> = MutableLiveData(true)
+
+
+
+
     val messages: LiveData<List<RoomMessageItem>>
         get() = repository.getRoomMessages(roomid)
 

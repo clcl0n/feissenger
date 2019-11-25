@@ -4,12 +4,10 @@ import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.Navigation
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.util.Log
 import android.widget.ImageView
-import android.widget.Toast
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.Intent
@@ -23,22 +21,20 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.feissenger.data.ConnectivityReceiver
 import com.feissenger.data.util.Injection
-import com.feissenger.ui.RoomsFragment
 import com.feissenger.ui.ViewPagerFragmentDirections
 import com.feissenger.ui.viewModels.MessagesViewModel
+import com.feissenger.ui.viewModels.RoomMessagesViewModel
 import com.feissenger.ui.viewModels.RoomPostViewModel
 import com.feissenger.ui.viewModels.RoomsViewModel
-import com.giphy.sdk.core.network.api.GPHApiClient
 import com.giphy.sdk.ui.GiphyCoreUI
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_view_pager.*
+import kotlinx.android.synthetic.main.fragment_room_message.*
 
 class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -50,6 +46,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
     private lateinit var roomsViewModel: RoomsViewModel
     private lateinit var messagesViewModel: MessagesViewModel
     private lateinit var roomPostViewModel: RoomPostViewModel
+    private lateinit var roomMessagesViewModel: RoomMessagesViewModel
     private lateinit var sharedPreferences: MySharedPreferences
 
 
@@ -60,15 +57,34 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         roomsViewModel.loadRooms()
     }
 
+    fun goBackFromRoomPost(){
+        if(sharedPreferences.get("fragment") == "roomsPost"){
+            roomPostViewModel.input_post.postValue("")
+            findNavController(R.id.nav_host_fragment).popBackStack()
+            sharedPreferences.put("fragment","roomMessages")
+        }
+    }
+
+    fun showFab(show: Boolean){
+        if(sharedPreferences.get("fragment") == "roomMessages"){
+
+            if(show)
+                roomMessagesViewModel.showFab.postValue(show)
+            else
+                roomMessagesViewModel.showFab.postValue(show)
+        }
+    }
+
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         val activeNetworkCapabilities = connMgr.getNetworkCapabilities(connMgr.activeNetwork)
-
         if(connMgr.activeNetwork != null){
+            if(activeNetworkCapabilities != null)
             if(activeNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)){
                 Log.i("connection", "ON WIFI")
                 if (wifiManager.connectionInfo.hiddenSSID){
                     sharedPreferences.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
                     roomsViewModel.activeWifi = wifiManager.connectionInfo.bssid.removeSurrounding("\"","\"")
+                    roomMessagesViewModel.roomid = wifiManager.connectionInfo.ssid.removeSurrounding("\"","\"")
                     refresRooms()
                 }
                 else{
@@ -77,23 +93,32 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
                     refresRooms()
 
                 }
+                if(sharedPreferences.get("activeWifi").toString() == roomsViewModel.activeWifi){
+                    showFab(true)
+                }
+                else{
+                    goBackFromRoomPost()
+                    showFab(false)
+                }
             }
             else{
                 sharedPreferences.put("activeWifi","")
                 refresRooms()
-                Log.i("connection", "NO CONNECTION OR ONLY DATA")
+                goBackFromRoomPost()
+                showFab(false)
             }
             snackbar.dismiss()
             messagesViewModel.enabledSend.postValue(true)
-            roomPostViewModel.enableSend.postValue(true)
         }else{
             snackbar.show()
             sharedPreferences.put("activeWifi","")
             roomsViewModel.activeWifi = ""
             messagesViewModel.enabledSend.postValue(false)
-            roomPostViewModel.enableSend.postValue(false)
+            goBackFromRoomPost()
+
             Log.i("connection", "NO CONNECTION AT ALL")
         }
+
         when(sharedPreferences.get("fragment")){
 //            "roomMessages" ->
             "messages" -> messagesViewModel.loadMessages()
@@ -115,8 +140,9 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         roomsViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomsViewModel::class.java)
-        roomPostViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomPostViewModel::class.java)
+        roomMessagesViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomMessagesViewModel::class.java)
         messagesViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(MessagesViewModel::class.java)
+        roomPostViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomPostViewModel::class.java)
         sharedPreferences = MySharedPreferences(applicationContext)
 
         connMgr = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

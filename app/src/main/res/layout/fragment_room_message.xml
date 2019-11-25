@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
-            name="model"
+            name="roomMessage"
             type="com.feissenger.ui.viewModels.RoomMessagesViewModel" />
     </data>
 

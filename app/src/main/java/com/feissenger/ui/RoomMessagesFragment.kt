@@ -33,8 +33,10 @@ import com.giphy.sdk.ui.themes.LightTheme
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_message.*
+import kotlinx.android.synthetic.main.fragment_room_message.*
 
 class RoomMessagesFragment : Fragment() {
     private lateinit var viewModel: RoomMessagesViewModel
@@ -53,7 +55,7 @@ class RoomMessagesFragment : Fragment() {
             inflater, R.layout.fragment_room_message, container, false
         )
         binding.lifecycleOwner = this
-        viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
+        viewModel = ViewModelProvider(activity!!, Injection.provideViewModelFactory(activity?.applicationContext!!))
             .get(RoomMessagesViewModel::class.java)
 
         with(sharedPref) {
@@ -62,7 +64,7 @@ class RoomMessagesFragment : Fragment() {
 
         viewModel.roomid = arg.roomId
 
-        binding.model = viewModel
+        binding.roomMessage = viewModel
 
 
         binding.messagesList.layoutManager =
@@ -70,7 +72,14 @@ class RoomMessagesFragment : Fragment() {
 
         val adapter = RoomMessagesAdapter()
         binding.messagesList.adapter = adapter
-
+        viewModel.showFab.observeForever{
+            if(fab != null){
+                if(it)
+                    fab.show()
+                else
+                    fab.hide()
+            }
+        }
         viewModel.messages.observeForever {
             adapter.data = it
             binding.messagesList.scrollToPosition(adapter.itemCount -1)
@@ -86,7 +95,13 @@ class RoomMessagesFragment : Fragment() {
             val action = RoomMessagesFragmentDirections.actionRoomMessagesFragmentToRoomPost(arg.roomId)
             view.findNavController().navigate(action)
         }
+        if(sharedPref.get("activeWifi").toString() == viewModel.roomid){
+            viewModel.showFab.postValue(true)
 
+        }
+        else{
+            viewModel.showFab.postValue(false)
+        }
         viewModel.loadRoomMessages()
 
         return binding.root
@@ -94,6 +109,7 @@ class RoomMessagesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         sharedPref.put("fragment","roomMessages")
         sharedPref.put("roomId",arg.roomId)

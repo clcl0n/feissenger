@@ -33,6 +33,7 @@ import com.feissenger.ui.viewModels.RoomsViewModel
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.navArgs
 import com.feissenger.MainActivity
+import com.feissenger.ui.viewModels.RoomMessagesViewModel
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.GPHSettings
@@ -64,8 +65,11 @@ class RoomPostFragment : Fragment() {
             inflater, R.layout.fragment_room_post, container, false
         )
         binding.lifecycleOwner = this
+
         viewModel = ViewModelProvider(activity!!, Injection.provideViewModelFactory(context!!))
             .get(RoomPostViewModel::class.java)
+
+
 
         with(sharedPref) {
             viewModel.uid = get("uid").toString()
@@ -74,7 +78,8 @@ class RoomPostFragment : Fragment() {
         viewModel.roomId = arg.roomId
         viewModel.senderName = sharedPref.get("name").toString()
 
-        binding.model = viewModel
+        binding.roomPost = viewModel
+
 
         return binding.root
     }
