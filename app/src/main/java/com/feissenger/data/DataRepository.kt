@@ -108,7 +108,7 @@ class DataRepository private constructor(
             if (contactReadResponse.isSuccessful) {
 
                 contactReadResponse.body()?.let {
-                    cache.insertMessages(it.map { item ->
+                    return cache.insertMessages(it.map { item ->
                         MessageItem(
                             MessageId(
                                 contactReadRequest.uid,
@@ -262,7 +262,8 @@ class DataRepository private constructor(
                     return cache.insertRoomMessages(it.map { item ->
                         RoomMessageItem(
                             RoomMessageItemId(item.uid, item.roomid, item.time, item.name),
-                            item.message
+                            item.message,
+                            item.message.contains("giphy.com/media/")
                         )
                     })
                 }
@@ -291,7 +292,7 @@ class DataRepository private constructor(
             if (roomMessageResponse.isSuccessful)
                 loadRoomMessages(
                     onError,
-                    RoomReadRequest(roomMessageRequest.uid, roomMessageRequest.roomid)
+                    RoomReadRequest(roomMessageRequest.uid, roomMessageRequest.room)
                 )
 
             onError("Load images failed. Try again later please.")

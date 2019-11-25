@@ -43,7 +43,7 @@ data class ContactReadRequest(
 //RoomMessages
 data class RoomMessageRequest(
     val uid: String,
-    val roomid: String,
+    val room: String,
     val message: String,
     val api_key: String = "c95332ee022df8c953ce470261efc695ecf3e784"
 )

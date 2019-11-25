@@ -1,6 +1,8 @@
 package com.feissenger.ui
 
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,8 +24,17 @@ import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentRoomMessageBinding
 import com.feissenger.ui.adapter.RoomMessagesAdapter
 import com.feissenger.ui.viewModels.RoomMessagesViewModel
+import com.giphy.sdk.core.models.Media
+import com.giphy.sdk.ui.GPHContentType
+import com.giphy.sdk.ui.GPHSettings
+import com.giphy.sdk.ui.themes.DarkTheme
+import com.giphy.sdk.ui.themes.GridType
+import com.giphy.sdk.ui.themes.LightTheme
+import com.giphy.sdk.ui.views.GiphyDialogFragment
+import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.fragment_message.*
 
 class RoomMessagesFragment : Fragment() {
     private lateinit var viewModel: RoomMessagesViewModel
@@ -62,12 +73,12 @@ class RoomMessagesFragment : Fragment() {
 
         viewModel.messages.observeForever {
             adapter.data = it
-            binding.messagesList.scrollToPosition(0)
+            binding.messagesList.scrollToPosition(adapter.itemCount -1)
         }
 
         val contentView = binding.messagesList
         contentView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            binding.messagesList.scrollToPosition(0)
+            binding.messagesList.scrollToPosition(adapter.itemCount -1)
         }
 
 

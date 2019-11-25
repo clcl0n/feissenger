@@ -23,8 +23,6 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
     val messages: LiveData<List<MessageItem>>
         get() = repository.getMessages(uid, contact)
 
-    val mutableMessages: MutableLiveData<List<MessageItem>> = MutableLiveData()
-
     val input: MutableLiveData<String> = MutableLiveData()
 
     val enabledSend: MutableLiveData<Boolean> = MutableLiveData()
@@ -65,11 +63,4 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
             repository.loadMessages({error.postValue(it)},ContactReadRequest(uid, contact))
         }
     }
-
-//    init {
-//        viewModelScope.launch {
-//            loadMessages()
-//            mutableMessages.postValue(repository.getMutableMessages(uid, contact))
-//        }
-//    }
 }

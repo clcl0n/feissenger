@@ -9,7 +9,8 @@ data class RoomMessageItem(
     @PrimaryKey
     @Embedded
     val id: RoomMessageItemId,
-    val message: String
+    val message: String,
+    val isGif: Boolean
 )
 
 data class RoomMessageItemId(

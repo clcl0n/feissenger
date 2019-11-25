@@ -54,4 +54,10 @@
         android:textColor="@android:color/black"
         android:textSize="@dimen/normal_text"
         tools:text="teeeeee"/>
+
+    <com.giphy.sdk.ui.views.GPHMediaView
+        android:id="@+id/room_message_gif"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

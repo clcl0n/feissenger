@@ -16,22 +16,17 @@ class RoomPostViewModel(private val repository: DataRepository) : ViewModel() {
     var uid: String = ""
     var roomId: String = ""
 
-    val input: MutableLiveData<String> = MutableLiveData()
+    val input_post: MutableLiveData<String> = MutableLiveData()
 
     fun sendMessage() {
 
-        input.value?.let { it ->
+        input_post.value?.let { it ->
             viewModelScope.launch {
 
                 repository.sendRoomMessage({error.postValue(it)}, RoomMessageRequest(uid, roomId, it))
-
-//                repository.notifyMessage(notifyMessage = NotificationRequest(
-//                    contactFid,
-//                    NotificationBody(uid, it, uid, "msg")
-//                ), onError = { error.postValue(it) })
             }
         }
-        input.postValue("")
+        input_post.postValue("")
     }
 
     fun sendGif(gif : String) {
@@ -39,11 +34,6 @@ class RoomPostViewModel(private val repository: DataRepository) : ViewModel() {
         viewModelScope.launch {
 
             repository.sendRoomMessage({error.postValue(it)}, RoomMessageRequest(uid, roomId, gif))
-
-//            repository.notifyMessage(notifyMessage = NotificationRequest(
-//                contactFid,
-//                NotificationBody(uid, gif, uid, "msg")
-//            ), onError = { error.postValue(it) })
         }
     }
 }

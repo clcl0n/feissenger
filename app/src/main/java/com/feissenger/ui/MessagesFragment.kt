@@ -113,7 +113,7 @@ class MessagesFragment : Fragment() {
         giphy_button.style = GPHGiphyButtonStyle.iconSquareRounded
         val settings =
             GPHSettings(gridType = GridType.carousel, dimBackground = true)
-        when (this.activity?.getPreferences(Activity.MODE_PRIVATE)?.getString("theme", "")) {
+        when (sharedPref.get("theme")) {
             "light" -> settings.theme = LightTheme
             "dark" -> settings.theme = DarkTheme
         }

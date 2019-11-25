@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.feissenger.data.db.model.RoomMessageItem
 import com.feissenger.ui.RoomMessagesFragmentDirections
+import kotlinx.android.synthetic.main.message_item.view.*
 import kotlinx.android.synthetic.main.room_message_item.view.*
 
 class RoomMessagesAdapter() : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolder>() {
@@ -37,9 +38,23 @@ class RoomMessagesAdapter() : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolde
 
             (itemView.room_message_user_name as TextView).text = item.id.name
             (itemView.room_message_time as TextView).text = item.id.time
-            (itemView.room_message_text as TextView).text = item.message
+
             itemView.chat_with_user.setOnClickListener {
                 it.findNavController().navigate(RoomMessagesFragmentDirections.actionRoomMessagesFragmentToMessagesFragment(item.id.uid, item.id.name))
+            }
+
+            if(item.isGif){
+                itemView.room_message_text.visibility = View.GONE
+                itemView.room_message_gif.visibility = View.VISIBLE
+
+                val converter = com.feissenger.data.db.Converters()
+
+                itemView.room_message_gif.setMedia(converter.jsonToMedia(item.message))
+
+            }else{
+                itemView.room_message_text.visibility = View.VISIBLE
+                itemView.room_message_gif.visibility = View.GONE
+                (itemView.room_message_text as TextView).text = item.message
             }
         }
 

@@ -1,5 +1,7 @@
 package com.feissenger.ui
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.IntentFilter
 import android.net.ConnectivityManager
@@ -31,11 +33,17 @@ import com.feissenger.ui.viewModels.RoomsViewModel
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.navArgs
 import com.feissenger.MainActivity
+import com.giphy.sdk.core.models.Media
+import com.giphy.sdk.ui.GPHContentType
+import com.giphy.sdk.ui.GPHSettings
+import com.giphy.sdk.ui.themes.DarkTheme
+import com.giphy.sdk.ui.themes.GridType
+import com.giphy.sdk.ui.themes.LightTheme
+import com.giphy.sdk.ui.views.GiphyDialogFragment
+import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
 import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.fragment_message.*
 import kotlinx.android.synthetic.main.fragment_room_post.*
-
-
-
 
 
 class RoomPostFragment : Fragment() {
@@ -63,6 +71,8 @@ class RoomPostFragment : Fragment() {
             viewModel.uid = get("uid").toString()
         }
 
+        viewModel.roomId = arg.roomId
+
         binding.model = viewModel
 
         return binding.root
@@ -77,6 +87,46 @@ class RoomPostFragment : Fragment() {
         val keyboard =
             activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         keyboard.showSoftInput(editTextRoomPost, 0)
+
+        giphy_button_post.style = GPHGiphyButtonStyle.logo
+        val settings =
+            GPHSettings(gridType = GridType.carousel, dimBackground = true)
+        when (sharedPref.get("theme")) {
+            "light" -> settings.theme = LightTheme
+            "dark" -> settings.theme = DarkTheme
+        }
+        val gifsDialog = GiphyDialogFragment.newInstance(settings)
+        settings.mediaTypeConfig = arrayOf(GPHContentType.gif)
+
+        giphy_button_post.setOnClickListener {
+            fragmentManager?.let { it1 -> gifsDialog.show(it1, "gifs_dialog") }
+            gifsDialog.gifSelectionListener = object : GiphyDialogFragment.GifSelectionListener {
+                @SuppressLint("LogNotTimber")
+                override fun onGifSelected(media: Media) {
+                    val converter = com.feissenger.data.db.Converters()
+                    viewModel.sendGif(converter.mediaToJson(media))
+
+                    val inputMethodManager = context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+
+                    val action = RoomPostFragmentDirections.actionRoomPostToRoomMessagesFragment(arg.roomId)
+                    it.findNavController().navigate(action)
+                }
+
+                override fun onDismissed() {
+                }
+            }
+        }
+
+        button_post.setOnClickListener {
+            viewModel.sendMessage()
+
+            val inputMethodManager = context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+
+            val action = RoomPostFragmentDirections.actionRoomPostToRoomMessagesFragment(arg.roomId)
+            it.findNavController().navigate(action)
+        }
     }
     
 }
