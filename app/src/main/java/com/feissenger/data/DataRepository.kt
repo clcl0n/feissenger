@@ -233,8 +233,8 @@ class DataRepository private constructor(
     }
 
     //    RoomMessages
-    fun getRoomMessages(uid: String, roomId: String): LiveData<List<RoomMessageItem>> =
-        cache.getRoomMessages(uid, roomId)
+    fun getRoomMessages(roomId: String): LiveData<List<RoomMessageItem>> =
+        cache.getRoomMessages(roomId)
 
     suspend fun register(userName: String, password: String): RegisterResponse? {
         val registerReponse = api.register(RegisterRequest(userName, password))

@@ -52,8 +52,8 @@ interface DbDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertRoomMessages(wordItems: List<RoomMessageItem>)
 
-    @Query("SELECT * FROM posts WHERE uid LIKE :uid AND roomid LIKE :roomid")
-    fun getRoomMessages(uid: String, roomid: String): LiveData<List<RoomMessageItem>>
+    @Query("SELECT * FROM posts WHERE roomid LIKE :roomid")
+    fun getRoomMessages(roomid: String): LiveData<List<RoomMessageItem>>
 
 
 
