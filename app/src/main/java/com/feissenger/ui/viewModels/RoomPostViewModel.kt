@@ -3,9 +3,7 @@ package com.feissenger.ui.viewModels
 
 import androidx.lifecycle.*
 import com.feissenger.data.DataRepository
-import com.feissenger.data.api.model.RoomListRequest
-import com.feissenger.data.api.model.RoomMessageRequest
-import com.feissenger.data.api.model.RoomReadRequest
+import com.feissenger.data.api.model.*
 import com.feissenger.data.db.model.RoomItem
 import kotlinx.coroutines.launch
 
@@ -15,7 +13,7 @@ class RoomPostViewModel(private val repository: DataRepository) : ViewModel() {
 
     var uid: String = ""
     var roomId: String = ""
-
+    var senderName: String = ""
     val input_post: MutableLiveData<String> = MutableLiveData()
 
     var enableSend: MutableLiveData<Boolean> = MutableLiveData(true)
@@ -26,6 +24,12 @@ class RoomPostViewModel(private val repository: DataRepository) : ViewModel() {
             viewModelScope.launch {
 
                 repository.sendRoomMessage({error.postValue(it)}, RoomMessageRequest(uid, roomId, it))
+
+                repository.notifyPostMessage(notifyMessage = NotificationRequest(
+                    "/topics/$roomId",
+                    NotificationBody(senderName,"Nový príspevok v miestnosti: $roomId",roomId,"room")
+                ), onError = { error.postValue(it) })
+
             }
         }
         input_post.postValue("")
@@ -36,6 +40,10 @@ class RoomPostViewModel(private val repository: DataRepository) : ViewModel() {
         viewModelScope.launch {
 
             repository.sendRoomMessage({error.postValue(it)}, RoomMessageRequest(uid, roomId, gif))
+            repository.notifyPostMessage(notifyMessage = NotificationRequest(
+                "/topics/$roomId",
+                NotificationBody(senderName,"Nový GIF súbor v miestnosti: $roomId",roomId,"room")
+            ), onError = { error.postValue(it) })
         }
     }
 }

@@ -41,17 +41,21 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_view_pager.*
 
 class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
+
+    private var selected = "light"
+    lateinit var myToolbar: Toolbar
     private lateinit var snackbar: Snackbar
     private lateinit var wifiManager: WifiManager
-    private lateinit var sharedPref: MySharedPreferences
+    private lateinit var connMgr: ConnectivityManager
     private lateinit var roomsViewModel: RoomsViewModel
     private lateinit var messagesViewModel: MessagesViewModel
     private lateinit var roomPostViewModel: RoomPostViewModel
-    private lateinit var connMgr: ConnectivityManager
+    private lateinit var sharedPreferences: MySharedPreferences
+
 
     fun refresRooms(){
-        roomsViewModel.uid = sharedPref.get("uid").toString()
-        roomsViewModel.activeWifi = sharedPref.get("activeWifi").toString()
+        roomsViewModel.uid = sharedPreferences.get("uid").toString()
+        roomsViewModel.activeWifi = sharedPreferences.get("activeWifi").toString()
         roomsViewModel.setActiveRoom()
         roomsViewModel.loadRooms()
     }
@@ -63,19 +67,19 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             if(activeNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)){
                 Log.i("connection", "ON WIFI")
                 if (wifiManager.connectionInfo.hiddenSSID){
-                    sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
+                    sharedPreferences.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
                     roomsViewModel.activeWifi = wifiManager.connectionInfo.bssid.removeSurrounding("\"","\"")
                     refresRooms()
                 }
                 else{
-                    sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
+                    sharedPreferences.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
                     roomsViewModel.activeWifi = wifiManager.connectionInfo.ssid.removeSurrounding("\"","\"")
                     refresRooms()
 
                 }
             }
             else{
-                sharedPref.put("activeWifi","")
+                sharedPreferences.put("activeWifi","")
                 refresRooms()
                 Log.i("connection", "NO CONNECTION OR ONLY DATA")
             }
@@ -84,13 +88,13 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             roomPostViewModel.enableSend.postValue(true)
         }else{
             snackbar.show()
-            sharedPref.put("activeWifi","")
+            sharedPreferences.put("activeWifi","")
             roomsViewModel.activeWifi = ""
             messagesViewModel.enabledSend.postValue(false)
             roomPostViewModel.enableSend.postValue(false)
             Log.i("connection", "NO CONNECTION AT ALL")
         }
-        when(sharedPref.get("fragment")){
+        when(sharedPreferences.get("fragment")){
 //            "roomMessages" ->
             "messages" -> messagesViewModel.loadMessages()
             "rooms", "contacts" -> {
@@ -104,9 +108,6 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         ConnectivityReceiver.connectivityReceiverListener = this
     }
 
-    private var selected = "light"
-    private lateinit var sharedPreferences: MySharedPreferences
-    lateinit var myToolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         roomsViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomsViewModel::class.java)
         roomPostViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomPostViewModel::class.java)
         messagesViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(MessagesViewModel::class.java)
-        sharedPref = MySharedPreferences(applicationContext)
+        sharedPreferences = MySharedPreferences(applicationContext)
 
         connMgr = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -143,7 +144,6 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             }
         }
 
-        sharedPreferences = MySharedPreferences(applicationContext)
 
         setTheme(getSavedTheme())
         setContentView(R.layout.activity_main)

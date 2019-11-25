@@ -72,6 +72,7 @@ class RoomPostFragment : Fragment() {
         }
 
         viewModel.roomId = arg.roomId
+        viewModel.senderName = sharedPref.get("name").toString()
 
         binding.model = viewModel
 

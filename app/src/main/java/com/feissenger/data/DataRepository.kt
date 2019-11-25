@@ -436,6 +436,23 @@ class DataRepository private constructor(
         return ""
     }
 
+    suspend fun notifyPostMessage(notifyMessage: NotificationRequest, onError: (error: String) -> Unit) {
+        try {
+            val response = fcm.sendNotification(notifyMessage)
+            if (response.isSuccessful)
+                response.body()?.let {
+                    Log.i("tag", it.toString())
+//                    return cache.getRoomMessages(it.map{item-> RoomMessage(0,item.message, item.roomid, item.uid, item.time)})
+                }
+        } catch (ex: ConnectException) {
+            onError("Off-line. Check internet connection.")
+        } catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
+    }
+
 
 //    suspend fun getRoomMessages(onError: (error: String) -> Unit, roomid: String){
 //        try {
