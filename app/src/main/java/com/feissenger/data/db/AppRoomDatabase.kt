@@ -9,7 +9,7 @@ import com.feissenger.data.db.model.RoomMessageItem
 
 @Database(
     entities = [MessageItem::class, RoomItem::class, ContactItem::class, RoomMessageItem::class],
-    version = 20,
+    version = 999,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

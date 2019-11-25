@@ -11,7 +11,7 @@ class RoomsViewModel(private val repository: DataRepository) : ViewModel() {
 
     val error: MutableLiveData<String> = MutableLiveData()
 
-
+    val _rooms : MutableLiveData<List<RoomItem>> = MutableLiveData()
     val activeRoom: MutableLiveData<String> = MutableLiveData("")
     val visibleActive: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -19,10 +19,9 @@ class RoomsViewModel(private val repository: DataRepository) : ViewModel() {
     var access: String = ""
     var activeWifi: String = ""
 
-    val rooms: LiveData<List<RoomItem>>
-        get() = repository.getRooms(uid, activeWifi)
 
-    val mutableRooms: MutableLiveData<List<RoomItem>> = MutableLiveData()
+    val rooms: LiveData<List<RoomItem>>
+        get() = _rooms
 
     fun setActiveRoom() {
         activeRoom.postValue(activeWifi)
@@ -34,19 +33,15 @@ class RoomsViewModel(private val repository: DataRepository) : ViewModel() {
 
     fun loadRooms() {
         viewModelScope.launch {
-            repository.getRoomList({error.postValue(it)}, RoomListRequest(uid))
+            repository.getRoomList({error.postValue(it)},RoomListRequest(uid))
+            refreshRooms()
         }
     }
 
     fun refreshRooms(){
-        viewModelScope.launch {
-            mutableRooms.postValue(repository.getMutableRooms(uid,activeWifi))
-        }
-    }
+        viewModelScope.launch{
+            _rooms.postValue(repository.getMutableRooms(uid, activeWifi))
 
-    init {
-        viewModelScope.launch {
-            mutableRooms.postValue(repository.getMutableRooms(uid,activeWifi))
         }
     }
 }

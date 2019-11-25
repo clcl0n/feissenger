@@ -2,7 +2,7 @@ package com.feissenger.data.db.model
 
 import androidx.room.*
 
-@Entity(tableName = "rooms")
+@Entity(tableName = "roomsList")
 data class RoomItem(
     @PrimaryKey
     @Embedded

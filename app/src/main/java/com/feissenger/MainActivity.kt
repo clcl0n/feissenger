@@ -47,6 +47,13 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
     private lateinit var messagesViewModel: MessagesViewModel
     private lateinit var connMgr: ConnectivityManager
 
+    fun refresRooms(){
+        roomsViewModel.uid = sharedPref.get("uid").toString()
+        roomsViewModel.activeWifi = sharedPref.get("activeWifi").toString()
+        roomsViewModel.setActiveRoom()
+        roomsViewModel.loadRooms()
+    }
+
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         val activeNetworkCapabilities = connMgr.getNetworkCapabilities(connMgr.activeNetwork)
 
@@ -56,17 +63,18 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
                 if (wifiManager.connectionInfo.hiddenSSID){
                     sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
                     roomsViewModel.activeWifi = wifiManager.connectionInfo.bssid.removeSurrounding("\"","\"")
-                    roomsViewModel.setActiveRoom()
+                    refresRooms()
                 }
                 else{
                     sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
                     roomsViewModel.activeWifi = wifiManager.connectionInfo.ssid.removeSurrounding("\"","\"")
-                    roomsViewModel.setActiveRoom()
+                    refresRooms()
+
                 }
             }
             else{
                 sharedPref.put("activeWifi","")
-                roomsViewModel.activeWifi = ""
+                refresRooms()
                 Log.i("connection", "NO CONNECTION OR ONLY DATA")
             }
             snackbar.dismiss()
@@ -82,8 +90,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 //            "roomMessages" ->
             "messages" -> messagesViewModel.loadMessages()
             "rooms", "contacts" -> {
-                roomsViewModel.loadRooms()
-                roomsViewModel.setActiveRoom()
+                refresRooms()
             }
         }
     }

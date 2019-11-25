@@ -39,7 +39,6 @@ class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
             item: RoomItem
         ) {
             (itemView.ssid as TextView).text = item.id.ssid
-
             itemView.setOnClickListener {
                 val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(item.id.ssid)
                 it.findNavController().navigate(action)

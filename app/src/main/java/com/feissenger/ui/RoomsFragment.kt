@@ -1,34 +1,23 @@
 package com.feissenger.ui
 
 
-import android.content.Context
-import android.content.IntentFilter
-import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
-import com.feissenger.data.ConnectivityReceiver
 import com.feissenger.databinding.FragmentRoomBinding
 import com.feissenger.ui.adapter.RoomsAdapter
 import com.feissenger.ui.viewModels.RoomsViewModel
 import com.feissenger.data.util.Injection
-import com.google.firebase.FirebaseApp
-import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.android.synthetic.main.fragment_room.*
+
 //, ConnectivityReceiver.ConnectivityReceiverListener
 class RoomsFragment : Fragment() {
 
@@ -81,7 +70,7 @@ class RoomsFragment : Fragment() {
             viewModel.refreshRooms()
         }
 
-        viewModel.mutableRooms.observeForever{
+        viewModel.rooms.observeForever{
             adapter.data = it
         }
 
@@ -98,8 +87,14 @@ class RoomsFragment : Fragment() {
             )
             it.findNavController().navigate(action)
         }
+        viewModel.loadRooms()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        viewModel.loadRooms()
+        super.onResume()
     }
 //
 //    private fun showMessage(isConnected: Boolean) {
@@ -131,6 +126,8 @@ class RoomsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.loadRooms()
+
         sharedPref.put("fragment","rooms")
     }
 

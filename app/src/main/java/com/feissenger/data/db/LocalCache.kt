@@ -25,8 +25,11 @@ class LocalCache(private val dao: DbDao) {
     //Rooms
 
     fun getRooms(user: String, activeRoom: String) = dao.getRooms(user,activeRoom)
-
-    suspend fun getMutableRooms(user: String, activeRoom: String) = dao.getMutableRooms(user, activeRoom)
+//
+    suspend fun getMutableRooms(user: String, activeRoom: String): List<RoomItem>{
+        val i = dao.getMutableRooms(user, activeRoom)
+        return i
+    }
 
     suspend fun insertRooms(roomItems: List<RoomItem>) {
         dao.insertRooms(roomItems)
