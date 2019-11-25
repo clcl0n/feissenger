@@ -64,7 +64,7 @@ class RoomPostFragment : Fragment() {
             inflater, R.layout.fragment_room_post, container, false
         )
         binding.lifecycleOwner = this
-        viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
+        viewModel = ViewModelProvider(activity!!, Injection.provideViewModelFactory(context!!))
             .get(RoomPostViewModel::class.java)
 
         with(sharedPref) {

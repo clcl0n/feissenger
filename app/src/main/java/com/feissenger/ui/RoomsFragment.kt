@@ -17,6 +17,7 @@ import com.feissenger.databinding.FragmentRoomBinding
 import com.feissenger.ui.adapter.RoomsAdapter
 import com.feissenger.ui.viewModels.RoomsViewModel
 import com.feissenger.data.util.Injection
+import com.reddit.indicatorfastscroll.FastScrollItemIndicator
 
 //, ConnectivityReceiver.ConnectivityReceiverListener
 class RoomsFragment : Fragment() {
@@ -88,6 +89,21 @@ class RoomsFragment : Fragment() {
             it.findNavController().navigate(action)
         }
         viewModel.loadRooms()
+
+        binding.roomFastscroller.apply {
+            setupWithRecyclerView(
+                binding.messagesList,
+                {
+                        position ->
+                    val item = adapter.data[position]
+                    FastScrollItemIndicator.Text(
+                        item.id.ssid.substring(0, 1).toUpperCase()
+                    )
+                }
+            )
+        }
+
+        binding.roomFastscrollerThumb.setupWithFastScroller(binding.roomFastscroller)
 
         return binding.root
     }

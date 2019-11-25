@@ -11,10 +11,10 @@ import com.feissenger.data.db.model.RoomMessageItem
 @Dao
 interface DbDao {
     //    Messages
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessages(messageItems: List<MessageItem>)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessage(messageItem: MessageItem)
 
     @Query("SELECT * FROM messages WHERE uid LIKE :uid AND ((sender LIKE :uid AND recipient LIKE :contact) OR (sender LIKE :contact AND recipient LIKE :uid))")
@@ -23,9 +23,6 @@ interface DbDao {
     @Query("SELECT * FROM messages WHERE uid LIKE :uid AND sender LIKE :sender AND time LIKE :time LIMIT 1")
     fun getMessage(uid: String, sender: String, time: String):MessageItem
 
-
-    @Query("SELECT contact_fid FROM messages WHERE recipient = :contact LIMIT 1")
-    suspend fun getContactFid(contact: String): String
 
     //    Rooms
     @Query("SELECT * FROM roomsList WHERE uid LIKE :uid  AND ssid NOT LIKE 'XsTDHS3C2YneVmEW5Ry7' AND ssid NOT LIKE :activeRoom")

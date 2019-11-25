@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
 
         <variable
             name="model"
@@ -31,6 +32,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/thick"
             android:background="@color/gray"
+            android:visibility="@{model.enableSend? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">

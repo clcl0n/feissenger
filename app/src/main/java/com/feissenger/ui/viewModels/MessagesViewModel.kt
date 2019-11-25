@@ -31,7 +31,8 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
 
         input.value?.let { it ->
             viewModelScope.launch {
-                val contactFid = repository.getContactFid(contact)
+                val contactFid = repository.getContactFid({error.postValue(it)},uid, contact)
+
 
                 repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, it))
 
@@ -47,7 +48,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
     fun sendGif(gif : String) {
 
         viewModelScope.launch {
-            val contactFid = repository.getContactFid(contact)
+            val contactFid = repository.getContactFid({error.postValue(it)},uid, contact)
 
             repository.sendMessage({error.postValue(it)}, ContactMessageRequest(uid, contact, gif))
 
