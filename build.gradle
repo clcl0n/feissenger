@@ -21,6 +21,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
         maven {
             url "http://giphy.bintray.com/giphy-sdk"
         }
