@@ -1,6 +1,7 @@
 package com.feissenger.data.db
 
 import androidx.room.TypeConverter
+import com.giphy.sdk.core.models.Media
 import com.google.gson.Gson
 
 class Converters {
@@ -19,4 +20,16 @@ class Converters {
         return list
     }
 
+    @TypeConverter
+    fun mediaToJson(value: Media?): String {
+        return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun jsonToMedia(value: String): Media? {
+        if(value == "null")
+            return null
+        val obj = Gson().fromJson(value, Media::class.java) as Media
+        return obj
+    }
 }

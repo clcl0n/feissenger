@@ -5,7 +5,6 @@ import com.feissenger.data.api.model.*
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -13,57 +12,52 @@ import retrofit2.http.*
 
 interface WebApi {
 
+//    Register
     @POST("user/create.php")
-    @Headers("Accept: application/json",
-        "Cache-Control: no-cache",
-        "Content-Type: application/json")
+    @Headers("Needs-Auth: false")
     suspend fun register(@Body register: RegisterRequest): Response<RegisterResponse>
 
+//    Login
     @POST("user/login.php")
-    @Headers("Accept: application/json",
-        "Cache-Control: no-cache",
-        "Content-Type: application/json")
+    @Headers("Needs-Auth: false")
     suspend fun login(@Body login: LoginRequest): Response<LoginResponse>
 
+//  Refresh
+    @POST("user/refresh.php")
+    @Headers("Needs-Auth: false")
+    fun refresh(@Body refresh: RefreshRequest): Call<RefreshResponse>
+
+//    Messages
     @POST("contact/message.php")
-    @Headers("Accept: application/json",
-        "Cache-Control: no-cache",
-        "Content-Type: application/json")
-    suspend fun contactMessage(@Header("Authorization") authorization:String, @Body contactMessageRequest: ContactMessageRequest) : Response<ResponseBody>
+    @Headers("Needs-Auth: true")
+    suspend fun sendContactMessage(@Body contactMessageRequest: ContactMessageRequest) : Response<ResponseBody>
 
     @POST("contact/read.php")
-    @Headers("Accept: application/json",
-        "Cache-Control: no-cache",
-        "Content-Type: application/json")
-    suspend fun contactRead(@Header("Authorization") authorization:String, @Body contactReadRequest: ContactReadRequest): Response<List<ContactReadResponse>>
+    @Headers("Needs-Auth: true")
+    suspend fun getContactMessages(@Body contactReadRequest: ContactReadRequest): Response<List<ContactReadResponse>>
 
-    @POST("/room/list.php")
-    @Headers("Accept: application/json",
-            "Cache-Control: no-cache",
-            "Content-Type: application/json")
-    suspend fun getRooms(@Header("Authorization") authorization:String?, @Body roomList: RoomListRequest): Response<List<RoomListResponse>>
-
-
+//    RoomMessages
     @POST("room/message.php")
-    @Headers("Accept: application/json",
-        "Cache-Control: no-cache",
-        "Content-Type: application/json",
-        "Authorization: Bearer 235357457bc9de273f1cdb3d4530f56b5d9aa4c9")
-    suspend fun sendRoomMessage(@Body roomMessage: RoomMessageRequest)
+    @Headers("Needs-Auth: true")
+    suspend fun sendRoomMessage(@Body roomMessage: RoomMessageRequest): Response<ResponseBody>
 
     @POST("room/read.php")
-    @Headers("Accept: application/json",
-        "Cache-Control: no-cache",
-        "Content-Type: application/json",
-        "Authorization: Bearer 235357457bc9de273f1cdb3d4530f56b5d9aa4c9")
+    @Headers("Needs-Auth: true")
     suspend fun getRoomMessages(@Body roomRead: RoomReadRequest): Response<List<RoomReadResponse>>
 
+//    Contacts
     @POST("contact/list.php")
-    @Headers("Accept: application/json",
-        "Cache-Control: no-cache",
-        "Content-Type: application/json")
-    suspend fun getContactList(@Header("Authorization") authorization: String, @Body contactList: ContactListRequest): Response<List<ContactListResponse>>
+    @Headers("Needs-Auth: true")
+    suspend fun getContactList(@Body contactList: ContactListRequest): Response<List<ContactListResponse>>
 
+//    Rooms
+    @POST("/room/list.php")
+    @Headers("Needs-Auth: true")
+    suspend fun getRooms(@Body roomList: RoomListRequest): Response<List<RoomListResponse>>
+
+    @POST("/user/fid.php")
+    @Headers("Needs-Auth: true")
+    suspend fun registerToken(@Body userFidRequest: RegisterTokenRequest): Response<ResponseBody>
 
     companion object {
         private const val BASE_URL =
@@ -72,6 +66,8 @@ interface WebApi {
         fun create(context: Context): WebApi {
 
             val client = OkHttpClient.Builder()
+                .addInterceptor(AuthInterceptor(context))
+                .authenticator(TokenAuthenticator(context))
                 .build()
 
             val retrofit = Retrofit.Builder()

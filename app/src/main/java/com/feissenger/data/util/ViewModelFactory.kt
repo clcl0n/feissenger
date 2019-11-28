@@ -48,14 +48,19 @@ class ViewModelFactory(private val repository: DataRepository) : ViewModelProvid
             return RoomsViewModel(repository) as T
         }
 
+        if (modelClass.isAssignableFrom(RoomMessagesViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return RoomMessagesViewModel(repository) as T
+        }
+
         if (modelClass.isAssignableFrom(ContactListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ContactListViewModel(repository) as T
         }
 
-        if (modelClass.isAssignableFrom(SharedViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(RoomPostViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SharedViewModel() as T
+            return RoomPostViewModel(repository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")

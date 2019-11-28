@@ -3,18 +3,18 @@ package com.feissenger.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SectionIndexer
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
 import com.feissenger.data.db.model.ContactItem
-import com.feissenger.ui.viewModels.SharedViewModel
+import com.feissenger.ui.ViewPagerFragmentDirections
 import kotlinx.android.synthetic.main.contact_item.view.*
+import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 
 
-class ContactListAdapter(sharedViewModel: SharedViewModel) : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
-
-    val sharedViewModel = sharedViewModel
+class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>(){
 
     var data = listOf<ContactItem>()
         set(value) {
@@ -22,11 +22,28 @@ class ContactListAdapter(sharedViewModel: SharedViewModel) : RecyclerView.Adapte
             notifyDataSetChanged()
         }
 
+    var category: String = "A"
+
+
     override fun getItemCount() = data.size
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        holder.bind(item, sharedViewModel)
+
+        if(position == 0){
+            category = item.name.first().toUpperCase().toString()
+            holder.bind(item, category, View.VISIBLE)
+        }
+        else{
+            val prevItem = data[position-1]
+            if(item.name.first().toUpperCase() != prevItem.name.first().toUpperCase()){
+                category = item.name.first().toUpperCase().toString()
+                holder.bind(item, category, View.VISIBLE)
+            }else{
+                holder.bind(item, category, View.GONE)
+            }
+        }
     }
 
 
@@ -38,15 +55,19 @@ class ContactListAdapter(sharedViewModel: SharedViewModel) : RecyclerView.Adapte
 
         fun bind(
             item: ContactItem,
-            sharedViewModel: SharedViewModel
+            category: String,
+            visibility: Int
         ) {
-            (itemView.contact_name as TextView).text = item.name
-            (itemView.contact_id as TextView).text = item.id
 
-            itemView.setOnClickListener {
-                sharedViewModel.setContactId(item.id)
-                it.findNavController().navigate(R.id.action_contact_list_fragment_to_messagesFragment)
-            }
+            val head = (itemView.contact_group as TextView)
+            head.text = category
+            head.visibility = visibility
+
+            (itemView.contact_name as TextView).text = item.name
+        itemView.setOnClickListener {
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(item.id.contactId, item.name)
+            it.findNavController().navigate(action)
+        }
         }
 
         companion object {

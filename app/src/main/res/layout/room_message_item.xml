@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="@dimen/thin"
+    android:background="@drawable/rounded_border_room_message"
+    android:padding="@dimen/text_padding"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/chat_with_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/thick">
+
+        <ImageView
+            android:id="@+id/room_message_user_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/user_circle"
+            android:layout_gravity="start"
+            android:layout_marginEnd="@dimen/thin"
+            />
+
+        <TextView
+            android:id="@+id/room_message_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/normal_text"
+            android:layout_weight="2"
+            tools:text="MENOOOO"/>
+
+        <TextView
+            android:id="@+id/room_message_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/small_text"
+            android:layout_weight="2"
+            android:gravity="end"
+            tools:text="datum"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/room_message_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/normal_text"
+        tools:text="teeeeee"/>
+
+    <com.giphy.sdk.ui.views.GPHMediaView
+        android:id="@+id/room_message_gif"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

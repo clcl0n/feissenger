@@ -8,20 +8,25 @@
     android:paddingBottom="200dp"
     android:background="@color/white">
     <TextView
+        android:id="@+id/room_group"
+        android:layout_gravity="start"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@color/red"
+        android:textSize="24sp" />
+    <TextView
         android:id="@+id/ssid"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:layout_width="wrap_content"
-        android:textColor="?attr/ssid_color"
+        android:textColor="?attr/text_color"
         android:textSize="24sp" />
 
     <TextView
         android:id="@+id/bssid"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:layout_width="wrap_content"
-        android:textColor="?attr/ssid_color"
+        android:textColor="?attr/text_color"
         android:textSize="14sp" />
 </LinearLayout>

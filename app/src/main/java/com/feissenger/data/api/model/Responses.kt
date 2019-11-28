@@ -1,41 +1,53 @@
 package com.feissenger.data.api.model
 
+import com.giphy.sdk.core.models.Media
+
+data class NotificationResponse(
+    val messageId:String
+)
+
+//Login
 data class LoginResponse(
     val uid: String,
-    val access: String,
+    var access: String,
     val refresh: String
 )
 
+//Refresh
+data class RefreshResponse(
+    val uid: String,
+    var access: String,
+    val refresh: String
+)
+
+//Messages
 data class ContactReadResponse(
     val uid: String,
     val contact: String,
     val message: String,
-    val time: String
+    val time: String,
+    val uid_name: String,
+    val contact_name: String,
+    val uid_fid: String,
+    val contact_fid: String
 )
 
-data class MarsResponse(
-    val price: Long,
-    val id: String,
-    val type: String,
-    val img_src: String
+//RoomMessages
+data class RoomReadResponse(
+    val uid: String,
+    val roomid: String,
+    val message: String,
+    val time: String,
+    val name: String
 )
 
+//Rooms
 data class RoomListResponse(
     val roomid: String,
     val time: String
 )
 
-data class RoomReadResponse(
-    val uid: String,
-    val roomid: String,
-    val message: String,
-    val time: String
-)
-
-data class ContactMessageResponse(
-    val message: String
-)
-
+//Contacts
 data class ContactListResponse(
     val name:String,
     val id: String
