@@ -6,4 +6,7 @@
     <string name="not_matching_passwords">Passwords do not match!</string>
     <string name="existing_username_message">Username already exists.</string>
     <string name="wrong_username_or_password_message">Wrong username or password.</string>
+    <string name="logout_dialog_text">Are you sure to logout?</string>
+    <string name="confirm_logout">Log out</string>
+    <string name="cancel_logout">Cancel</string>
 </resources>

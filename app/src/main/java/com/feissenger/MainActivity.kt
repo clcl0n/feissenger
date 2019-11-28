@@ -27,8 +27,7 @@ import android.content.SharedPreferences
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
+import com.feissenger.ui.LogoutDialogFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -88,12 +87,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         logout_icon.setOnClickListener {
-            val preferences = getPreferences(Context.MODE_PRIVATE)
-            preferences.edit().clear()
-            navGraph.startDestination = R.id.login_fragment
-            val loginNavController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
-            loginNavController?.graph = navGraph
-            loginNavController?.navigate(R.id.login_fragment)
+            val newFragment = LogoutDialogFragment()
+            newFragment.show(supportFragmentManager, "logoutDialog")
         }
 
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
