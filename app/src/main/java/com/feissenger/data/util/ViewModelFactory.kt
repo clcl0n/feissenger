@@ -19,11 +19,7 @@ package com.feissenger.data.util
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.feissenger.data.DataRepository
-import com.feissenger.ui.viewModels.MessagesViewModel
-import com.feissenger.ui.viewModels.ContactListViewModel
-import com.feissenger.ui.viewModels.LoginViewModel
-import com.feissenger.ui.viewModels.RoomsViewModel
-import com.feissenger.ui.viewModels.SharedViewModel
+import com.feissenger.ui.viewModels.*
 
 /**
  * Factory for ViewModels
@@ -37,6 +33,11 @@ class ViewModelFactory(private val repository: DataRepository) : ViewModelProvid
             return LoginViewModel(repository) as T
         }
 
+        if (modelClass.isAssignableFrom(RegistrationViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return RegistrationViewModel(repository) as T
+        }
+
         if (modelClass.isAssignableFrom(MessagesViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MessagesViewModel(repository) as T
@@ -47,14 +48,19 @@ class ViewModelFactory(private val repository: DataRepository) : ViewModelProvid
             return RoomsViewModel(repository) as T
         }
 
+        if (modelClass.isAssignableFrom(RoomMessagesViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return RoomMessagesViewModel(repository) as T
+        }
+
         if (modelClass.isAssignableFrom(ContactListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ContactListViewModel(repository) as T
         }
 
-        if (modelClass.isAssignableFrom(SharedViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(RoomPostViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SharedViewModel() as T
+            return RoomPostViewModel(repository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")

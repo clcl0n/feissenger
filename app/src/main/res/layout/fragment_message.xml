@@ -6,11 +6,13 @@
         <variable
             name="model"
             type="com.feissenger.ui.viewModels.MessagesViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/message_root">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messages_list"
@@ -46,7 +48,8 @@
             <EditText
                 android:id="@+id/editText"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
+                android:maxHeight="100dp"
                 android:background="@android:color/transparent"
                 android:text="@={model.input}"
                 app:layout_constraintBottom_toBottomOf="@id/message_input"
@@ -54,27 +57,18 @@
                 app:layout_constraintStart_toStartOf="@id/guideline_start"
                 app:layout_constraintTop_toTopOf="@id/message_input" />
 
-            <!--            <Button-->
-<!--                android:id="@+id/send_btn"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:onClick="@{() -> model.insertMessage()}"-->
-<!--                android:text="@string/send"-->
-<!--                app:layout_constraintBottom_toBottomOf="@id/message_input"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toEndOf="@id/guideline_end"-->
-<!--                app:layout_constraintTop_toTopOf="@id/message_input" />-->
-
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:onClick="@{() -> model.sendMessage()}"
-                android:src="@drawable/ic_send_black"
+                android:src="@{model.enabledSend ? @drawable/ic_send_black : @drawable/ic_sync_disabled_black_24dp}"
                 app:layout_constraintBottom_toBottomOf="@id/message_input"
                 app:layout_constraintEnd_toEndOf="@id/message_input"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline_end"
+                android:enabled="@{model.enabledSend}"
+
                 app:layout_constraintTop_toTopOf="@id/message_input" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -82,14 +76,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.1" />
+                app:layout_constraintGuide_begin="40dp" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.9" />
+                app:layout_constraintGuide_end="40dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

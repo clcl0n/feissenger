@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/nav_graph"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
             app:startDestination="@id/login_fragment">
 
     <fragment
         android:id="@+id/room_fragment"
         android:name="com.feissenger.ui.RoomsFragment"
-        android:label="RoomFragment" />
+        android:label="RoomFragment" >
+        <action
+            android:id="@+id/action_room_fragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/contact_list_fragment"
         android:name="com.feissenger.ui.ContactListFragment"
-        android:label="ContactListFragment" >
-        <action
-            android:id="@+id/action_contact_list_fragment_to_messagesFragment"
-            app:destination="@id/messagesFragment" />
-    </fragment>
+        android:label="ContactListFragment" />
 
     <fragment
         android:id="@+id/messagesFragment"
         android:name="com.feissenger.ui.MessagesFragment"
         android:label="MessagesFragment" >
-        <action
-            android:id="@+id/action_messagesFragment_to_contact_list_fragment"
-            app:destination="@id/contact_list_fragment" />
+        <argument android:name="contactId" />
+        <argument
+            android:name="contactName"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
 
     <fragment
@@ -32,8 +35,58 @@
         android:name="com.feissenger.ui.LoginFragment"
         android:label="LoginFragment" >
         <action
-            android:id="@+id/action_login_fragment_to_room_fragment"
-            app:destination="@id/room_fragment" />
+            android:id="@+id/action_login_fragment_to_viewPagerFragment"
+            app:destination="@id/viewPagerFragment" />
+        <action
+            android:id="@+id/action_login_fragment_to_registrationFragment"
+            app:destination="@id/registration_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewPagerFragment"
+        android:name="com.feissenger.ui.ViewPagerFragment"
+        android:label="ViewPagerFragment" >
+        <action
+            android:id="@+id/action_viewPagerFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment" />
+        <action
+            android:id="@+id/action_viewPagerFragment_to_roomMessagesFragment"
+            app:destination="@id/roomMessagesFragment" />
+        <action
+            android:id="@+id/action_viewPagerFragment_to_roomPost"
+            app:destination="@id/roomPost" />
+    </fragment>
+    <fragment
+        android:id="@+id/roomMessagesFragment"
+        android:name="com.feissenger.ui.RoomMessagesFragment"
+        android:label="RoomMessagesFragment" >
+        <argument android:name="roomId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_roomMessagesFragment_to_roomPost"
+            app:destination="@id/roomPost" />
+        <action
+            android:id="@+id/action_roomMessagesFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registration_fragment"
+        android:name="com.feissenger.ui.RegistrationFragment"
+        android:label="RegistrationFragment" >
+        <action
+            android:id="@+id/action_registrationFragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/roomPost"
+        android:name="com.feissenger.ui.RoomPostFragment"
+        android:label="fragment_room_post"
+        tools:layout="@layout/fragment_room_post" >
+        <action
+            android:id="@+id/action_roomPost_to_roomMessagesFragment"
+            app:destination="@id/roomMessagesFragment" />
+        <argument
+            android:name="roomId"
+            app:argType="string" />
     </fragment>
 
 

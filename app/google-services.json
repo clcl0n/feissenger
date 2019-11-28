@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "416391206561-mjaqihjnkrpspfnvi84evmmke1p2dhlc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.feissenger",
+            "certificate_hash": "4ca58e3bf445a3cc1c5ffd502dd90251a9ff3e9c"
+          }
+        },
+        {
           "client_id": "416391206561-r8j1kqcichtcbtp5j50celiucif26jp0.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -1,33 +1,39 @@
 package com.feissenger.ui.viewModels
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.feissenger.data.DataRepository
-import com.feissenger.data.api.model.LoginResponse
+import com.feissenger.ui.User
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: DataRepository) : ViewModel() {
-    val loginData: MutableLiveData<LoginResponse> = MutableLiveData()
+    val _userName: MutableLiveData<String> = MutableLiveData("")
+    val _password: MutableLiveData<String> = MutableLiveData("")
+    val _user : MutableLiveData<User> = MutableLiveData()
 
-    fun login(userName: String, password: String) {
-        try {
-            viewModelScope.launch {
-                val loginResponse = repository.login(
-                    userName = userName,
-                    password = password
-                )
+    val fid: MutableLiveData<String> = MutableLiveData()
 
-                if (loginResponse != null) {
-                    loginData.postValue(loginResponse)
-                } else {
-                    throw Exception("Login failed.")
-                }
+    val error: MutableLiveData<String> = MutableLiveData()
+
+    val userName: LiveData<String>
+        get() = _userName
+
+    val password: LiveData<String>
+        get() = _password
+
+    val user: LiveData<User>
+        get() = _user
+
+    fun login() {
+        viewModelScope.launch {
+            val response = repository.login(userName.value!!, password.value!!)
+            if (response != null){
+                response.access = "Bearer ${response.access}"
+                _user.postValue(User(response.uid, response.access, response.refresh, userName.value!!))
             }
-        } catch (ex: Exception) {
-            Log.e("error", ex.toString())
         }
     }
-
 }

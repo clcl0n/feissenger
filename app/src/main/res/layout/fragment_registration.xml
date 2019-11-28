@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="model"
+            type="com.feissenger.ui.viewModels.RegistrationViewModel" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/registration_fragment"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/big_height"
+        android:padding="@dimen/thick">
+
+        <EditText
+            android:id="@+id/registration_userName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="@={model._userName}"
+            android:hint="@string/username_hint"
+            style="@style/editTextStyle"/>
+
+        <EditText
+            android:id="@+id/registration_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword"
+            android:text="@={model._password}"
+            style="@style/editTextStyle"/>
+
+        <EditText
+            android:id="@+id/registration_passwordConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="@string/confirm_password"
+            android:text="@={model._passwodConfirm}"
+            style="@style/editTextStyle"/>
+
+        <Button
+            android:id="@+id/registration_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_btn"
+            android:onClick="@{() -> model.registration()}"
+            style="@style/buttonStyle"/>
+    </LinearLayout>
+</layout>
