@@ -17,6 +17,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -184,8 +185,10 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         val navGraph = navController?.navInflater?.inflate(R.navigation.nav_graph)
 
         if (sharedPreferences.get("access") != "") {
+            logout_icon.visibility = View.VISIBLE
             navGraph?.startDestination = R.id.viewPagerFragment
         } else {
+            logout_icon.visibility = View.GONE
             navGraph?.startDestination = R.id.login_fragment
         }
 
@@ -245,6 +248,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             navGraph.startDestination = R.id.login_fragment
             val loginNavController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
             loginNavController?.graph = navGraph
+            logout_icon.visibility = View.GONE
             loginNavController?.navigate(R.id.login_fragment)
         }
 

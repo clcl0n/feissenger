@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
 import com.feissenger.databinding.FragmentRoomBinding
@@ -18,6 +19,7 @@ import com.feissenger.ui.adapter.RoomsAdapter
 import com.feissenger.ui.viewModels.RoomsViewModel
 import com.feissenger.data.util.Injection
 import com.reddit.indicatorfastscroll.FastScrollItemIndicator
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 //, ConnectivityReceiver.ConnectivityReceiverListener
 class RoomsFragment : Fragment() {
@@ -146,6 +148,5 @@ class RoomsFragment : Fragment() {
 
         sharedPref.put("fragment","rooms")
     }
-
 
 }

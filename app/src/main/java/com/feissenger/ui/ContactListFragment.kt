@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
 import com.feissenger.data.db.model.ContactItem
@@ -21,6 +22,7 @@ import com.feissenger.ui.adapter.ContactListAdapter
 import com.feissenger.ui.viewModels.ContactListViewModel
 import com.feissenger.data.util.Injection
 import com.reddit.indicatorfastscroll.FastScrollItemIndicator
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_contact_list.*
 
 

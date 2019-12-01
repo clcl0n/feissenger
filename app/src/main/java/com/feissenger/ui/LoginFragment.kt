@@ -27,6 +27,7 @@ import com.feissenger.databinding.FragmentLoginBinding
 import com.feissenger.ui.viewModels.LoginViewModel
 import kotlinx.android.synthetic.main.activity_main.view.*
 import com.google.firebase.iid.FirebaseInstanceId
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -97,16 +98,17 @@ class LoginFragment : Fragment() {
                     put("uid", it.uid)
                     put("name", it.name)
                 }
-
                 navGraph.startDestination = id
                 navController.graph = navGraph
                 navController.navigate(id)
+                (activity as MainActivity).myToolbar.logout_icon.visibility = View.VISIBLE
             } else {
                 sharedPref.clear()
+                logout_icon.visibility = View.GONE
                 GlobalScope.launch {
                     FirebaseInstanceId.getInstance().deleteInstanceId()
-
                 }
+                (activity as MainActivity).myToolbar.logout_icon.visibility = View.GONE
             }
         }
     }
@@ -115,25 +117,6 @@ class LoginFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         (activity as MainActivity).myToolbar.toolbar_text.text = "FEIssenger"
+        (activity as MainActivity).myToolbar.theme_icon.visibility = View.VISIBLE
     }
-
-//    /**
-//     * Callback will be called when there is change
-//     */
-//    override fun onNetworkConnectionChanged(isConnected: Boolean) {
-//        showMessage(isConnected)
-//    }
-
-//    private fun showMessage(isConnected: Boolean) {
-//        if (isConnected) {
-//            if (wifiManager.connectionInfo.hiddenSSID){
-//                sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
-//            }
-//            else{
-//                sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
-//            }
-//        } else {
-//            sharedPref.put("activeWifi","")
-//        }
-//    }
 }

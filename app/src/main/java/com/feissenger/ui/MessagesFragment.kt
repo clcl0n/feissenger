@@ -22,6 +22,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.ui.adapter.MessagesAdapter
@@ -90,7 +91,7 @@ class MessagesFragment : Fragment() {
 
         binding.messagesList.isNestedScrollingEnabled = false
 
-        adapter = MessagesAdapter()
+        adapter = MessagesAdapter(Glide.with(this))
         binding.messagesList.adapter = adapter
 
         viewModel.messages.observeForever {
@@ -154,5 +155,6 @@ class MessagesFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         (activity as MainActivity).myToolbar.toolbar_text.text = arg.contactName
+        (activity as MainActivity).myToolbar.theme_icon.visibility = View.GONE
     }
 }

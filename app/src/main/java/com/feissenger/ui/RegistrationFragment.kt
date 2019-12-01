@@ -12,6 +12,8 @@ import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentRegistrationBinding
 import com.feissenger.ui.viewModels.RegistrationViewModel
 import androidx.navigation.fragment.findNavController
+import com.feissenger.MainActivity
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 class RegistrationFragment : Fragment() {
 
