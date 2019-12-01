@@ -9,12 +9,13 @@ import com.feissenger.R
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.feissenger.data.db.model.RoomMessageItem
 import com.feissenger.ui.RoomMessagesFragmentDirections
 import kotlinx.android.synthetic.main.message_item.view.*
 import kotlinx.android.synthetic.main.room_message_item.view.*
 
-class RoomMessagesAdapter() : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolder>() {
+class RoomMessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolder>() {
     var data = listOf<RoomMessageItem>()
         set(value) {
             field = value
@@ -25,7 +26,7 @@ class RoomMessagesAdapter() : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolde
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        holder.bind(item)
+        holder.bind(item, glide)
     }
 
 
@@ -35,7 +36,9 @@ class RoomMessagesAdapter() : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolde
 
     class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: RoomMessageItem) {
+        fun bind(item: RoomMessageItem, glide: RequestManager) {
+
+            itemView.room_message_gif.layout(0,0,0,0)
 
             (itemView.room_message_user_name as TextView).text = item.id.name
             (itemView.room_message_time as TextView).text = item.id.time
@@ -48,7 +51,7 @@ class RoomMessagesAdapter() : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolde
                 itemView.room_message_text.visibility = View.GONE
                 itemView.room_message_gif.visibility = View.VISIBLE
 
-                Glide.with(itemView).asGif().load("https://media2.giphy.com/media/${item.message.split("gif:").last()}/200w.gif").into(itemView.room_message_gif)
+                glide.asGif().load("https://media2.giphy.com/media/${item.message.split("gif:").last()}/200w.gif").into(itemView.room_message_gif)
 
             }else{
                 itemView.room_message_text.visibility = View.VISIBLE

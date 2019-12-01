@@ -11,11 +11,12 @@ import com.feissenger.R
 import kotlinx.android.synthetic.main.message_item.view.*
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.giphy.sdk.core.models.enums.RenditionType
 import com.giphy.sdk.ui.views.GPHMediaView
 
-class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
+class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
 
     var data = listOf<MessageItem>()
         set(value) {
@@ -28,7 +29,7 @@ class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        holder.bind(item)
+        holder.bind(item, glide)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,16 +37,17 @@ class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
     }
 
     class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: MessageItem) {
+        fun bind(item: MessageItem, glide: RequestManager) {
 
             itemView.message_time.visibility = View.GONE
+
+            itemView.message_gif.layout(0,0,0,0)
 
             if(item.isGif){
                 itemView.message_bubble.visibility = View.GONE
                 itemView.message_gif.visibility = View.VISIBLE
 
-                Glide.with(itemView).load("https://media2.giphy.com/media/${item.message.split("gif:").last()}/200w.gif")
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                glide.load("https://media2.giphy.com/media/${item.message.split("gif:").last()}/200w.gif")
                     .into(itemView.message_gif)
 
                 (itemView.message_time as TextView).text = item.id.time
@@ -73,6 +75,7 @@ class   MessagesAdapter() : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
                     itemView.view_right.visibility = View.VISIBLE
                 }
             }else{
+
                 itemView.message_bubble.visibility = View.VISIBLE
                 itemView.message_gif.visibility = View.GONE
 

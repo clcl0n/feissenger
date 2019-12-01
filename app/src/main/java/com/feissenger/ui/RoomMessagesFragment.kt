@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
@@ -70,7 +71,7 @@ class RoomMessagesFragment : Fragment() {
         binding.messagesList.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, true)
 
-        val adapter = RoomMessagesAdapter()
+        val adapter = RoomMessagesAdapter(Glide.with(this))
         binding.messagesList.adapter = adapter
         viewModel.showFab.observeForever{
             if(fab != null){
@@ -123,6 +124,6 @@ class RoomMessagesFragment : Fragment() {
         else
             arg.roomId
         (activity as MainActivity).myToolbar.toolbar_text.text = roomName
-        (activity as MainActivity).myToolbar.theme_icon.visibility = View.VISIBLE
+        (activity as MainActivity).myToolbar.theme_icon.visibility = View.GONE
     }
 }
