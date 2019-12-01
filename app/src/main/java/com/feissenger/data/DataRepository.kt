@@ -123,7 +123,7 @@ class DataRepository private constructor(
                             item.contact_fid,
                             item.uid_name,
                             item.contact_name,
-                            item.message.contains("giphy.com/media/"))
+                            item.message.startsWith("gif:"))
                     })
 //                    for (r: ContactReadResponse in it) {
 //
@@ -265,7 +265,7 @@ class DataRepository private constructor(
                         RoomMessageItem(
                             RoomMessageItemId(item.uid, item.roomid, item.time, item.name),
                             item.message,
-                            item.message.contains("giphy.com/media/")
+                            item.message.startsWith("gif:")
                         )
                     })
                 }

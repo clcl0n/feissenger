@@ -51,13 +51,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textIsSelectable="true"
         android:textColor="@android:color/black"
         android:textSize="@dimen/normal_text"
         tools:text="teeeeee"/>
 
-    <com.giphy.sdk.ui.views.GPHMediaView
+    <ImageView
         android:id="@+id/room_message_gif"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:layout_gravity="center_horizontal"/>
 </LinearLayout>

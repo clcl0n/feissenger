@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.feissenger.data.db.model.RoomMessageItem
 import com.feissenger.ui.RoomMessagesFragmentDirections
 import kotlinx.android.synthetic.main.message_item.view.*
@@ -47,9 +48,7 @@ class RoomMessagesAdapter() : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolde
                 itemView.room_message_text.visibility = View.GONE
                 itemView.room_message_gif.visibility = View.VISIBLE
 
-                val converter = com.feissenger.data.db.Converters()
-
-                itemView.room_message_gif.setMedia(converter.jsonToMedia(item.message))
+                Glide.with(itemView).asGif().load("https://media2.giphy.com/media/${item.message.split("gif:").last()}/200w.gif").into(itemView.room_message_gif)
 
             }else{
                 itemView.room_message_text.visibility = View.VISIBLE

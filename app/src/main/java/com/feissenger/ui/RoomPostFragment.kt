@@ -109,8 +109,8 @@ class RoomPostFragment : Fragment() {
             gifsDialog.gifSelectionListener = object : GiphyDialogFragment.GifSelectionListener {
                 @SuppressLint("LogNotTimber")
                 override fun onGifSelected(media: Media) {
-                    val converter = com.feissenger.data.db.Converters()
-                    viewModel.sendGif(converter.mediaToJson(media))
+
+                    viewModel.sendGif("gif:${media.id}")
 
                     val inputMethodManager = context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)

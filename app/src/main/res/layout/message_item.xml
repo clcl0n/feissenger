@@ -24,21 +24,15 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="10sp"
             android:visibility="gone"/>
-        <LinearLayout
-            android:id="@+id/obal_gif"
-            android:background="@drawable/rounded_border_recipient"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+
+        <ImageView
+            android:id="@+id/message_gif"
+            android:layout_gravity="start"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:padding="0dp"
-            android:layout_margin="5dp">
-            <com.giphy.sdk.ui.views.GPHMediaView
-                android:id="@+id/message_gif"
-                android:layout_gravity="start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black" />
-        </LinearLayout>
+            android:layout_margin="5dp"/>
+
         <TextView
             android:background="@drawable/rounded_border_recipient"
             android:id="@+id/message_bubble"
