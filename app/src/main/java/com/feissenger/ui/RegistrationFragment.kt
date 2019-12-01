@@ -31,6 +31,8 @@ class RegistrationFragment : Fragment() {
         viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
             .get(RegistrationViewModel::class.java)
 
+        viewModel.notMatchingPasswordMessage = getString(R.string.not_matching_passwords)
+        viewModel.existingUserNameMessage = getString(R.string.existing_username_message)
         binding.model = viewModel
 
         return binding.root

@@ -1,6 +1,5 @@
 package com.feissenger.ui.viewModels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +12,8 @@ class LoginViewModel(private val repository: DataRepository) : ViewModel() {
     val _userName: MutableLiveData<String> = MutableLiveData("")
     val _password: MutableLiveData<String> = MutableLiveData("")
     val _user : MutableLiveData<User> = MutableLiveData()
+    val _userInfo: MutableLiveData<String> = MutableLiveData("")
+    var wrongUsernameOrPasswordMessage = ""
 
     val fid: MutableLiveData<String> = MutableLiveData()
 
@@ -33,6 +34,8 @@ class LoginViewModel(private val repository: DataRepository) : ViewModel() {
             if (response != null){
                 response.access = "Bearer ${response.access}"
                 _user.postValue(User(response.uid, response.access, response.refresh, userName.value!!))
+            } else {
+                _userInfo.postValue(wrongUsernameOrPasswordMessage)
             }
         }
     }

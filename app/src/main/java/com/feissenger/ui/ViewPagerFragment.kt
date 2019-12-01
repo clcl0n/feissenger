@@ -66,5 +66,6 @@ class ViewPagerFragment : Fragment() {
 
         (activity as MainActivity).myToolbar.toolbar_text.text = sharedPref.get("name").toString()
         (activity as MainActivity).myToolbar.theme_icon.visibility = View.VISIBLE
+        (activity as MainActivity).myToolbar.logout_icon.visibility = View.VISIBLE
     }
 }

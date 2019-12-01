@@ -12,7 +12,10 @@ class RegistrationViewModel(private val repository: DataRepository) : ViewModel(
     val _password: MutableLiveData<String> = MutableLiveData("")
     val _passwodConfirm: MutableLiveData<String> = MutableLiveData("")
     val _userName: MutableLiveData<String> = MutableLiveData("")
+    val _userInfo: MutableLiveData<String> = MutableLiveData("")
     val _user : MutableLiveData<RegisterResponse> = MutableLiveData()
+    var notMatchingPasswordMessage: String = ""
+    var existingUserNameMessage: String = ""
 
     val userName: LiveData<String>
         get() = _userName
@@ -33,8 +36,15 @@ class RegistrationViewModel(private val repository: DataRepository) : ViewModel(
                     userName = userName.value!!,
                     password = password.value!!
                 )
-                _user.postValue(response)
+
+                if (response == null) {
+                    _userInfo.postValue(existingUserNameMessage)
+                } else {
+                    _user.postValue(response)
+                }
             }
+        } else {
+            _userInfo.postValue(notMatchingPasswordMessage)
         }
     }
 }

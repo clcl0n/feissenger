@@ -60,6 +60,7 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProvider(activity!!, Injection.provideViewModelFactory(activity?.applicationContext!!))
             .get(LoginViewModel::class.java)
 
+        viewModel.wrongUsernameOrPasswordMessage = getString(R.string.wrong_username_or_password_message)
         binding.model = viewModel
 
 //        viewModel.user.observe(this) {
@@ -101,14 +102,11 @@ class LoginFragment : Fragment() {
                 navGraph.startDestination = id
                 navController.graph = navGraph
                 navController.navigate(id)
-                (activity as MainActivity).myToolbar.logout_icon.visibility = View.VISIBLE
             } else {
                 sharedPref.clear()
-                logout_icon.visibility = View.GONE
                 GlobalScope.launch {
                     FirebaseInstanceId.getInstance().deleteInstanceId()
                 }
-                (activity as MainActivity).myToolbar.logout_icon.visibility = View.GONE
             }
         }
     }

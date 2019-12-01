@@ -32,6 +32,8 @@ import com.feissenger.ui.viewModels.*
 import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import com.feissenger.ui.LogoutDialogFragment
+
 
 class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -44,7 +46,6 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
     private lateinit var messagesViewModel: MessagesViewModel
     private lateinit var roomPostViewModel: RoomPostViewModel
     private lateinit var roomMessagesViewModel: RoomMessagesViewModel
-    private lateinit var loginViewModel: LoginViewModel
     private lateinit var sharedPreferences: MySharedPreferences
     private lateinit var regexSSID: Regex
 
@@ -143,7 +144,6 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         messagesViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(MessagesViewModel::class.java)
         roomPostViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomPostViewModel::class.java)
         sharedPreferences = MySharedPreferences(applicationContext)
-        loginViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext!!)).get(LoginViewModel::class.java)
         regexSSID =  Regex("[^A-Za-z0-9-_.~%]")
         connMgr = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -240,16 +240,8 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         setSupportActionBar(findViewById(R.id.my_toolbar))
 
         logout_icon.setOnClickListener {
-
-            sharedPreferences.clear()
-            loginViewModel._user.postValue(null)
-            loginViewModel._userName.postValue("")
-            loginViewModel._password.postValue("")
-            navGraph.startDestination = R.id.login_fragment
-            val loginNavController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
-            loginNavController?.graph = navGraph
-            logout_icon.visibility = View.GONE
-            loginNavController?.navigate(R.id.login_fragment)
+            val newFragment = LogoutDialogFragment()
+            newFragment.show(supportFragmentManager, "logoutDialog")
         }
 
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
