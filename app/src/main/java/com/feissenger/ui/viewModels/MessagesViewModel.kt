@@ -1,6 +1,7 @@
 package com.feissenger.ui.viewModels
 
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.feissenger.data.DataRepository
 import com.feissenger.data.api.model.ContactMessageRequest
@@ -40,6 +41,7 @@ class MessagesViewModel(private val repository: DataRepository) : ViewModel() {
                     contactFid,
                     NotificationBody(senderName,it,uid,"msg")
                 ), onError = { error.postValue(it) })
+
             }
         }
         input.postValue("")

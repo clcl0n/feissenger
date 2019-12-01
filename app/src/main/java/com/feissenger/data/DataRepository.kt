@@ -124,6 +124,8 @@ class DataRepository private constructor(
                             item.uid_name,
                             item.contact_name,
                             item.message.startsWith("gif:"))
+
+
                     })
 //                    for (r: ContactReadResponse in it) {
 //
@@ -156,19 +158,15 @@ class DataRepository private constructor(
 
 
                 }
-
+                 onError("ok")              
+                 return                     
             }
 
-            onError("Load images failed. Try again later please.")
         } catch (ex: ConnectException) {
             onError("Off-line. Check internet connection.")
             ex.printStackTrace()
             return
-        } catch (ex: Exception) {
-            onError("Oops...Change failed. Try again later please.")
-            ex.printStackTrace()
-            return
-        }
+        } 
     }
 
     suspend fun saveMessage(
@@ -215,20 +213,19 @@ class DataRepository private constructor(
         try {
 
             val contactMessageResponse = api.sendContactMessage(contactMessageRequest)
-
-            if (contactMessageResponse.isSuccessful)
+            Log.i("tag","SENT")
+            if (contactMessageResponse.isSuccessful){
                 loadMessages(
                     onError,
                     ContactReadRequest(contactMessageRequest.uid, contactMessageRequest.contact)
                 )
+                Log.i("tag","LOADED")
+                onError("ok")
+                return
+            }
 
-            onError("Load images failed. Try again later please.")
         } catch (ex: ConnectException) {
             onError("Off-line. Check internet connection.")
-            ex.printStackTrace()
-            return
-        } catch (ex: Exception) {
-            onError("Oops...Change failed. Try again later please.")
             ex.printStackTrace()
             return
         }

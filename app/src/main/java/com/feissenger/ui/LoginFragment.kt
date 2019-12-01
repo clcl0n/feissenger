@@ -56,7 +56,7 @@ class LoginFragment : Fragment() {
             inflater, R.layout.fragment_login, container, false
         )
         binding.lifecycleOwner = this
-        viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
+        viewModel = ViewModelProvider(activity!!, Injection.provideViewModelFactory(activity?.applicationContext!!))
             .get(LoginViewModel::class.java)
 
         binding.model = viewModel
@@ -98,19 +98,16 @@ class LoginFragment : Fragment() {
                     put("name", it.name)
                 }
 
-
+                navGraph.startDestination = id
+                navController.graph = navGraph
+                navController.navigate(id)
             } else {
-                id = R.id.login_fragment
                 sharedPref.clear()
                 GlobalScope.launch {
                     FirebaseInstanceId.getInstance().deleteInstanceId()
 
                 }
             }
-
-            navGraph.startDestination = id
-            navController.graph = navGraph
-            navController.navigate(id)
         }
     }
 

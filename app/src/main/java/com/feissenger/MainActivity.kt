@@ -27,14 +27,10 @@ import androidx.navigation.ui.NavigationUI
 import com.feissenger.data.ConnectivityReceiver
 import com.feissenger.data.util.Injection
 import com.feissenger.ui.ViewPagerFragmentDirections
-import com.feissenger.ui.viewModels.MessagesViewModel
-import com.feissenger.ui.viewModels.RoomMessagesViewModel
-import com.feissenger.ui.viewModels.RoomPostViewModel
-import com.feissenger.ui.viewModels.RoomsViewModel
+import com.feissenger.ui.viewModels.*
 import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_room_message.*
 
 class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -47,10 +43,12 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
     private lateinit var messagesViewModel: MessagesViewModel
     private lateinit var roomPostViewModel: RoomPostViewModel
     private lateinit var roomMessagesViewModel: RoomMessagesViewModel
+    private lateinit var loginViewModel: LoginViewModel
     private lateinit var sharedPreferences: MySharedPreferences
+    private lateinit var regexSSID: Regex
 
 
-    fun refresRooms(){
+    fun refreshRooms(){
         roomsViewModel.uid = sharedPreferences.get("uid").toString()
         roomsViewModel.activeWifi = sharedPreferences.get("activeWifi").toString()
         roomsViewModel.setActiveRoom()
@@ -60,8 +58,8 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
     fun goBackFromRoomPost(){
         if(sharedPreferences.get("fragment") == "roomsPost"){
             roomPostViewModel.input_post.postValue("")
-            findNavController(R.id.nav_host_fragment).popBackStack()
             sharedPreferences.put("fragment","roomMessages")
+            findNavController(R.id.nav_host_fragment).popBackStack()
         }
     }
 
@@ -82,18 +80,18 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             if(activeNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)){
                 Log.i("connection", "ON WIFI")
                 if (wifiManager.connectionInfo.hiddenSSID){
-                    sharedPreferences.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
-                    roomsViewModel.activeWifi = wifiManager.connectionInfo.bssid.removeSurrounding("\"","\"")
-                    roomMessagesViewModel.roomid = wifiManager.connectionInfo.ssid.removeSurrounding("\"","\"")
-                    refresRooms()
+                    sharedPreferences.put("activeWifi",regexSSID.replace(wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""),"_"))
+                    roomsViewModel.activeWifi = regexSSID.replace(wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""),"_")
+                    roomMessagesViewModel.roomid = regexSSID.replace(wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""),"_")
+                    refreshRooms()
                 }
                 else{
-                    sharedPreferences.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
-                    roomsViewModel.activeWifi = wifiManager.connectionInfo.ssid.removeSurrounding("\"","\"")
-                    refresRooms()
+                    sharedPreferences.put("activeWifi",regexSSID.replace(wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""),"_"))
+                    roomsViewModel.activeWifi = regexSSID.replace(wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""),"_")
+                    refreshRooms()
 
                 }
-                if(sharedPreferences.get("activeWifi").toString() == roomsViewModel.activeWifi){
+                if(sharedPreferences.get("activeWifi").toString() == roomsViewModel.activeWifi || roomsViewModel.activeWifi == "XsTDHS3C2YneVmEW5Ry7"){
                     showFab(true)
                 }
                 else{
@@ -103,7 +101,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             }
             else{
                 sharedPreferences.put("activeWifi","")
-                refresRooms()
+                refreshRooms()
                 goBackFromRoomPost()
                 showFab(false)
             }
@@ -123,7 +121,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 //            "roomMessages" ->
             "messages" -> messagesViewModel.loadMessages()
             "rooms", "contacts" -> {
-                refresRooms()
+                refreshRooms()
             }
         }
     }
@@ -144,7 +142,8 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         messagesViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(MessagesViewModel::class.java)
         roomPostViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomPostViewModel::class.java)
         sharedPreferences = MySharedPreferences(applicationContext)
-
+        loginViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext!!)).get(LoginViewModel::class.java)
+        regexSSID =  Regex("[^A-Za-z0-9-_.~%]")
         connMgr = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
 // Here, thisActivity is the current activity
@@ -238,7 +237,11 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         setSupportActionBar(findViewById(R.id.my_toolbar))
 
         logout_icon.setOnClickListener {
+
             sharedPreferences.clear()
+            loginViewModel._user.postValue(null)
+            loginViewModel._userName.postValue("")
+            loginViewModel._password.postValue("")
             navGraph.startDestination = R.id.login_fragment
             val loginNavController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
             loginNavController?.graph = navGraph

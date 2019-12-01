@@ -95,7 +95,7 @@ class RoomMessagesFragment : Fragment() {
             val action = RoomMessagesFragmentDirections.actionRoomMessagesFragmentToRoomPost(arg.roomId)
             view.findNavController().navigate(action)
         }
-        if(sharedPref.get("activeWifi").toString() == viewModel.roomid){
+        if(sharedPref.get("activeWifi").toString() == viewModel.roomid || viewModel.roomid == "XsTDHS3C2YneVmEW5Ry7"){
             viewModel.showFab.postValue(true)
 
         }

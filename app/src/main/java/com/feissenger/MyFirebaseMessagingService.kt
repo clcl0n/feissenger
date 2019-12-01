@@ -77,8 +77,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 //        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        val activityManager =
-            applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val activityManager = applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
 
         var displayNotification = true
 
@@ -86,9 +85,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             displayNotification = if (appprocess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appprocess.processName == "com.feissenger") {
                 !((sharedPref.get("fragment") == "messages" && sharedPref.get("contactId") == message.data["value"]) ||
                         (sharedPref.get("activeWifi") != message.data["value"] && message.data["typ"] == "room") ||
+                        ("XsTDHS3C2YneVmEW5Ry7" != message.data["value"] && message.data["typ"] == "room") ||
                         (sharedPref.get("fragment") == "roomMessages" && sharedPref.get("roomId") == message.data["value"]))
             } else {
-                (sharedPref.get("activeWifi") == message.data["value"] && message.data["typ"] == "room") || message.data["typ"] == "msg"
+                message.data["value"] == "XsTDHS3C2YneVmEW5Ry7" || (sharedPref.get("activeWifi") == message.data["value"] && message.data["typ"] == "room") || message.data["typ"] == "msg"
             }
         }
 
