@@ -24,31 +24,12 @@ import kotlinx.android.synthetic.main.fragment_view_pager.*
 class ViewPagerFragment : Fragment() {
 
     private lateinit var sharedPref: MySharedPreferences
-    private lateinit var connectivityManager: ConnectivityManager
-    private lateinit var wifiManager: WifiManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         sharedPref = MySharedPreferences(context!!)
-        connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        if(connectivityManager.activeNetwork != null){
-            if(connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork).hasTransport(NetworkCapabilities.TRANSPORT_WIFI)){
-                if (wifiManager.connectionInfo.hiddenSSID){
-                    sharedPref.put("activeWifi",wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""))
-                }
-                else{
-                    sharedPref.put("activeWifi",wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""))
-                }
-            }
-            else{
-                sharedPref.put("activeWifi","")
-            }
-        }else{
-            sharedPref.put("activeWifi","")
-        }
 
        return inflater.inflate(R.layout.fragment_view_pager,container,false)
     }

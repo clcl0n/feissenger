@@ -4,18 +4,16 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_margin="@dimen/thick"
-    android:background="?attr/background_color">
+    android:padding="@dimen/thick">
 
     <TextView
         android:id="@+id/contact_group"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-
         android:layout_width="wrap_content"
-        android:textColor="@color/red"
-        android:textSize="24sp"
+        android:textColor="?attr/primary"
+        android:textSize="@dimen/big_text"
         tools:text="J"/>
 
     <TextView
@@ -24,6 +22,10 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         tools:text="jany"
-        android:textColor="?attr/text_color"
+        android:paddingBottom="5dp"
         android:textSize="@dimen/normal_text" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 </LinearLayout>

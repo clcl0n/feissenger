@@ -1,5 +1,6 @@
 package com.feissenger.ui.adapter
 
+import android.graphics.Color
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -92,6 +93,7 @@ class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapte
 
                 if(item.id.uid == item.id.sender){
                     itemView.message_bubble.setBackgroundResource(R.drawable.rounded_border_sender)
+                    itemView.message_bubble.setTextColor(Color.WHITE)
                     (itemView.message_bubble.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
                     (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
                     itemView.view_left.visibility = View.VISIBLE
@@ -99,6 +101,7 @@ class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapte
                 }
                 else{
                     itemView.message_bubble.setBackgroundResource(R.drawable.rounded_border_recipient)
+                    itemView.message_bubble.setTextColor(Color.BLACK)
                     (itemView.message_bubble.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
                     (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
                     itemView.view_left.visibility = View.GONE

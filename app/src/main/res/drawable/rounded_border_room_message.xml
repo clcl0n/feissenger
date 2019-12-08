@@ -2,8 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <solid android:color="?attr/room_message" />
-    <stroke android:color="@color/dark_gray" android:width="2dp"/>
+    <solid android:color="@color/white" />
+    <stroke android:color="?attr/primary" android:width="3dp"/>
     <corners
         android:radius="20dp" />
 

@@ -10,10 +10,9 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/primaryLight"
         android:minHeight="?attr/actionBarSize"
-        app:tabTextColor="@color/black"
-        app:tabIndicatorColor="@color/red"
+        app:tabIndicatorColor="?attr/primaryDark"
         app:tabIndicatorHeight="@dimen/thin"/>
 
     <!-- View pager to swipe views -->

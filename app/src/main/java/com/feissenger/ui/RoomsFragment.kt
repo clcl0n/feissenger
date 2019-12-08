@@ -77,14 +77,14 @@ class RoomsFragment : Fragment() {
             adapter.data = it
         }
 
-        binding.activeRoom.setOnClickListener {
+        binding.activeRoomLayout.setOnClickListener {
             val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
                 viewModel.activeRoom.value!!
             )
             it.findNavController().navigate(action)
         }
 
-        binding.publicRoom.setOnClickListener {
+        binding.publicRoomLayout.setOnClickListener {
             val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
                 "XsTDHS3C2YneVmEW5Ry7"
             )

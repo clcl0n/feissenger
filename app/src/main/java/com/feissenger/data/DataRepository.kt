@@ -308,8 +308,7 @@ class DataRepository private constructor(
 
 //    Rooms
 
-    fun getRooms(user: String, activeRoom: String): LiveData<List<RoomItem>> =
-        cache.getRooms(user, activeRoom)
+
 //
     suspend fun getMutableRooms(user: String, activeRoom: String): List<RoomItem> =
         cache.getMutableRooms(user, activeRoom)

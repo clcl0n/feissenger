@@ -25,18 +25,16 @@ interface DbDao {
 
 
     //    Rooms
-    @Query("SELECT * FROM roomsList WHERE uid LIKE :uid  AND ssid NOT LIKE 'XsTDHS3C2YneVmEW5Ry7' AND ssid NOT LIKE :activeRoom")
-    fun getRooms(uid: String, activeRoom: String): LiveData<List<RoomItem>>
 
 
-    @Query("SELECT * FROM roomsList WHERE uid LIKE :user  AND ssid NOT LIKE 'XsTDHS3C2YneVmEW5Ry7' AND ssid NOT LIKE :activeRoom")
+    @Query("SELECT * FROM roomsList WHERE uid LIKE :user  AND ssid NOT LIKE 'XsTDHS3C2YneVmEW5Ry7' AND ssid NOT LIKE :activeRoom ORDER BY ssid COLLATE NOCASE ")
     suspend fun getMutableRooms(user: String, activeRoom: String):  List<RoomItem>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertRooms(roomList: List<RoomItem>)
 
     //    Contacts
-    @Query("SELECT * FROM contacts WHERE uid LIKE :uid ORDER BY name ASC")
+    @Query("SELECT * FROM contacts WHERE uid LIKE :uid ORDER BY name COLLATE NOCASE ")
     fun getContacts(uid: String): LiveData<List<ContactItem>>
 
     @Query("SELECT * FROM contacts WHERE uid LIKE :uid and contactId LIKE :contactId LIMIT 1")

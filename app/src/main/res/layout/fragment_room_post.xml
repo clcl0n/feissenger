@@ -51,7 +51,6 @@
                 android:layout_height="wrap_content"
                 android:text="POST"
                 android:textSize="@dimen/normal_text"
-                android:textColor="@color/black"
                 android:background="@drawable/rounded_border_room_message"
                 app:layout_constraintBottom_toBottomOf="@id/bottom_panel"
                 app:layout_constraintEnd_toEndOf="@id/bottom_panel"

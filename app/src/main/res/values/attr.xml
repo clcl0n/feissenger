@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="sender" format="reference"/>
-    <attr name="recipient" format="reference"/>
-    <attr name="room_message" format="reference"/>
-    <attr name="background_color" format="reference"/>
-    <attr name="toolbar_background" format="reference"/>
-    <attr name="toolbar_color" format="reference"/>
-    <attr name="ssid_color" format="reference"/>
-    <attr name="text_color" format="reference"/>
+    <attr name="primary" format="reference" />
+    <attr name="primaryLight" format="reference" />
+    <attr name="primaryDark" format="reference" />
+    <attr name="primaryText" format="reference" />
+    <attr name="secondaryText" format="reference" />
+    <attr name="accent" format="reference" />
+    <attr name="icons" format="reference" />
+    <attr name="divider" format="reference" />
 </resources>

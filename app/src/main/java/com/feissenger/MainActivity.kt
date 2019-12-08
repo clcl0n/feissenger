@@ -18,6 +18,7 @@ import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -33,6 +34,7 @@ import com.giphy.sdk.ui.GiphyCoreUI
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import com.feissenger.ui.LogoutDialogFragment
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
@@ -175,12 +177,14 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         setContentView(R.layout.activity_main)
         snackbar = Snackbar.make(app,"NO INTERNET CONNECTION!",Snackbar.LENGTH_INDEFINITE)
         snackbar.view.setBackgroundColor(Color.RED)
+
         NavigationUI.setupWithNavController(
             nav_view, Navigation.findNavController(
                 this,
                 R.id.nav_host_fragment
             )
         )
+
         val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
         val navGraph = navController?.navInflater?.inflate(R.navigation.nav_graph)
 
@@ -196,17 +200,19 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
         myToolbar = findViewById(R.id.my_toolbar)
 
+        myToolbar.toolbar_text.setTextColor(Color.WHITE)
+
         setSupportActionBar(myToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         val image = findViewById<ImageView>(R.id.theme_icon)
         when (sharedPreferences.get("theme")) {
             "light" -> {
-                image.setImageResource(R.drawable.sun)
+                image.setImageResource(R.drawable.moon)
                 selected = "light"
             }
             "dark" -> {
-                image.setImageResource(R.drawable.moon)
+                image.setImageResource(R.drawable.sun)
                 selected = "dark"
             }
         }
@@ -214,11 +220,11 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         image.setOnClickListener {
             if(selected == "light"){
                 selected = "dark"
-                image.setImageResource(R.drawable.moon)
+                image.setImageResource(R.drawable.sun)
             }
             else{
                 selected = "light"
-                image.setImageResource(R.drawable.sun)
+                image.setImageResource(R.drawable.moon)
             }
             sharedPreferences.put("theme", selected)
             sharedPreferences.put("newTheme","true")
@@ -228,11 +234,11 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
         when (sharedPreferences.get("theme")) {
             "light" -> {
-                image.setImageResource(R.drawable.sun)
+                image.setImageResource(R.drawable.moon)
                 selected = "light"
             }
             "dark" -> {
-                image.setImageResource(R.drawable.moon)
+                image.setImageResource(R.drawable.sun)
                 selected = "dark"
             }
         }

@@ -48,7 +48,9 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@={model._userInfo}" />
+            android:text="@={model._userInfo}"
+            android:textAlignment="center"
+            android:textColor="?attr/primaryDark"/>
 
         <Button
             android:id="@+id/registration_btn"

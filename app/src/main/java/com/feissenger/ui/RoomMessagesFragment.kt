@@ -3,6 +3,7 @@ package com.feissenger.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,9 +12,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -34,15 +37,16 @@ import com.giphy.sdk.ui.themes.LightTheme
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.fragment_message.*
 import kotlinx.android.synthetic.main.fragment_room_message.*
 
 class RoomMessagesFragment : Fragment() {
     private lateinit var viewModel: RoomMessagesViewModel
     private lateinit var binding: FragmentRoomMessageBinding
     private lateinit var sharedPref: MySharedPreferences
+    private lateinit var snackbar: Snackbar
+    private lateinit var regexSSID: Regex
+
 
     val arg: RoomMessagesFragmentArgs by navArgs()
 
@@ -50,6 +54,8 @@ class RoomMessagesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        regexSSID =  Regex("[^A-Za-z0-9-_.~%]")
         sharedPref = context?.let { MySharedPreferences(it) }!!
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
@@ -83,26 +89,14 @@ class RoomMessagesFragment : Fragment() {
         }
         viewModel.messages.observeForever {
             adapter.data = it
-            binding.messagesList.scrollToPosition(adapter.itemCount -1)
+            binding.messagesList.scrollToPosition(adapter.itemCount - 1)
         }
-
-        val contentView = binding.messagesList
-        contentView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            binding.messagesList.scrollToPosition(adapter.itemCount -1)
-        }
-
 
         binding.fab.setOnClickListener { view ->
             val action = RoomMessagesFragmentDirections.actionRoomMessagesFragmentToRoomPost(arg.roomId)
             view.findNavController().navigate(action)
         }
-        if(sharedPref.get("activeWifi").toString() == viewModel.roomid || viewModel.roomid == "XsTDHS3C2YneVmEW5Ry7"){
-            viewModel.showFab.postValue(true)
 
-        }
-        else{
-            viewModel.showFab.postValue(false)
-        }
         viewModel.loadRoomMessages()
 
         return binding.root
@@ -111,9 +105,21 @@ class RoomMessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        snackbar = Snackbar.make(messages_list,"You have to connect to wifi of this room",Snackbar.LENGTH_LONG)
+        snackbar.view.setBackgroundColor(Color.WHITE)
 
         sharedPref.put("fragment","roomMessages")
-        sharedPref.put("roomId",arg.roomId)
+        sharedPref.put("roomId",regexSSID.replace(arg.roomId,"_"))
+
+        if(sharedPref.get("activeWifi").toString() == viewModel.roomid || viewModel.roomid == "XsTDHS3C2YneVmEW5Ry7"){
+            viewModel.showFab.postValue(true)
+
+        }
+        else{
+            viewModel.showFab.postValue(false)
+            snackbar.show()
+        }
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -125,5 +131,10 @@ class RoomMessagesFragment : Fragment() {
             arg.roomId
         (activity as MainActivity).myToolbar.toolbar_text.text = roomName
         (activity as MainActivity).myToolbar.theme_icon.visibility = View.GONE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        snackbar.dismiss()
     }
 }

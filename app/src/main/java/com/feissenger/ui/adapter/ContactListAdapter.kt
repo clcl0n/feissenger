@@ -64,7 +64,7 @@ class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>()
             head.visibility = visibility
 
             (itemView.contact_name as TextView).text = item.name
-        itemView.setOnClickListener {
+            (itemView.contact_name as TextView).setOnClickListener {
             val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(item.id.contactId, item.name)
             it.findNavController().navigate(action)
         }

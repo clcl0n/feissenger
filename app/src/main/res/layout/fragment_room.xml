@@ -13,49 +13,99 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/public_room"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/public_room_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:padding="10dp"
+            android:elevation="10dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/public_room"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/public_room"
+                android:textSize="24sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:padding="10dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/public_room"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/active_room_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/public_room_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/active_room"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textColor="?attr/text_color"
-            android:text="@string/public_room"
-            android:textIsSelectable="true"
-            android:textSize="24sp"/>
-        <TextView
-            android:id="@+id/active_room"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/messages_list"
-            app:layout_constraintTop_toBottomOf="@id/public_room"
-            android:textColor="?attr/text_color"
+            android:padding="10dp"
+            android:elevation="10dp"
             android:visibility="@{model.visibleActive ? View.VISIBLE : View.GONE}"
-            android:text="@{model.activeRoom}"
-            android:textSize="24sp" />
+            >
+            <TextView
+                android:id="@+id/active_room_badge"
+                android:layout_height="10dp"
+                android:layout_width="10dp"
+                android:background="@drawable/rounded_border_active"
+                app:layout_constraintEnd_toStartOf="@id/active_room"
+                app:layout_constraintTop_toTopOf="@id/active_room"
+                app:layout_constraintBottom_toBottomOf="@id/active_room"
+                android:layout_marginEnd="5dp"
+                />
+            <TextView
+                android:id="@+id/active_room"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@{model.activeRoom}"
+                android:textSize="24sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/active_room"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messages_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/room_fastscroller_thumb"
+            app:layout_constraintEnd_toStartOf="@+id/room_fastscroller"
 
-            app:layout_constraintTop_toBottomOf="@id/active_room" />
-
+            app:layout_constraintTop_toBottomOf="@id/active_room_layout" />
 
         <com.reddit.indicatorfastscroll.FastScrollerView
             android:id="@+id/room_fastscroller"
             android:layout_width="@dimen/normal_height"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:iconColor="@color/red"
-            android:textColor="@color/red"
+            app:iconColor="?attr/primaryDark"
+            android:textColor="?attr/primaryDark"
             android:layout_marginEnd="@dimen/thin"
             />
 
@@ -65,11 +115,12 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/thick"
             android:textColor="@color/white"
-            app:thumbColor="@color/red"
-            app:iconColor="@color/red"
+            app:thumbColor="?attr/primaryDark"
+            app:iconColor="?attr/primaryDark"
             app:layout_constraintBottom_toBottomOf="@+id/room_fastscroller"
             app:layout_constraintEnd_toStartOf="@id/room_fastscroller"
             app:layout_constraintTop_toTopOf="@+id/room_fastscroller" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -2,6 +2,7 @@ package com.feissenger.ui
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
@@ -12,7 +13,6 @@ import com.feissenger.MySharedPreferences
 import com.feissenger.R
 import com.feissenger.data.util.Injection
 import com.feissenger.ui.viewModels.LoginViewModel
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 class LogoutDialogFragment : DialogFragment() {
@@ -23,7 +23,7 @@ class LogoutDialogFragment : DialogFragment() {
             val builder = AlertDialog.Builder(it)
             builder.setMessage(R.string.logout_dialog_text)
                 .setPositiveButton(R.string.confirm_logout
-                ) { _, _ ->
+                ) {_, _->
                     val preferences = MySharedPreferences(it.applicationContext)
                     preferences.clear()
                     loginViewModel._user.postValue(null)
@@ -42,5 +42,11 @@ class LogoutDialogFragment : DialogFragment() {
                 ) { _, _ -> }
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+        (dialog as AlertDialog).getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
     }
 }

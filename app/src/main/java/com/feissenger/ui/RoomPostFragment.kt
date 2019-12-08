@@ -115,8 +115,8 @@ class RoomPostFragment : Fragment() {
                     val inputMethodManager = context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 
-                    val action = RoomPostFragmentDirections.actionRoomPostToRoomMessagesFragment(arg.roomId)
-                    it.findNavController().navigate(action)
+                    sharedPref.put("fragment","roomMessages")
+                    it.findNavController().popBackStack()
                 }
 
                 override fun onDismissed() {

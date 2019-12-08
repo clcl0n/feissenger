@@ -4,29 +4,25 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_marginBottom="5dp"
-    android:paddingTop="200dp"
-    android:paddingBottom="200dp"
-    android:background="@color/white">
+    android:padding="@dimen/thick">
     <TextView
         android:id="@+id/room_group"
         android:layout_gravity="start"
+        android:layout_margin="5dp"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textColor="@color/red"
-        android:textSize="24sp" />
+        android:textColor="?attr/primary"
+        android:textSize="@dimen/big_text"/>
     <TextView
         android:id="@+id/ssid"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textColor="?attr/text_color"
-        android:textSize="24sp" />
+        android:paddingBottom="5dp"
+        android:textSize="@dimen/normal_text" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
-    <TextView
-        android:id="@+id/bssid"
-        android:layout_gravity="start"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:textColor="?attr/text_color"
-        android:textSize="14sp" />
 </LinearLayout>
