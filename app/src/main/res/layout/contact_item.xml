@@ -18,11 +18,12 @@
 
     <TextView
         android:id="@+id/contact_name"
+        android:paddingTop="16dp"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         tools:text="jany"
-        android:paddingBottom="5dp"
+        android:paddingBottom="16dp"
         android:textSize="@dimen/normal_text" />
     <View
         android:layout_width="match_parent"

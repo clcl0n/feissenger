@@ -19,7 +19,7 @@
         <EditText
             android:id="@+id/registration_userName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/huge_height"
             android:inputType="textPersonName"
             android:text="@={model._userName}"
             android:hint="@string/username_hint"
@@ -28,7 +28,7 @@
         <EditText
             android:id="@+id/registration_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/huge_height"
             android:hint="@string/password_hint"
             android:inputType="textPassword"
             android:text="@={model._password}"
@@ -37,7 +37,7 @@
         <EditText
             android:id="@+id/registration_passwordConfirm"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/huge_height"
             android:inputType="textPassword"
             android:hint="@string/confirm_password"
             android:text="@={model._passwodConfirm}"
@@ -50,14 +50,13 @@
             android:layout_height="wrap_content"
             android:text="@={model._userInfo}"
             android:textAlignment="center"
-            android:textColor="?attr/primaryDark"/>
+            android:textColor="@color/warning"/>
 
         <Button
             android:id="@+id/registration_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register_btn"
-            android:onClick="@{() -> model.registration()}"
-            style="@style/buttonStyle"/>
+            android:onClick="@{() -> model.registration()}" />
     </LinearLayout>
 </layout>

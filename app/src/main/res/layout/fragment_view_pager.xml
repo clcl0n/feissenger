@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/primaryLight"
         android:minHeight="?attr/actionBarSize"
+        app:tabTextColor="?attr/primaryDark"
         app:tabIndicatorColor="?attr/primaryDark"
         app:tabIndicatorHeight="@dimen/thin"/>
 

@@ -26,6 +26,7 @@
 
         <com.feissenger.MyFloatingButton
             android:id="@+id/fab"
+            android:contentDescription="@string/add_new_post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"

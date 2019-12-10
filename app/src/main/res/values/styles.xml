@@ -16,7 +16,7 @@
         <item name='primaryText'>@color/light_primary_text</item>
         <item name="primaryLight">@color/light_primary_light</item>
         <item name="primaryDark">@color/light_primary_dark</item>
-        <item name="buttonStyle">@style/buttonStyle</item>
+        <item name="buttonStyle">@style/buttonStyleLight</item>
         <item name="primary">@color/light_primary</item>
         <item name="colorAccent">@color/light_primary_dark</item>
 
@@ -39,7 +39,7 @@
         <item name='primaryText'>@color/dark_primary_text</item>
         <item name="primaryLight">@color/dark_primary_light</item>
         <item name="primaryDark">@color/dark_primary_dark</item>
-        <item name="buttonStyle">@style/buttonStyle</item>
+        <item name="buttonStyle">@style/buttonStyleDark</item>
         <item name="primary">@color/dark_primary</item>
         <item name="colorAccent">@color/dark_primary_dark</item>
 
@@ -52,13 +52,21 @@
     </style>
 
     <style name="editTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:color">@color/warning</item>
         <item name="android:backgroundTint">?attr/primaryText</item>
         <item name="android:textCursorDrawable">@null</item>
         <item name="android:textSize">@dimen/normal_text</item>
         <item name="android:layout_margin">@dimen/thick</item>
     </style>
 
-    <style name="buttonStyle" parent="Widget.AppCompat.Button">
+    <style name="buttonStyleLight" parent="Widget.AppCompat.Button">
+        <item name="android:backgroundTint">?attr/primary</item>
+        <item name="android:textSize">@dimen/normal_text</item>
+        <item name="android:layout_margin">@dimen/thick</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="buttonStyleDark" parent="Widget.AppCompat.Button">
         <item name="android:backgroundTint">?attr/primary</item>
         <item name="android:textSize">@dimen/normal_text</item>
         <item name="android:layout_margin">@dimen/thick</item>

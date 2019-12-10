@@ -46,7 +46,7 @@ class LogoutDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+        (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#8B0000"))
         (dialog as AlertDialog).getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
     }
 }

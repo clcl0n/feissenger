@@ -22,6 +22,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:gravity="bottom"
+            android:hint="@string/type_your_post_here"
             android:text="@={roomPost.input_post}"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,10 +38,11 @@
             <com.giphy.sdk.ui.views.buttons.GPHGiphyButton
                 android:id="@+id/giphy_button_post"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/huge_height"
                 android:background="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="@id/bottom_panel"
                 app:layout_constraintEnd_toEndOf="@id/guideline_start"
+                android:contentDescription="@string/open_gifs_panel"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@id/bottom_panel"
                 app:layout_constraintTop_toTopOf="@id/bottom_panel" />
@@ -49,9 +51,10 @@
                 android:id="@+id/button_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="POST"
+                android:text="@string/post"
                 android:textSize="@dimen/normal_text"
                 android:background="@drawable/rounded_border_room_message"
+                android:contentDescription="@string/send_message_button"
                 app:layout_constraintBottom_toBottomOf="@id/bottom_panel"
                 app:layout_constraintEnd_toEndOf="@id/bottom_panel"
                 app:layout_constraintHorizontal_bias="1.0"

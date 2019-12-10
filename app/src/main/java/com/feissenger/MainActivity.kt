@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
         myToolbar = findViewById(R.id.my_toolbar)
 
-        myToolbar.toolbar_text.setTextColor(Color.WHITE)
+
 
         setSupportActionBar(myToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(true)
@@ -208,10 +208,12 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         val image = findViewById<ImageView>(R.id.theme_icon)
         when (sharedPreferences.get("theme")) {
             "light" -> {
+                myToolbar.toolbar_text.setTextColor(Color.BLACK)
                 image.setImageResource(R.drawable.moon)
                 selected = "light"
             }
             "dark" -> {
+                myToolbar.toolbar_text.setTextColor(Color.WHITE)
                 image.setImageResource(R.drawable.sun)
                 selected = "dark"
             }

@@ -24,7 +24,7 @@
 
         <com.reddit.indicatorfastscroll.FastScrollerView
             android:id="@+id/fastscroller"
-            android:layout_width="@dimen/normal_height"
+            android:layout_width="@dimen/huge_height"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:iconColor="?attr/primaryDark"
