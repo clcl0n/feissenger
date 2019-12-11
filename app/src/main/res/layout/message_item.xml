@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tool="http://schemas.android.com/tools">
     <View
         android:layout_height="match_parent"
         android:layout_width="0dp"
@@ -26,23 +27,33 @@
             android:visibility="gone"/>
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:contentDescription="@string/this_is_gif_image"
             android:id="@+id/message_gif"
             android:layout_width="wrap_content"
             android:layout_height="150dp"
             android:padding="0dp"
             android:layout_margin="5dp"/>
 
-        <TextView
-            android:background="@drawable/rounded_border_recipient"
-            android:id="@+id/message_bubble"
-            android:layout_gravity="start"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+        <FrameLayout
+            android:id="@+id/message_bubble_layout"
             android:layout_width="wrap_content"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/thin"
+            android:paddingStart="@dimen/thin"
+            android:paddingEnd="@dimen/thin"
+            android:paddingBottom="@dimen/big_text"
+            >
+            <TextView
+                android:background="@drawable/rounded_border_recipient"
+                android:id="@+id/message_bubble"
+                android:layout_gravity="start"
+                android:layout_height="wrap_content"
+                tool:text="ahoj"
+                android:layout_width="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/big_text" />
+        </FrameLayout>
+
     </LinearLayout>
     <View
         android:layout_height="match_parent"

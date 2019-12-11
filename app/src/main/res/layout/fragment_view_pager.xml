@@ -13,6 +13,7 @@
         android:background="?attr/primaryLight"
         android:minHeight="?attr/actionBarSize"
         app:tabTextColor="?attr/primaryDark"
+        app:tabTextAppearance="?android:attr/textAppearanceLarge"
         app:tabIndicatorColor="?attr/primaryDark"
         app:tabIndicatorHeight="@dimen/thin"/>
 

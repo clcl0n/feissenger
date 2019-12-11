@@ -18,10 +18,12 @@ import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -35,6 +37,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import com.feissenger.ui.LogoutDialogFragment
 import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.fragment_login.*
+import java.security.Permissions
 
 
 class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
@@ -83,6 +87,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             if(activeNetworkCapabilities != null)
             if(activeNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)){
                 Log.i("connection", "ON WIFI")
+                sharedPreferences.put("connType","wifi")
                 if (wifiManager.connectionInfo.hiddenSSID){
                     sharedPreferences.put("activeWifi",regexSSID.replace(wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""),"_"))
                     roomsViewModel.activeWifi = regexSSID.replace(wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""),"_")
@@ -105,6 +110,8 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             }
             else{
                 sharedPreferences.put("activeWifi","")
+                sharedPreferences.put("connType","data")
+
                 refreshRooms()
                 goBackFromRoomPost()
                 showFab(false)
@@ -112,6 +119,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             snackbar.dismiss()
             messagesViewModel.enabledSend.postValue(true)
         }else{
+            sharedPreferences.put("connType","none")
             snackbar.show()
             sharedPreferences.put("activeWifi","")
             roomsViewModel.activeWifi = ""
@@ -136,6 +144,44 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
     }
 
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Log.i("per",requestCode.toString())
+        if(requestCode == 1)
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+                // Permission is not granted
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),1)
+
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+                } else {
+                    login_user_info.text = "You have to manually grant 'Location' permissions for this application in your settings. Restart Feissenger afterwards."
+                    LoginButton.isEnabled = false
+                    // No explanation needed, we can request the permission.
+
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            }else{
+                login_user_info.text = ""
+                LoginButton.isEnabled = true
+            }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         applicationContext.registerReceiver(ConnectivityReceiver(), IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
@@ -150,26 +196,14 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         connMgr = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
 // Here, thisActivity is the current activity
+
+
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
 
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),1)
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),1)
         }
 
 
@@ -204,7 +238,8 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
         setSupportActionBar(myToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(true)
-
+        if(sharedPreferences.get("theme") == "")
+            sharedPreferences.put("theme","light")
         val image = findViewById<ImageView>(R.id.theme_icon)
         when (sharedPreferences.get("theme")) {
             "light" -> {
@@ -219,7 +254,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             }
         }
 
-        image.setOnClickListener {
+        theme_icon_layout.setOnClickListener {
             if(selected == "light"){
                 selected = "dark"
                 image.setImageResource(R.drawable.sun)
@@ -247,7 +282,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
 
-        logout_icon.setOnClickListener {
+        logout_icon_layout.setOnClickListener {
             val newFragment = LogoutDialogFragment()
             newFragment.show(supportFragmentManager, "logoutDialog")
         }

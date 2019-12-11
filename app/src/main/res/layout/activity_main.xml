@@ -31,29 +31,47 @@
                 android:id="@+id/toolbar_text"
                 android:textSize="@dimen/big_text" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/theme_icon"
+            <FrameLayout
+                android:id="@+id/theme_icon_layout"
                 android:layout_width="@dimen/huge_height"
                 android:layout_height="@dimen/huge_height"
-                app:layout_constraintEnd_toStartOf="@id/logout_icon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/logout_icon_layout"
+                android:layout_margin="@dimen/thick"
                 android:contentDescription="@string/change_theme"
-                android:layout_margin="@dimen/thick"
+                >
 
-                android:src="@drawable/sun" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/logout_icon"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/theme_icon"
+                    android:layout_width="@dimen/normal_height"
+                    android:layout_height="@dimen/normal_height"
+                    android:layout_gravity="center"
+                    android:src="@drawable/sun" />
+            </FrameLayout>
+
+            <FrameLayout
                 android:layout_width="@dimen/huge_height"
                 android:layout_height="@dimen/huge_height"
+                android:id="@+id/logout_icon_layout"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:contentDescription="@string/logout_icon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:src="@drawable/logout"
                 android:layout_margin="@dimen/thick"
-                />
+                >
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_gravity="center"
+                    android:id="@+id/logout_icon"
+                    android:layout_width="@dimen/normal_height"
+                    android:layout_height="@dimen/normal_height"
+                    android:contentDescription="@string/logout_icon"
+                    android:src="@drawable/logout"
+                    />
+
+            </FrameLayout>
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

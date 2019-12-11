@@ -1,6 +1,7 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorHint">@color/dark_gray</item>
 <!--        <item name="android:windowBackground">@color/white</item>-->
 <!--        <item name="android:textColorHint">@color/gray</item>-->
 <!--        <item name="colorAccent">?attr/text_color</item>-->

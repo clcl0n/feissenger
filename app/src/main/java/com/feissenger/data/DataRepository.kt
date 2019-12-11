@@ -124,49 +124,22 @@ class DataRepository private constructor(
                             item.uid_name,
                             item.contact_name,
                             item.message.startsWith("gif:"))
-
-
                     })
-//                    for (r: ContactReadResponse in it) {
-//
-//                        if (r.message.startsWith("https://giphy.com/gifs/")) {
-//                            val client = GPHApiClient("jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
-//                            val handler =
-//                                MyCompletionHelper(this, contactReadRequest.uid, onError, r)
-//                            client.gifById(r.message.split("-").last(), handler)
-//                        } else {
-//                            cache.insertMessages(
-//                                listOf(
-//                                    MessageItem(
-//                                        MessageId(
-//                                            contactReadRequest.uid,
-//                                            r.uid,
-//                                            r.time
-//                                        ),
-//                                        r.contact,
-//                                        r.message,
-//                                        r.message.startsWith("https://giphy.com/gifs/"),
-//                                        r.uid_fid,
-//                                        r.contact_fid,
-//                                        r.uid_name,
-//                                        r.contact_name
-//                                    )
-//                                )
-//                            )
-//                        }
-//                    }
 
 
                 }
-                 onError("ok")              
-                 return                     
             }
+                 onError("ok")
 
         } catch (ex: ConnectException) {
             onError("Off-line. Check internet connection.")
             ex.printStackTrace()
             return
-        } 
+        }catch (ex: Exception) {
+            onError("Oops...Change failed. Try again later please.")
+            ex.printStackTrace()
+            return
+        }
     }
 
     suspend fun saveMessage(

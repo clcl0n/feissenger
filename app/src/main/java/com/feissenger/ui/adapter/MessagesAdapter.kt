@@ -45,7 +45,7 @@ class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapte
             itemView.message_gif.layout(0,0,0,0)
 
             if(item.isGif){
-                itemView.message_bubble.visibility = View.GONE
+                itemView.message_bubble_layout.visibility = View.GONE
                 itemView.message_gif.visibility = View.VISIBLE
 
                 glide.load("https://media2.giphy.com/media/${item.message.split("gif:").last()}/200w.gif")
@@ -77,13 +77,13 @@ class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapte
                 }
             }else{
 
-                itemView.message_bubble.visibility = View.VISIBLE
+                itemView.message_bubble_layout.visibility = View.VISIBLE
                 itemView.message_gif.visibility = View.GONE
 
-                (itemView.message_bubble as TextView).text = item.message
+                (itemView.message_bubble_layout.message_bubble as TextView).text = item.message
                 (itemView.message_time as TextView).text = item.id.time
 
-                itemView.message_bubble.setOnClickListener {
+                itemView.message_bubble_layout.setOnClickListener {
                     val currentVisibility = itemView.message_time.visibility
                     if(currentVisibility == View.GONE)
                         itemView.message_time.visibility = View.VISIBLE
@@ -92,17 +92,17 @@ class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapte
                 }
 
                 if(item.id.uid == item.id.sender){
-                    itemView.message_bubble.setBackgroundResource(R.drawable.rounded_border_sender)
-                    itemView.message_bubble.setTextColor(Color.WHITE)
-                    (itemView.message_bubble.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
+                    itemView.message_bubble_layout.message_bubble.setBackgroundResource(R.drawable.rounded_border_sender)
+                    itemView.message_bubble_layout.message_bubble.setTextColor(Color.WHITE)
+                    (itemView.message_bubble_layout.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
                     (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
                     itemView.view_left.visibility = View.VISIBLE
                     itemView.view_right.visibility = View.GONE
                 }
                 else{
-                    itemView.message_bubble.setBackgroundResource(R.drawable.rounded_border_recipient)
-                    itemView.message_bubble.setTextColor(Color.BLACK)
-                    (itemView.message_bubble.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
+                    itemView.message_bubble_layout.message_bubble.setBackgroundResource(R.drawable.rounded_border_recipient)
+                    itemView.message_bubble_layout.message_bubble.setTextColor(Color.BLACK)
+                    (itemView.message_bubble_layout.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
                     (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
                     itemView.view_left.visibility = View.GONE
                     itemView.view_right.visibility = View.VISIBLE

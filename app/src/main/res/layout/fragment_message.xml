@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -34,17 +35,27 @@
             app:layout_constraintTop_toBottomOf="@id/messages_list"
             android:background="@drawable/message_input">
 
-            <com.giphy.sdk.ui.views.buttons.GPHGiphyButton
-                android:id="@+id/giphy_button"
+            <FrameLayout
+                android:id="@+id/giphy_button_layout"
                 android:layout_width="@dimen/huge_height"
                 android:layout_height="@dimen/huge_height"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/open_gifs_panel"
                 app:layout_constraintBottom_toBottomOf="@id/message_input"
                 app:layout_constraintEnd_toEndOf="@id/guideline_start"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@id/message_input"
-                app:layout_constraintTop_toTopOf="@id/message_input" />
+                app:layout_constraintTop_toTopOf="@id/message_input"
+
+                >
+
+            <com.giphy.sdk.ui.views.buttons.GPHGiphyButton
+                android:id="@+id/giphy_button"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/normal_height"
+                android:layout_height="@dimen/normal_height"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/open_gifs_panel"
+                />
+            </FrameLayout>
+
 
             <EditText
                 android:id="@+id/editText"
@@ -54,40 +65,47 @@
                 android:hint="@string/type_message_here"
                 android:background="@android:color/transparent"
                 android:text="@={model.input}"
-                android:layout_marginStart="10dp"
                 app:layout_constraintBottom_toBottomOf="@id/message_input"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintStart_toStartOf="@id/guideline_start"
                 app:layout_constraintTop_toTopOf="@id/message_input" />
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:contentDescription="@string/send_message_button"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
+            <FrameLayout
+                android:layout_width="@dimen/huge_height"
+                android:layout_height="@dimen/huge_height"
                 android:onClick="@{() -> model.sendMessage()}"
-                android:src="@{model.enabledSend ? @drawable/ic_send_black : @drawable/ic_sync_disabled_black_24dp}"
                 app:layout_constraintBottom_toBottomOf="@id/message_input"
-                app:layout_constraintEnd_toEndOf="@id/message_input"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline_end"
-                android:enabled="@{model.enabledSend}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_end"
+                app:layout_constraintTop_toTopOf="@id/message_input">
 
-                app:layout_constraintTop_toTopOf="@id/message_input" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/send_message_button"
+                    android:enabled="@{model.enabledSend}"
+                    tool:src="@drawable/ic_send_black"
+                    android:src="@{model.enabledSend ? @drawable/ic_send_black : @drawable/ic_sync_disabled_black_24dp}"
+
+                    />
+
+            </FrameLayout>
+
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="50dp" />
+                app:layout_constraintGuide_begin="@dimen/huge_height" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_end="50dp" />
+                app:layout_constraintGuide_end="@dimen/huge_height" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

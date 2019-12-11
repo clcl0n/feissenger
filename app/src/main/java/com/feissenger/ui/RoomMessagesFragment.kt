@@ -117,7 +117,8 @@ class RoomMessagesFragment : Fragment() {
         }
         else{
             viewModel.showFab.postValue(false)
-            snackbar.show()
+            if(sharedPref.get("connType").toString()!="none")
+                snackbar.show()
         }
 
     }

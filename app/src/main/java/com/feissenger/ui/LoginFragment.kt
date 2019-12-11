@@ -1,8 +1,10 @@
 package com.feissenger.ui
 
 
+import android.Manifest
 import android.content.Context
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
@@ -11,6 +13,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -75,6 +79,8 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -109,6 +115,7 @@ class LoginFragment : Fragment() {
                 }
             }
         }
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -116,5 +123,6 @@ class LoginFragment : Fragment() {
 
         (activity as MainActivity).myToolbar.toolbar_text.text = "FEIssenger"
         (activity as MainActivity).myToolbar.theme_icon.visibility = View.VISIBLE
+
     }
 }

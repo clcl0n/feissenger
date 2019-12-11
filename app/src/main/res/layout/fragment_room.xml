@@ -107,6 +107,7 @@
             app:iconColor="?attr/primaryDark"
             android:textColor="?attr/primaryDark"
             android:layout_marginEnd="@dimen/thin"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             />
 
         <com.reddit.indicatorfastscroll.FastScrollerThumbView

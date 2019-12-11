@@ -121,7 +121,7 @@ class MessagesFragment : Fragment() {
         val gifsDialog = GiphyDialogFragment.newInstance(settings)
         settings.mediaTypeConfig = arrayOf(GPHContentType.gif)
 
-        giphy_button.setOnClickListener {
+        giphy_button_layout.setOnClickListener {
             fragmentManager?.let { it1 -> gifsDialog.show(it1, "gifs_dialog") }
             gifsDialog.gifSelectionListener = object : GiphyDialogFragment.GifSelectionListener {
                 @SuppressLint("LogNotTimber")
