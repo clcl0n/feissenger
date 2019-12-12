@@ -31,46 +31,54 @@
                 android:id="@+id/toolbar_text"
                 android:textSize="@dimen/big_text" />
 
-            <FrameLayout
-                android:id="@+id/theme_icon_layout"
-                android:layout_width="@dimen/huge_height"
-                android:layout_height="@dimen/huge_height"
-                app:layout_constraintTop_toTopOf="parent"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/logout_icon_layout"
-                android:layout_margin="@dimen/thick"
-                android:contentDescription="@string/change_theme"
-                >
-
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/theme_icon"
-                    android:layout_width="@dimen/normal_height"
-                    android:layout_height="@dimen/normal_height"
-                    android:layout_gravity="center"
-                    android:src="@drawable/sun" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="@dimen/huge_height"
-                android:layout_height="@dimen/huge_height"
-                android:id="@+id/logout_icon_layout"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_margin="@dimen/thick"
                 >
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_gravity="center"
-                    android:id="@+id/logout_icon"
-                    android:layout_width="@dimen/normal_height"
-                    android:layout_height="@dimen/normal_height"
-                    android:contentDescription="@string/logout_icon"
-                    android:src="@drawable/logout"
-                    />
 
-            </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/theme_icon_layout"
+                    android:layout_width="@dimen/huge_height"
+                    android:layout_height="@dimen/huge_height"
+                    android:layout_margin="@dimen/thick"
+                    android:contentDescription="@string/change_theme"
+                    >
+
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/theme_icon"
+                        android:layout_width="@dimen/normal_height"
+                        android:layout_height="@dimen/normal_height"
+                        android:layout_gravity="center"
+                        android:src="@drawable/sun" />
+                </FrameLayout>
+
+                <FrameLayout
+
+                    android:layout_width="@dimen/huge_height"
+                    android:layout_height="@dimen/huge_height"
+                    android:id="@+id/logout_icon_layout"
+                    android:layout_margin="@dimen/thick"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_gravity="center"
+                        android:id="@+id/logout_icon"
+                        android:layout_width="@dimen/normal_height"
+                        android:layout_height="@dimen/normal_height"
+                        android:contentDescription="@string/logout_icon"
+                        android:src="@drawable/logout"
+                        />
+
+                </FrameLayout>
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
 
 

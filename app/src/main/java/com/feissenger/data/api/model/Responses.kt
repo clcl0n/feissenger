@@ -1,7 +1,5 @@
 package com.feissenger.data.api.model
 
-import com.giphy.sdk.core.models.Media
-
 data class NotificationResponse(
     val messageId:String
 )

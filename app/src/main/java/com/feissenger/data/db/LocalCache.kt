@@ -1,6 +1,5 @@
 package com.feissenger.data.db
 
-import com.feissenger.data.db.DbDao
 import com.feissenger.data.db.model.MessageItem
 import com.feissenger.data.db.model.ContactItem
 import com.feissenger.data.db.model.RoomItem
@@ -13,20 +12,10 @@ class LocalCache(private val dao: DbDao) {
         dao.insertMessages(messageItems)
     }
 
-    suspend fun insertMessage(messageItem: MessageItem) {
-        dao.insertMessage(messageItem)
-    }
-
-    fun getMessages(user: String, contact : String) = dao.getMessages(user, contact)
-
-
-    fun getMessage(uid: String, sender: String, time: String) = dao.getMessage(uid, sender, time)
+    fun getMessages(user: String, contact: String) = dao.getMessages(user, contact)
 
     //Rooms
-
-
-//
-    suspend fun getMutableRooms(user: String, activeRoom: String): List<RoomItem>{
+    suspend fun getMutableRooms(user: String, activeRoom: String): List<RoomItem> {
         val i = dao.getMutableRooms(user, activeRoom)
         return i
     }
@@ -37,7 +26,9 @@ class LocalCache(private val dao: DbDao) {
 
     //Contacts
     fun getContacts(user: String) = dao.getContacts(user)
-    suspend fun getContactById(user: String, contactId: String) = dao.getContactById(user, contactId)
+
+    suspend fun getContactById(user: String, contactId: String) =
+        dao.getContactById(user, contactId)
 
     suspend fun insertContacts(contactList: List<ContactItem>) {
         dao.insertContacts(contactList)
@@ -49,7 +40,6 @@ class LocalCache(private val dao: DbDao) {
     }
 
     fun getRoomMessages(roomId: String) = dao.getRoomMessages(roomId)
-
 
 
 }

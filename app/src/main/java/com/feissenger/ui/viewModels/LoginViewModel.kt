@@ -15,10 +15,6 @@ class LoginViewModel(private val repository: DataRepository) : ViewModel() {
     val _userInfo: MutableLiveData<String> = MutableLiveData("")
     var wrongUsernameOrPasswordMessage = ""
 
-    val fid: MutableLiveData<String> = MutableLiveData()
-
-    val error: MutableLiveData<String> = MutableLiveData()
-
     val userName: LiveData<String>
         get() = _userName
 

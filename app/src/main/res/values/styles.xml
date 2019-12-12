@@ -1,7 +1,7 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:textColorHint">@color/dark_gray</item>
+        <item name="android:textColorHint">@color/black</item>
 <!--        <item name="android:windowBackground">@color/white</item>-->
 <!--        <item name="android:textColorHint">@color/gray</item>-->
 <!--        <item name="colorAccent">?attr/text_color</item>-->
@@ -15,6 +15,7 @@
         <item name="colorPrimary">@color/light_primary</item>
         <item name='android:textColor'>@color/light_primary_text</item>
         <item name='primaryText'>@color/light_primary_text</item>
+        <item name='secondaryText'>@color/black</item>
         <item name="primaryLight">@color/light_primary_light</item>
         <item name="primaryDark">@color/light_primary_dark</item>
         <item name="buttonStyle">@style/buttonStyleLight</item>
@@ -38,6 +39,7 @@
         <item name="colorPrimary">@color/dark_primary</item>
         <item name='android:textColor'>@color/dark_primary_text</item>
         <item name='primaryText'>@color/dark_primary_text</item>
+        <item name='secondaryText'>@color/white</item>
         <item name="primaryLight">@color/dark_primary_light</item>
         <item name="primaryDark">@color/dark_primary_dark</item>
         <item name="buttonStyle">@style/buttonStyleDark</item>

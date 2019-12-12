@@ -37,7 +37,7 @@ object Injection {
     }
 
     fun provideDataRepository(context: Context): DataRepository {
-        return DataRepository.getInstance(FCMApi.create(context),WebApi.create(context), provideCache(context))
+        return DataRepository.getInstance(FCMApi.create(),WebApi.create(context), provideCache(context))
     }
 
     fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {

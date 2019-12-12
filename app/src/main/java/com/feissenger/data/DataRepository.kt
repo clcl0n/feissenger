@@ -19,8 +19,6 @@ package com.feissenger.data
 
 import androidx.lifecycle.LiveData
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import com.feissenger.MyCompletionHelper
 import com.feissenger.data.api.FCMApi
 import com.feissenger.data.api.WebApi
 import com.feissenger.data.api.model.ContactMessageRequest
@@ -29,11 +27,9 @@ import com.feissenger.data.api.model.LoginRequest
 import com.feissenger.data.api.model.ContactListRequest
 import com.feissenger.data.api.model.RoomListRequest
 import com.feissenger.data.api.model.*
-import com.feissenger.data.db.Converters
 import com.feissenger.data.db.LocalCache
 import com.feissenger.data.db.model.*
 import com.giphy.sdk.core.models.Media
-import com.giphy.sdk.core.network.api.GPHApiClient
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
@@ -41,7 +37,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * Repository class that works with local and remote data sources.
@@ -53,7 +48,6 @@ class DataRepository private constructor(
 ) {
 
     companion object {
-        const val TAG = "DataRepository"
 
         @Volatile
         private var INSTANCE: DataRepository? = null
@@ -81,14 +75,11 @@ class DataRepository private constructor(
 
                     // Get new Instance ID token
                     val token = task.result?.token.toString()
-//                    registerToken(RegisterTokenRequest(loginResponse.body()!!.uid, token))
 
                     GlobalScope.launch {
                         api.registerToken(RegisterTokenRequest(loginResponse.body()!!.uid, token))
                     }
 
-                    // Log and toast
-                    Log.i("tag", "TU MAS TOKEN $token")
                 })
             return loginResponse.body()
         }
@@ -123,19 +114,20 @@ class DataRepository private constructor(
                             item.contact_fid,
                             item.uid_name,
                             item.contact_name,
-                            item.message.startsWith("gif:"))
+                            item.message.startsWith("gif:")
+                        )
                     })
 
 
                 }
             }
-                 onError("ok")
+            onError("ok")
 
         } catch (ex: ConnectException) {
             onError("Off-line. Check internet connection.")
             ex.printStackTrace()
             return
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             onError("Oops...Change failed. Try again later please.")
             ex.printStackTrace()
             return
@@ -145,8 +137,7 @@ class DataRepository private constructor(
     suspend fun saveMessage(
         onError: (error: String) -> Unit,
         uid: String,
-        contactReadResponse: ContactReadResponse,
-        media: Media
+        contactReadResponse: ContactReadResponse
     ) {
         try {
             cache.insertMessages(
@@ -186,13 +177,13 @@ class DataRepository private constructor(
         try {
 
             val contactMessageResponse = api.sendContactMessage(contactMessageRequest)
-            Log.i("tag","SENT")
-            if (contactMessageResponse.isSuccessful){
+            Log.i("tag", "SENT")
+            if (contactMessageResponse.isSuccessful) {
                 loadMessages(
                     onError,
                     ContactReadRequest(contactMessageRequest.uid, contactMessageRequest.contact)
                 )
-                Log.i("tag","LOADED")
+                Log.i("tag", "LOADED")
                 onError("ok")
                 return
             }
@@ -279,10 +270,7 @@ class DataRepository private constructor(
         }
     }
 
-//    Rooms
-
-
-//
+    //    Rooms
     suspend fun getMutableRooms(user: String, activeRoom: String): List<RoomItem> =
         cache.getMutableRooms(user, activeRoom)
 
@@ -328,9 +316,6 @@ class DataRepository private constructor(
     //    Contacts
     fun getContacts(user: String): LiveData<List<ContactItem>> = cache.getContacts(user)
 
-    suspend fun getContactById(user: String, contactId: String): ContactItem =
-        cache.getContactById(user, contactId)
-
     suspend fun getContactList(
         onError: (error: String) -> Unit,
         contactListRequest: ContactListRequest
@@ -369,7 +354,6 @@ class DataRepository private constructor(
             if (response.isSuccessful)
                 response.body()?.let {
                     Log.i("tag", it.toString())
-//                    return cache.getRoomMessages(it.map{item-> RoomMessage(0,item.message, item.roomid, item.uid, item.time)})
                 }
         } catch (ex: ConnectException) {
             onError("Off-line. Check internet connection.")
@@ -379,25 +363,22 @@ class DataRepository private constructor(
             return
         }
     }
-//
-//    fun registerToken(registerTokenRequest: RegisterTokenRequest) {
-//        val response = api.registerToken(registerTokenRequest).execute()
-//        if(response.isSuccessful){
-//            Log.i("tag","token registred")
-//        }
-//    }
 
-    suspend fun getContactFid(onError: (error: String) -> Unit, uid:String, contact: String): String {
+    suspend fun getContactFid(
+        onError: (error: String) -> Unit,
+        uid: String,
+        contact: String
+    ): String {
         try {
             val response = api.getContactMessages(ContactReadRequest(uid, contact))
-            if(response.isSuccessful)
-                response.body()?.let{
+            if (response.isSuccessful)
+                response.body()?.let {
 
-                    return it.filter{it.contact==contact}[0].contact_fid
+                    return it.filter { it.contact == contact }[0].contact_fid
                 }
-        }catch (ex: ConnectException){
+        } catch (ex: ConnectException) {
             onError("Off-line. Check internet connection.")
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             onError("Oops...Change failed. Try again later please.")
             ex.printStackTrace()
             return ""
@@ -405,13 +386,15 @@ class DataRepository private constructor(
         return ""
     }
 
-    suspend fun notifyPostMessage(notifyMessage: NotificationRequest, onError: (error: String) -> Unit) {
+    suspend fun notifyPostMessage(
+        notifyMessage: NotificationRequest,
+        onError: (error: String) -> Unit
+    ) {
         try {
             val response = fcm.sendNotification(notifyMessage)
             if (response.isSuccessful)
                 response.body()?.let {
                     Log.i("tag", it.toString())
-//                    return cache.getRoomMessages(it.map{item-> RoomMessage(0,item.message, item.roomid, item.uid, item.time)})
                 }
         } catch (ex: ConnectException) {
             onError("Off-line. Check internet connection.")
@@ -421,22 +404,4 @@ class DataRepository private constructor(
             return
         }
     }
-
-
-//    suspend fun getRoomMessages(onError: (error: String) -> Unit, roomid: String){
-//        try {
-//            val response = api.getRoomMessages(RoomReadRequest("2",roomid,api_key))
-//            if(response.isSuccessful)
-//                response.body()?.let{
-//                    return cache.getRoomMessages(it.map{item-> RoomMessage(0,item.message, item.roomid, item.uid, item.time)})
-//                }
-//        }catch (ex: ConnectException){
-//            onError("Off-line. Check internet connection.")
-//        }catch (ex: Exception) {
-//            onError("Oops...Change failed. Try again later please.")
-//            ex.printStackTrace()
-//            return
-//        }
-//    }
-
 }

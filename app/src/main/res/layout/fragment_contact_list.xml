@@ -24,13 +24,13 @@
 
         <com.reddit.indicatorfastscroll.FastScrollerView
             android:id="@+id/fastscroller"
-            android:layout_width="@dimen/huge_height"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:paddingStart="@dimen/thicker"
+            android:paddingEnd="@dimen/thicker"
             app:iconColor="?attr/primaryDark"
-            android:textColor="?attr/primaryDark"
-            android:layout_marginEnd="@dimen/thin"
-            android:elevation="10dp"
+            android:textColor="?attr/primaryText"
             />
 
         <com.reddit.indicatorfastscroll.FastScrollerThumbView
@@ -38,12 +38,11 @@
             android:layout_width="@dimen/big_height"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/thick"
-            android:textColor="@color/white"
-            app:thumbColor="?attr/primaryDark"
-            app:iconColor="?attr/primaryDark"
+            android:textColor="?attr/secondaryText"
+            app:thumbColor="?attr/primary"
+            app:iconColor="?attr/primary"
             app:layout_constraintBottom_toBottomOf="@+id/fastscroller"
             app:layout_constraintEnd_toStartOf="@id/fastscroller"
-            android:elevation="10dp"
             app:layout_constraintTop_toTopOf="@+id/fastscroller" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

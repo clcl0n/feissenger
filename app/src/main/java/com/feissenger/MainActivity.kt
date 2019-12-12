@@ -56,25 +56,25 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
     private lateinit var regexSSID: Regex
 
 
-    fun refreshRooms(){
+    fun refreshRooms() {
         roomsViewModel.uid = sharedPreferences.get("uid").toString()
         roomsViewModel.activeWifi = sharedPreferences.get("activeWifi").toString()
         roomsViewModel.setActiveRoom()
         roomsViewModel.loadRooms()
     }
 
-    fun goBackFromRoomPost(){
-        if(sharedPreferences.get("fragment") == "roomsPost"){
+    fun goBackFromRoomPost() {
+        if (sharedPreferences.get("fragment") == "roomsPost") {
             roomPostViewModel.input_post.postValue("")
-            sharedPreferences.put("fragment","roomMessages")
+            sharedPreferences.put("fragment", "roomMessages")
             findNavController(R.id.nav_host_fragment).popBackStack()
         }
     }
 
-    fun showFab(show: Boolean){
-        if(sharedPreferences.get("fragment") == "roomMessages"){
+    fun showFab(show: Boolean) {
+        if (sharedPreferences.get("fragment") == "roomMessages") {
 
-            if(show)
+            if (show)
                 roomMessagesViewModel.showFab.postValue(show)
             else
                 roomMessagesViewModel.showFab.postValue(show)
@@ -83,54 +83,85 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         val activeNetworkCapabilities = connMgr.getNetworkCapabilities(connMgr.activeNetwork)
-        if(connMgr.activeNetwork != null){
-            if(activeNetworkCapabilities != null)
-            if(activeNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)){
-                Log.i("connection", "ON WIFI")
-                sharedPreferences.put("connType","wifi")
-                if (wifiManager.connectionInfo.hiddenSSID){
-                    sharedPreferences.put("activeWifi",regexSSID.replace(wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""),"_"))
-                    roomsViewModel.activeWifi = regexSSID.replace(wifiManager.connectionInfo.bssid.removeSurrounding("\"","\""),"_")
-                    roomMessagesViewModel.roomid = regexSSID.replace(wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""),"_")
-                    refreshRooms()
-                }
-                else{
-                    sharedPreferences.put("activeWifi",regexSSID.replace(wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""),"_"))
-                    roomsViewModel.activeWifi = regexSSID.replace(wifiManager.connectionInfo.ssid.removeSurrounding("\"","\""),"_")
-                    refreshRooms()
+        if (connMgr.activeNetwork != null) {
+            if (activeNetworkCapabilities != null)
+                if (activeNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.i("connection", "ON WIFI")
+                    sharedPreferences.put("connType", "wifi")
+                    if (wifiManager.connectionInfo.hiddenSSID) {
+                        sharedPreferences.put(
+                            "activeWifi",
+                            regexSSID.replace(
+                                wifiManager.connectionInfo.bssid.removeSurrounding(
+                                    "\"",
+                                    "\""
+                                ), "_"
+                            )
+                        )
+                        roomsViewModel.activeWifi = regexSSID.replace(
+                            wifiManager.connectionInfo.bssid.removeSurrounding(
+                                "\"",
+                                "\""
+                            ), "_"
+                        )
+                        roomMessagesViewModel.roomid = regexSSID.replace(
+                            wifiManager.connectionInfo.ssid.removeSurrounding(
+                                "\"",
+                                "\""
+                            ), "_"
+                        )
+                        refreshRooms()
+                    } else {
+                        sharedPreferences.put(
+                            "activeWifi",
+                            regexSSID.replace(
+                                wifiManager.connectionInfo.ssid.removeSurrounding(
+                                    "\"",
+                                    "\""
+                                ), "_"
+                            )
+                        )
+                        roomsViewModel.activeWifi = regexSSID.replace(
+                            wifiManager.connectionInfo.ssid.removeSurrounding(
+                                "\"",
+                                "\""
+                            ), "_"
+                        )
+                        refreshRooms()
 
-                }
-                if(sharedPreferences.get("activeWifi").toString() == roomsViewModel.activeWifi || roomsViewModel.activeWifi == "XsTDHS3C2YneVmEW5Ry7"){
-                    showFab(true)
-                }
-                else{
+                    }
+                    if (sharedPreferences.get("activeWifi").toString() == roomsViewModel.activeWifi || roomsViewModel.activeWifi == "XsTDHS3C2YneVmEW5Ry7") {
+                        showFab(true)
+                    } else {
+                        goBackFromRoomPost()
+                        showFab(false)
+                    }
+                } else {
+                    sharedPreferences.put("activeWifi", "")
+                    sharedPreferences.put("connType", "data")
+                    if(roomMessagesViewModel.roomid == "XsTDHS3C2YneVmEW5Ry7")
+                        showFab(true)
+                    else
+                        showFab(false)
+
+
+                    refreshRooms()
                     goBackFromRoomPost()
-                    showFab(false)
                 }
-            }
-            else{
-                sharedPreferences.put("activeWifi","")
-                sharedPreferences.put("connType","data")
-
-                refreshRooms()
-                goBackFromRoomPost()
-                showFab(false)
-            }
             snackbar.dismiss()
             messagesViewModel.enabledSend.postValue(true)
-        }else{
-            sharedPreferences.put("connType","none")
+        } else {
+            sharedPreferences.put("connType", "none")
             snackbar.show()
-            sharedPreferences.put("activeWifi","")
+            sharedPreferences.put("activeWifi", "")
             roomsViewModel.activeWifi = ""
             messagesViewModel.enabledSend.postValue(false)
             goBackFromRoomPost()
-
+            showFab(false)
             Log.i("connection", "NO CONNECTION AT ALL")
         }
 
-        when(sharedPreferences.get("fragment")){
-//            "roomMessages" ->
+        when (sharedPreferences.get("fragment")) {
             "messages" -> messagesViewModel.loadMessages()
             "rooms", "contacts" -> {
                 refreshRooms()
@@ -150,24 +181,33 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.i("per",requestCode.toString())
-        if(requestCode == 1)
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        Log.i("per", requestCode.toString())
+        if (requestCode == 1)
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+                != PackageManager.PERMISSION_GRANTED
+            ) {
 
                 // Permission is not granted
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),1)
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                ) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                    )
 
                     // Show an explanation to the user *asynchronously* -- don't block
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
                 } else {
-                    login_user_info.text = "You have to manually grant 'Location' permissions for this application in your settings. Restart Feissenger afterwards."
+                    login_user_info.text =
+                        "You have to manually grant 'Location' permissions for this application in your settings. Restart Feissenger afterwards."
                     LoginButton.isEnabled = false
                     // No explanation needed, we can request the permission.
 
@@ -175,7 +215,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
                     // app-defined int constant. The callback method gets the
                     // result of the request.
                 }
-            }else{
+            } else {
                 login_user_info.text = ""
                 LoginButton.isEnabled = true
             }
@@ -184,33 +224,54 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        applicationContext.registerReceiver(ConnectivityReceiver(), IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
+        applicationContext.registerReceiver(
+            ConnectivityReceiver(),
+            IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
+        )
 
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        roomsViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomsViewModel::class.java)
-        roomMessagesViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomMessagesViewModel::class.java)
-        messagesViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(MessagesViewModel::class.java)
-        roomPostViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(RoomPostViewModel::class.java)
+        roomsViewModel =
+            ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(
+                RoomsViewModel::class.java
+            )
+        roomMessagesViewModel =
+            ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(
+                RoomMessagesViewModel::class.java
+            )
+        messagesViewModel =
+            ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(
+                MessagesViewModel::class.java
+            )
+        roomPostViewModel =
+            ViewModelProvider(this, Injection.provideViewModelFactory(applicationContext)).get(
+                RoomPostViewModel::class.java
+            )
         sharedPreferences = MySharedPreferences(applicationContext)
-        regexSSID =  Regex("[^A-Za-z0-9-_.~%]")
-        connMgr = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        regexSSID = Regex("[^A-Za-z0-9-_.~%]")
+        connMgr =
+            applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-// Here, thisActivity is the current activity
+        // Here, thisActivity is the current activity
 
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
 
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),1)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+            )
         }
 
 
         setTheme(getSavedTheme())
         setContentView(R.layout.activity_main)
-        snackbar = Snackbar.make(app,"NO INTERNET CONNECTION!",Snackbar.LENGTH_INDEFINITE)
-        snackbar.view.setBackgroundColor(Color.RED)
+        snackbar = Snackbar.make(app, "NO INTERNET CONNECTION!", Snackbar.LENGTH_INDEFINITE)
+        snackbar.view.setBackgroundColor(ContextCompat.getColor(this,R.color.no_conn_background))
 
         NavigationUI.setupWithNavController(
             nav_view, Navigation.findNavController(
@@ -219,14 +280,15 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
             )
         )
 
-        val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+        val navController =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
         val navGraph = navController?.navInflater?.inflate(R.navigation.nav_graph)
 
         if (sharedPreferences.get("access") != "") {
-            logout_icon.visibility = View.VISIBLE
+            logout_icon_layout.visibility = View.VISIBLE
             navGraph?.startDestination = R.id.viewPagerFragment
         } else {
-            logout_icon.visibility = View.GONE
+            logout_icon_layout.visibility = View.GONE
             navGraph?.startDestination = R.id.login_fragment
         }
 
@@ -238,8 +300,8 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
         setSupportActionBar(myToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(true)
-        if(sharedPreferences.get("theme") == "")
-            sharedPreferences.put("theme","light")
+        if (sharedPreferences.get("theme") == "")
+            sharedPreferences.put("theme", "light")
         val image = findViewById<ImageView>(R.id.theme_icon)
         when (sharedPreferences.get("theme")) {
             "light" -> {
@@ -255,16 +317,15 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         }
 
         theme_icon_layout.setOnClickListener {
-            if(selected == "light"){
+            if (selected == "light") {
                 selected = "dark"
                 image.setImageResource(R.drawable.sun)
-            }
-            else{
+            } else {
                 selected = "light"
                 image.setImageResource(R.drawable.moon)
             }
             sharedPreferences.put("theme", selected)
-            sharedPreferences.put("newTheme","true")
+            sharedPreferences.put("newTheme", "true")
             recreate()
         }
 
@@ -289,33 +350,37 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
         GiphyCoreUI.configure(this, "jputsvVhTVGbajc62DSDMsoQ59MLjPdA")
 
-//
-
         //creating notification channel if android version is greater than or equals to oreo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("simplified_coding", "Simplified Coding", NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel(
+                "simplified_coding",
+                "Simplified Coding",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
             channel.description = "Android Push Notification Tutorial"
             getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
         }
 
-        if(sharedPreferences.get("newTheme") == "true"){
-            sharedPreferences.put("newTheme","false")
+        if (sharedPreferences.get("newTheme") == "true") {
+            sharedPreferences.put("newTheme", "false")
 
-            when(sharedPreferences.get("fragment")){
-                "messages"->{
-                    val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(
-                        sharedPreferences.get("contactId") as String, sharedPreferences.get("contactName") as String
+            when (sharedPreferences.get("fragment")) {
+                "messages" -> {
+                    val action =
+                        ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(
+                            sharedPreferences.get("contactId") as String,
+                            sharedPreferences.get("contactName") as String
                         )
                     action.let { navController.navigate(it) }
                 }
-                "roomMessages"->{
+                "roomMessages" -> {
                     val action =
                         ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
                             sharedPreferences.get("roomId") as String
                         )
                     action.let { navController.navigate(it) }
                 }
-                "roomsPost"->{
+                "roomsPost" -> {
                     val action =
                         ViewPagerFragmentDirections.actionViewPagerFragmentToRoomPost(
                             sharedPreferences.get("roomId") as String
@@ -324,8 +389,8 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
                 }
             }
 
-        }else{
-            Log.i("theme","false")
+        } else {
+            Log.i("theme", "false")
         }
 
 
@@ -347,14 +412,20 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         val extras = intent?.extras
-        val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
-        if(extras?.get("typ").toString() == "msg"){
-            navController?.popBackStack(R.id.viewPagerFragment,false)
-            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(extras?.get("id").toString(),extras?.get("from").toString())
+        val navController =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+        if (extras?.get("typ").toString() == "msg") {
+            navController?.popBackStack(R.id.viewPagerFragment, false)
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(
+                extras?.get("id").toString(),
+                extras?.get("from").toString()
+            )
             navController?.navigate(action)
-        }else if(extras?.get("typ").toString() == "room"){
-            navController?.popBackStack(R.id.viewPagerFragment,false)
-            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(extras?.get("id").toString())
+        } else if (extras?.get("typ").toString() == "room") {
+            navController?.popBackStack(R.id.viewPagerFragment, false)
+            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(
+                extras?.get("id").toString()
+            )
             navController?.navigate(action)
         }
     }

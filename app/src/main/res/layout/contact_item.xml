@@ -4,26 +4,36 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:padding="@dimen/thick">
+    android:layout_marginBottom="5dp"
+    android:padding="@dimen/thick"
+    >
 
-    <TextView
-        android:id="@+id/contact_group"
-        android:layout_gravity="start"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:textColor="?attr/primary"
-        android:textSize="@dimen/big_text"
-        tools:text="J"/>
+    <FrameLayout
+        android:id="@+id/contact_group_layout"
+        android:layout_width="@dimen/huge_height"
+        android:layout_height="@dimen/huge_height"
+        android:background="@drawable/rounded_border_room_group"
+        >
+        <TextView
+            android:id="@+id/contact_group"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="?attr/secondaryText"
+            android:textSize="@dimen/big_text"
+            tools:text="J"/>
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/contact_name"
-        android:paddingTop="16dp"
         android:layout_gravity="start"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         tools:text="jany"
-        android:paddingBottom="16dp"
+        android:paddingTop="@dimen/text_padding"
+        android:paddingBottom="@dimen/text_padding"
         android:textSize="@dimen/normal_text" />
     <View
         android:layout_width="match_parent"

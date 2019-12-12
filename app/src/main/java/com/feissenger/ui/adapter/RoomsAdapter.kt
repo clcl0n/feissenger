@@ -3,23 +3,23 @@ package com.feissenger.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.R
 import com.feissenger.data.db.model.RoomItem
 import com.feissenger.ui.ViewPagerFragmentDirections
-import kotlinx.android.synthetic.main.contact_item.view.*
 import kotlinx.android.synthetic.main.room_item.view.*
 
 
 class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
 
-        var data = listOf<RoomItem>()
-            set(value) {
-                field = value
-                notifyDataSetChanged()
-            }
+    var data = listOf<RoomItem>()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     var category: String = "A"
 
@@ -27,16 +27,15 @@ class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        if(position == 0){
+        if (position == 0) {
             category = item.id.ssid.first().toUpperCase().toString()
             holder.bind(item, category, View.VISIBLE)
-        }
-        else{
-            val prevItem = data[position-1]
-            if(item.id.ssid.first().toUpperCase() != prevItem.id.ssid.first().toUpperCase()){
+        } else {
+            val prevItem = data[position - 1]
+            if (item.id.ssid.first().toUpperCase() != prevItem.id.ssid.first().toUpperCase()) {
                 category = item.id.ssid.first().toUpperCase().toString()
                 holder.bind(item, category, View.VISIBLE)
-            }else{
+            } else {
                 holder.bind(item, category, View.GONE)
             }
         }
@@ -56,13 +55,14 @@ class RoomsAdapter : RecyclerView.Adapter<RoomsAdapter.ViewHolder>() {
             visibility: Int
         ) {
 
-            val head = (itemView.room_group as TextView)
-            head.text = category
+            val head = (itemView.room_group_layout as FrameLayout)
+            head.room_group.text = category
             head.visibility = visibility
 
             (itemView.ssid as TextView).text = item.id.ssid
-            itemView.setOnClickListener {
-                val action = ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(item.id.ssid)
+            itemView.ssid.setOnClickListener {
+                val action =
+                    ViewPagerFragmentDirections.actionViewPagerFragmentToRoomMessagesFragment(item.id.ssid)
                 it.findNavController().navigate(action)
             }
         }

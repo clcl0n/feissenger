@@ -3,37 +3,21 @@ package com.feissenger.ui
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.IntentFilter
-import android.net.ConnectivityManager
-import android.net.Uri
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.view.inputmethod.InputMethodManager.*
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
-import com.feissenger.data.ConnectivityReceiver
 import com.feissenger.data.util.Injection
-import com.feissenger.databinding.FragmentRoomBinding
 import com.feissenger.databinding.FragmentRoomPostBinding
-import com.feissenger.ui.adapter.RoomsAdapter
 import com.feissenger.ui.viewModels.RoomPostViewModel
-import com.feissenger.ui.viewModels.RoomsViewModel
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.navArgs
-import com.feissenger.MainActivity
-import com.feissenger.ui.viewModels.RoomMessagesViewModel
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.GPHSettings
@@ -42,8 +26,6 @@ import com.giphy.sdk.ui.themes.GridType
 import com.giphy.sdk.ui.themes.LightTheme
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.fragment_message.*
 import kotlinx.android.synthetic.main.fragment_room_post.*
 
 

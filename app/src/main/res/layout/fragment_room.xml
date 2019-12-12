@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View"/>
@@ -18,8 +19,8 @@
             android:id="@+id/public_room_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:elevation="10dp"
+            android:paddingStart="@dimen/thin"
+            android:paddingEnd="@dimen/thin"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -27,15 +28,17 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
+                android:paddingTop="@dimen/text_padding"
+                android:paddingBottom="@dimen/text_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="@string/public_room"
-                android:textSize="24sp"/>
+                android:textSize="@dimen/normal_text"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:padding="10dp"
+                android:padding="@dimen/thick"
                 android:background="@android:color/darker_gray"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -49,32 +52,38 @@
             android:id="@+id/active_room_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/thin"
+            android:paddingEnd="@dimen/thin"
             app:layout_constraintTop_toBottomOf="@id/public_room_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:padding="10dp"
-            android:elevation="10dp"
+
             android:visibility="@{model.visibleActive ? View.VISIBLE : View.GONE}"
             >
             <TextView
                 android:id="@+id/active_room_badge"
-                android:layout_height="10dp"
-                android:layout_width="10dp"
+
+                android:layout_height="@dimen/thick"
+                android:layout_width="@dimen/thick"
                 android:background="@drawable/rounded_border_active"
                 app:layout_constraintEnd_toStartOf="@id/active_room"
+
                 app:layout_constraintTop_toTopOf="@id/active_room"
                 app:layout_constraintBottom_toBottomOf="@id/active_room"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="@dimen/thin"
                 />
             <TextView
                 android:id="@+id/active_room"
+                tools:text = "SSID_ROOM"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:paddingTop="@dimen/text_padding"
+                android:paddingBottom="@dimen/text_padding"
                 android:text="@{model.activeRoom}"
-                android:textSize="24sp" />
+                android:textSize="@dimen/normal_text" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -101,13 +110,13 @@
 
         <com.reddit.indicatorfastscroll.FastScrollerView
             android:id="@+id/room_fastscroller"
-            android:layout_width="@dimen/huge_height"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:paddingStart="@dimen/thicker"
+            android:paddingEnd="@dimen/thicker"
             app:layout_constraintEnd_toEndOf="parent"
             app:iconColor="?attr/primaryDark"
-            android:textColor="?attr/primaryDark"
-            android:layout_marginEnd="@dimen/thin"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="?attr/primaryText"
             />
 
         <com.reddit.indicatorfastscroll.FastScrollerThumbView
@@ -115,9 +124,9 @@
             android:layout_width="@dimen/big_height"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/thick"
-            android:textColor="@color/white"
-            app:thumbColor="?attr/primaryDark"
-            app:iconColor="?attr/primaryDark"
+            android:textColor="?attr/secondaryText"
+            app:thumbColor="?attr/primary"
+            app:iconColor="?attr/primary"
             app:layout_constraintBottom_toBottomOf="@+id/room_fastscroller"
             app:layout_constraintEnd_toStartOf="@id/room_fastscroller"
             app:layout_constraintTop_toTopOf="@+id/room_fastscroller" />

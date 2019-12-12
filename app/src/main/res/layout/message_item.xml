@@ -19,39 +19,39 @@
             android:id="@+id/message_time"
             android:layout_gravity="start"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginStart="@dimen/thin"
+            android:layout_marginEnd="@dimen/thin"
             android:layout_width="wrap_content"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="10sp"
+            android:textSize="@dimen/small_text"
             android:visibility="gone"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:contentDescription="@string/this_is_gif_image"
             android:id="@+id/message_gif"
             android:layout_width="wrap_content"
-            android:layout_height="150dp"
+            android:layout_height="@dimen/gif_height"
             android:padding="0dp"
-            android:layout_margin="5dp"/>
+            android:layout_margin="@dimen/thin"/>
 
         <FrameLayout
             android:id="@+id/message_bubble_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/thin"
+            android:paddingBottom="@dimen/thick"
             android:paddingStart="@dimen/thin"
             android:paddingEnd="@dimen/thin"
-            android:paddingBottom="@dimen/big_text"
             >
             <TextView
                 android:background="@drawable/rounded_border_recipient"
                 android:id="@+id/message_bubble"
                 android:layout_gravity="start"
                 android:layout_height="wrap_content"
+                android:paddingTop="@dimen/thick"
+                android:paddingBottom="@dimen/thick"
                 tool:text="ahoj"
                 android:layout_width="wrap_content"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/big_text" />
+                android:textSize="@dimen/normal_text" />
         </FrameLayout>
 
     </LinearLayout>

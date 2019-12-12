@@ -52,10 +52,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textIsSelectable="true"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/big_text"
+        android:paddingBottom="@dimen/text_padding"
+        android:paddingTop="@dimen/text_padding"
+        android:textColor="?attr/primaryText"
+        android:textSize="@dimen/normal_text"
         tools:text="teeeeee"/>
 
     <ImageView

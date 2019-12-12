@@ -1,21 +1,14 @@
 package com.feissenger.ui
 
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
-
 import com.feissenger.ui.adapter.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_view_pager.*
@@ -47,6 +40,6 @@ class ViewPagerFragment : Fragment() {
 
         (activity as MainActivity).myToolbar.toolbar_text.text = sharedPref.get("name").toString()
         (activity as MainActivity).myToolbar.theme_icon.visibility = View.VISIBLE
-        (activity as MainActivity).myToolbar.logout_icon.visibility = View.VISIBLE
+        (activity as MainActivity).myToolbar.logout_icon_layout.visibility = View.VISIBLE
     }
 }

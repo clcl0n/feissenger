@@ -25,11 +25,11 @@ class LogoutDialogFragment : DialogFragment() {
                 .setPositiveButton(R.string.confirm_logout
                 ) {_, _->
                     val preferences = MySharedPreferences(it.applicationContext)
-                    preferences.clear()
+                    preferences.logout()
                     loginViewModel._user.postValue(null)
                     loginViewModel._userName.postValue("")
                     loginViewModel._password.postValue("")
-                    (activity as MainActivity).myToolbar.logout_icon.visibility = View.GONE
+                    (activity as MainActivity).myToolbar.logout_icon_layout.visibility = View.GONE
 
                     val navController = it.supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
                     val navGraph = navController?.navInflater?.inflate(R.navigation.nav_graph)

@@ -1,5 +1,6 @@
 package com.feissenger.ui.adapter
 
+import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -11,13 +12,11 @@ import com.feissenger.data.db.model.MessageItem
 import com.feissenger.R
 import kotlinx.android.synthetic.main.message_item.view.*
 import android.widget.LinearLayout
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.giphy.sdk.core.models.enums.RenditionType
-import com.giphy.sdk.ui.views.GPHMediaView
 
-class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
+
+class MessagesAdapter(private var glide: RequestManager, private var context: Context) :
+    RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
 
     var data = listOf<MessageItem>()
         set(value) {
@@ -30,7 +29,7 @@ class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        holder.bind(item, glide)
+        holder.bind(item, glide, context)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,13 +37,13 @@ class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapte
     }
 
     class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: MessageItem, glide: RequestManager) {
+        fun bind(item: MessageItem, glide: RequestManager, context: Context) {
 
             itemView.message_time.visibility = View.GONE
 
-            itemView.message_gif.layout(0,0,0,0)
+            itemView.message_gif.layout(0, 0, 0, 0)
 
-            if(item.isGif){
+            if (item.isGif) {
                 itemView.message_bubble_layout.visibility = View.GONE
                 itemView.message_gif.visibility = View.VISIBLE
 
@@ -55,27 +54,28 @@ class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapte
 
                 itemView.message_gif.setOnClickListener {
                     val currentVisibility = itemView.message_time.visibility
-                    if(currentVisibility == View.GONE)
+                    if (currentVisibility == View.GONE)
                         itemView.message_time.visibility = View.VISIBLE
                     else
                         itemView.message_time.visibility = View.GONE
                 }
                 itemView.message_gif.setBackgroundResource(0)
-                if(item.id.uid == item.id.sender){
-//                    itemView.obal_gif.setBackgroundResource(R.drawable.rounded_border_sender)
-                    (itemView.message_gif.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
-                    (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
+                if (item.id.uid == item.id.sender) {
+                    (itemView.message_gif.layoutParams as LinearLayout.LayoutParams).gravity =
+                        Gravity.END
+                    (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity =
+                        Gravity.END
                     itemView.view_left.visibility = View.VISIBLE
                     itemView.view_right.visibility = View.GONE
-                }
-                else{
-//                    itemView.obal_gif.setBackgroundResource(R.drawable.rounded_border_recipient)
-                    (itemView.message_gif.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
-                    (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
+                } else {
+                    (itemView.message_gif.layoutParams as LinearLayout.LayoutParams).gravity =
+                        Gravity.START
+                    (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity =
+                        Gravity.START
                     itemView.view_left.visibility = View.GONE
                     itemView.view_right.visibility = View.VISIBLE
                 }
-            }else{
+            } else {
 
                 itemView.message_bubble_layout.visibility = View.VISIBLE
                 itemView.message_gif.visibility = View.GONE
@@ -85,25 +85,28 @@ class   MessagesAdapter(private var glide: RequestManager) : RecyclerView.Adapte
 
                 itemView.message_bubble_layout.setOnClickListener {
                     val currentVisibility = itemView.message_time.visibility
-                    if(currentVisibility == View.GONE)
+                    if (currentVisibility == View.GONE)
                         itemView.message_time.visibility = View.VISIBLE
                     else
                         itemView.message_time.visibility = View.GONE
                 }
 
-                if(item.id.uid == item.id.sender){
+                if (item.id.uid == item.id.sender) {
                     itemView.message_bubble_layout.message_bubble.setBackgroundResource(R.drawable.rounded_border_sender)
                     itemView.message_bubble_layout.message_bubble.setTextColor(Color.WHITE)
-                    (itemView.message_bubble_layout.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
-                    (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.END
+                    (itemView.message_bubble_layout.layoutParams as LinearLayout.LayoutParams).gravity =
+                        Gravity.END
+                    (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity =
+                        Gravity.END
                     itemView.view_left.visibility = View.VISIBLE
                     itemView.view_right.visibility = View.GONE
-                }
-                else{
+                } else {
                     itemView.message_bubble_layout.message_bubble.setBackgroundResource(R.drawable.rounded_border_recipient)
                     itemView.message_bubble_layout.message_bubble.setTextColor(Color.BLACK)
-                    (itemView.message_bubble_layout.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
-                    (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.START
+                    (itemView.message_bubble_layout.layoutParams as LinearLayout.LayoutParams).gravity =
+                        Gravity.START
+                    (itemView.message_time.layoutParams as LinearLayout.LayoutParams).gravity =
+                        Gravity.START
                     itemView.view_left.visibility = View.GONE
                     itemView.view_right.visibility = View.VISIBLE
                 }

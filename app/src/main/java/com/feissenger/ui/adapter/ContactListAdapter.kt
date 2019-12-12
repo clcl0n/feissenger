@@ -3,7 +3,7 @@ package com.feissenger.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SectionIndexer
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -11,10 +11,8 @@ import com.feissenger.R
 import com.feissenger.data.db.model.ContactItem
 import com.feissenger.ui.ViewPagerFragmentDirections
 import kotlinx.android.synthetic.main.contact_item.view.*
-import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 
-
-class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>(){
+class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
 
     var data = listOf<ContactItem>()
         set(value) {
@@ -31,16 +29,15 @@ class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>()
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
 
-        if(position == 0){
+        if (position == 0) {
             category = item.name.first().toUpperCase().toString()
             holder.bind(item, category, View.VISIBLE)
-        }
-        else{
-            val prevItem = data[position-1]
-            if(item.name.first().toUpperCase() != prevItem.name.first().toUpperCase()){
+        } else {
+            val prevItem = data[position - 1]
+            if (item.name.first().toUpperCase() != prevItem.name.first().toUpperCase()) {
                 category = item.name.first().toUpperCase().toString()
                 holder.bind(item, category, View.VISIBLE)
-            }else{
+            } else {
                 holder.bind(item, category, View.GONE)
             }
         }
@@ -59,15 +56,18 @@ class ContactListAdapter : RecyclerView.Adapter<ContactListAdapter.ViewHolder>()
             visibility: Int
         ) {
 
-            val head = (itemView.contact_group as TextView)
-            head.text = category
+            val head = (itemView.contact_group_layout as FrameLayout)
+            head.contact_group.text = category
             head.visibility = visibility
 
             (itemView.contact_name as TextView).text = item.name
-            (itemView.contact_name as TextView).setOnClickListener {
-            val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(item.id.contactId, item.name)
-            it.findNavController().navigate(action)
-        }
+            itemView.contact_name.setOnClickListener {
+                val action = ViewPagerFragmentDirections.actionViewPagerFragmentToMessagesFragment(
+                    item.id.contactId,
+                    item.name
+                )
+                it.findNavController().navigate(action)
+            }
         }
 
         companion object {

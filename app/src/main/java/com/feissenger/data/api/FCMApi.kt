@@ -23,7 +23,7 @@ interface FCMApi {
         private const val BASE_URL =
             "https://fcm.googleapis.com"
 
-        fun create(context: Context): FCMApi {
+        fun create(): FCMApi {
 
             val client = OkHttpClient.Builder()
                 .build()

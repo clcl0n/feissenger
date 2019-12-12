@@ -4,7 +4,6 @@ package com.feissenger.ui.viewModels
 import androidx.lifecycle.*
 import com.feissenger.data.DataRepository
 import com.feissenger.data.api.model.*
-import com.feissenger.data.db.model.RoomItem
 import kotlinx.coroutines.launch
 
 class RoomPostViewModel(private val repository: DataRepository) : ViewModel() {

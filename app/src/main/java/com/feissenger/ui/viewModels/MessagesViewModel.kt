@@ -1,16 +1,13 @@
 package com.feissenger.ui.viewModels
 
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.feissenger.data.DataRepository
 import com.feissenger.data.api.model.ContactMessageRequest
 import com.feissenger.data.api.model.ContactReadRequest
 import com.feissenger.data.api.model.NotificationBody
 import com.feissenger.data.api.model.NotificationRequest
-import com.feissenger.data.db.model.ContactItem
 import com.feissenger.data.db.model.MessageItem
-import com.feissenger.data.db.model.RoomItem
 import kotlinx.coroutines.launch
 
 class MessagesViewModel(private val repository: DataRepository) : ViewModel() {

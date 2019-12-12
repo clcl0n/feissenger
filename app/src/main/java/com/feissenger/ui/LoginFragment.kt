@@ -1,60 +1,36 @@
 package com.feissenger.ui
 
-
-import android.Manifest
-import android.content.Context
-import android.content.IntentFilter
-import android.content.pm.PackageManager
-import android.net.ConnectivityManager
-import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_login.*
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
-import com.feissenger.data.ConnectivityReceiver
-import com.feissenger.data.api.WebApi
-import com.feissenger.data.api.model.RegisterTokenRequest
 import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentLoginBinding
 import com.feissenger.ui.viewModels.LoginViewModel
 import kotlinx.android.synthetic.main.activity_main.view.*
 import com.google.firebase.iid.FirebaseInstanceId
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-//, ConnectivityReceiver.ConnectivityReceiverListener
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var viewModel: LoginViewModel
     private lateinit var sharedPref: MySharedPreferences
-//    private lateinit var wifiManager: WifiManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-//        activity?.registerReceiver(ConnectivityReceiver(),
-//            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-//        )
-
         sharedPref = context?.let { MySharedPreferences(it) }!!
-
-//        wifiManager = context?.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
@@ -67,15 +43,6 @@ class LoginFragment : Fragment() {
         viewModel.wrongUsernameOrPasswordMessage = getString(R.string.wrong_username_or_password_message)
         binding.model = viewModel
 
-//        viewModel.user.observe(this) {
-//            val navController = findNavController()
-//            val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
-//            navGraph.startDestination = R.id.room_fragment
-//            navController.graph = navGraph
-//            navController.navigate(R.id.room_fragment)
-//        }
-
-//        adapter
         return binding.root
     }
 
@@ -109,7 +76,7 @@ class LoginFragment : Fragment() {
                 navController.graph = navGraph
                 navController.navigate(id)
             } else {
-                sharedPref.clear()
+                sharedPref.logout()
                 GlobalScope.launch {
                     FirebaseInstanceId.getInstance().deleteInstanceId()
                 }

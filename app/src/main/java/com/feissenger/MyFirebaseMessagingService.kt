@@ -9,9 +9,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.RingtoneManager
-import android.net.ConnectivityManager
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.feissenger.data.DataRepository
@@ -75,23 +73,28 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(message)
         dataRepository = Injection.provideDataRepository(applicationContext)
 
-//        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        val activityManager = applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val activityManager =
+            applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
 
         var displayNotification = true
 
         for (appprocess in activityManager.runningAppProcesses) {
-            displayNotification = if (appprocess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appprocess.processName == "com.feissenger") {
-                !((sharedPref.get("fragment") == "messages" && sharedPref.get("contactId") == message.data["value"]) ||
-                        (sharedPref.get("activeWifi") != message.data["value"] && message.data["typ"] == "room") ||
-                        (sharedPref.get("fragment") == "roomMessages" && sharedPref.get("roomId") == message.data["value"])) ||
+            displayNotification =
+                if (appprocess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appprocess.processName == "com.feissenger") {
+                    !((sharedPref.get("fragment") == "messages" && sharedPref.get("contactId") == message.data["value"]) ||
+                            (sharedPref.get("activeWifi") != message.data["value"] && message.data["typ"] == "room") ||
+                            (sharedPref.get("fragment") == "roomMessages" && sharedPref.get("roomId") == message.data["value"])) ||
 
-                        (("XsTDHS3C2YneVmEW5Ry7" == message.data["value"] && message.data["typ"] == "room") &&
-                        !(sharedPref.get("fragment") == "roomMessages" && sharedPref.get("roomId") == message.data["value"]))
-            } else {
-                message.data["value"] == "XsTDHS3C2YneVmEW5Ry7" ||  message.data["typ"] == "msg" || (message.data["typ"] == "room" && sharedPref.get("activeWifi") == message.data["value"])
-            }
+                            (("XsTDHS3C2YneVmEW5Ry7" == message.data["value"] && message.data["typ"] == "room") &&
+                                    !(sharedPref.get("fragment") == "roomMessages" && sharedPref.get(
+                                        "roomId"
+                                    ) == message.data["value"]))
+                } else {
+                    message.data["value"] == "XsTDHS3C2YneVmEW5Ry7" || message.data["typ"] == "msg" || (message.data["typ"] == "room" && sharedPref.get(
+                        "activeWifi"
+                    ) == message.data["value"])
+                }
         }
 
 

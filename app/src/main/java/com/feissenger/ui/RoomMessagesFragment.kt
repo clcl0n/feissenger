@@ -1,8 +1,5 @@
 package com.feissenger.ui
 
-
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,31 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.R
-import com.feissenger.data.db.model.RoomItem
 import com.feissenger.data.util.Injection
 import com.feissenger.databinding.FragmentRoomMessageBinding
 import com.feissenger.ui.adapter.RoomMessagesAdapter
 import com.feissenger.ui.viewModels.RoomMessagesViewModel
-import com.giphy.sdk.core.models.Media
-import com.giphy.sdk.ui.GPHContentType
-import com.giphy.sdk.ui.GPHSettings
-import com.giphy.sdk.ui.themes.DarkTheme
-import com.giphy.sdk.ui.themes.GridType
-import com.giphy.sdk.ui.themes.LightTheme
-import com.giphy.sdk.ui.views.GiphyDialogFragment
-import com.giphy.sdk.ui.views.buttons.GPHGiphyButtonStyle
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_room_message.*
@@ -55,14 +39,17 @@ class RoomMessagesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        regexSSID =  Regex("[^A-Za-z0-9-_.~%]")
+        regexSSID = Regex("[^A-Za-z0-9-_.~%]")
         sharedPref = context?.let { MySharedPreferences(it) }!!
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_room_message, container, false
         )
         binding.lifecycleOwner = this
-        viewModel = ViewModelProvider(activity!!, Injection.provideViewModelFactory(activity?.applicationContext!!))
+        viewModel = ViewModelProvider(
+            activity!!,
+            Injection.provideViewModelFactory(activity?.applicationContext!!)
+        )
             .get(RoomMessagesViewModel::class.java)
 
         with(sharedPref) {
@@ -79,9 +66,9 @@ class RoomMessagesFragment : Fragment() {
 
         val adapter = RoomMessagesAdapter(Glide.with(this))
         binding.messagesList.adapter = adapter
-        viewModel.showFab.observeForever{
-            if(fab != null){
-                if(it)
+        viewModel.showFab.observeForever {
+            if (fab != null) {
+                if (it)
                     fab.show()
                 else
                     fab.hide()
@@ -93,7 +80,8 @@ class RoomMessagesFragment : Fragment() {
         }
 
         binding.fab.setOnClickListener { view ->
-            val action = RoomMessagesFragmentDirections.actionRoomMessagesFragmentToRoomPost(arg.roomId)
+            val action =
+                RoomMessagesFragmentDirections.actionRoomMessagesFragmentToRoomPost(arg.roomId)
             view.findNavController().navigate(action)
         }
 
@@ -105,19 +93,26 @@ class RoomMessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        snackbar = Snackbar.make(messages_list,"You have to connect to wifi of this room",Snackbar.LENGTH_LONG)
+        snackbar = Snackbar.make(
+            messages_list,
+            "You have to connect to wifi of this room",
+            Snackbar.LENGTH_LONG
+        )
         snackbar.view.setBackgroundColor(Color.WHITE)
 
-        sharedPref.put("fragment","roomMessages")
-        sharedPref.put("roomId",regexSSID.replace(arg.roomId,"_"))
+        sharedPref.put("fragment", "roomMessages")
+        sharedPref.put("roomId", regexSSID.replace(arg.roomId, "_"))
 
-        if(sharedPref.get("activeWifi").toString() == viewModel.roomid || viewModel.roomid == "XsTDHS3C2YneVmEW5Ry7"){
+        if ((sharedPref.get("activeWifi").toString() == viewModel.roomid || viewModel.roomid == "XsTDHS3C2YneVmEW5Ry7") && sharedPref.get(
+                "connType"
+            ).toString() != "none"
+        ) {
+            snackbar.dismiss()
             viewModel.showFab.postValue(true)
 
-        }
-        else{
+        } else {
             viewModel.showFab.postValue(false)
-            if(sharedPref.get("connType").toString()!="none")
+            if (sharedPref.get("connType").toString() != "none")
                 snackbar.show()
         }
 

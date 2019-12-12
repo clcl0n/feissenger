@@ -7,6 +7,7 @@
     <item name="indicator" type="dimen">3dp</item>
     <item name="thin" type="dimen">5dp</item>
     <item name="thick" type="dimen">10dp</item>
+    <item name="thicker" type="dimen">12dp</item>
 
     <item name="small_height" type="dimen">5dp</item>
     <item name="normal_height" type="dimen">32dp</item>
@@ -15,6 +16,12 @@
 
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="design_fab_image_size" tools:override="true">56dp</dimen>
+
+    <dimen name="gif_height" tools:override="true">150dp</dimen>
+
+    <dimen name="logo_dim" tools:override="true">75dp</dimen>
+
+
 
     <dimen name="text_padding">16dp</dimen>
 </resources>

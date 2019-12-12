@@ -1,7 +1,6 @@
 package com.feissenger.data.db
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.feissenger.data.db.model.MessageItem
 import com.feissenger.data.db.model.ContactItem
@@ -25,8 +24,6 @@ interface DbDao {
 
 
     //    Rooms
-
-
     @Query("SELECT * FROM roomsList WHERE uid LIKE :user  AND ssid NOT LIKE 'XsTDHS3C2YneVmEW5Ry7' AND ssid NOT LIKE :activeRoom ORDER BY ssid COLLATE NOCASE ")
     suspend fun getMutableRooms(user: String, activeRoom: String):  List<RoomItem>
 

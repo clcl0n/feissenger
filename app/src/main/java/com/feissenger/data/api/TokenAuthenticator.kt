@@ -1,7 +1,6 @@
 package com.feissenger.data.api
 
 import android.content.Context
-import com.feissenger.MainActivity
 import com.feissenger.MySharedPreferences
 import com.feissenger.data.api.model.RefreshRequest
 import okhttp3.Authenticator

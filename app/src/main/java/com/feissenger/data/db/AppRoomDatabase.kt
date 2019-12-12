@@ -12,7 +12,6 @@ import com.feissenger.data.db.model.RoomMessageItem
     version = 99999,
     exportSchema = false
 )
-@TypeConverters(Converters::class)
 abstract class AppRoomDatabase : RoomDatabase() {
 
     abstract fun appDao(): DbDao
