@@ -46,5 +46,9 @@ class MySharedPreferences(context: Context) {
         put("refresh", "")
         put("uid", "")
         put("name", "")
+        put("fragment", "")
+        put("roomId", "")
+        put("contactId", "")
+        put("contactName", "")
     }
 }
